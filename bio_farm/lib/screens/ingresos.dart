@@ -48,7 +48,9 @@ class _ScreenIngresosState extends State<ScreenIngresos> {
                 ),
                 title: 'ELIMINAR',
                 description: 'Eliminar un ingreso del registro',
-                onTap: () {}),
+                onTap: () {
+                  Navigator.of(context).pushNamed('IngresosBorrar');
+                }),
             CardButton(
                 icon: const Icon(
                   Icons.delete_outline,
