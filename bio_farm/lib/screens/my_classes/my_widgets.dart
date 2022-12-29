@@ -4,13 +4,13 @@ class CardButton extends StatelessWidget {
   final Icon icon;
   final String title;
   final String description;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   const CardButton(
       {super.key,
       required this.icon,
       required this.title,
       required this.description,
-      required this.onTap});
+      this.onTap});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(

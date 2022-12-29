@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:bio_farm/screens/widgets/my_widgets.dart';
+import 'package:bio_farm/screens/my_classes/my_widgets.dart';
 //import 'package:bio_farm/other/elementos.dart';
 
 class ScreenIngresosAgregar extends StatefulWidget {

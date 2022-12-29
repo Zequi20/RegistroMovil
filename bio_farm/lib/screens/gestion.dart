@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'widgets/my_widgets.dart';
+import 'my_classes/my_widgets.dart';
 import 'package:bio_farm/other/arguments.dart';
 
 class ScreenGestion extends StatelessWidget {

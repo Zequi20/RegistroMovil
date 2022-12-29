@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'widgets/my_widgets.dart';
+import 'my_classes/my_widgets.dart';
 
 class ScreenIngresos extends StatefulWidget {
   const ScreenIngresos({super.key});

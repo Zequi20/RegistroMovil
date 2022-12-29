@@ -1,8 +1,8 @@
+import 'package:bio_farm/screens/datagrid.dart';
 import 'package:flutter/material.dart';
 import 'package:bio_farm/screens/gestion.dart';
 import 'package:bio_farm/screens/ingresos.dart';
 import 'package:bio_farm/screens/ingresos_agregar.dart';
-import 'package:bio_farm/screens/ingresos_borrar.dart';
 import 'screens/sedes.dart';
 
 void main() {
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         'Gestion': (context) => const ScreenGestion(),
         'Ingresos': (context) => const ScreenIngresos(),
         'IngresosAgregar': (context) => const ScreenIngresosAgregar(),
-        'IngresosBorrar': (context) => const ScreenIngresosBorrar(),
+        'IngresosBorrar': (context) => const ScreenDataGrids(),
       },
       initialRoute: 'Sedes',
     );

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'widgets/my_widgets.dart';
+import 'my_classes/my_widgets.dart';
 import 'package:bio_farm/other/arguments.dart';
 
 class ScreenSedes extends StatelessWidget {
@@ -11,11 +11,6 @@ class ScreenSedes extends StatelessWidget {
     var lista = ['CAAZAPA', 'YUTY', 'SAN JUAN NEP'];
     return SafeArea(
         child: Scaffold(
-      floatingActionButton: const Icon(
-        Icons.account_tree,
-        color: Color.fromARGB(255, 26, 35, 126),
-        size: 80,
-      ),
       appBar: AppBar(
         title: const Center(
             child: Text(
