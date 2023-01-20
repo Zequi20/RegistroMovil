@@ -17,7 +17,7 @@ class CardButton extends StatelessWidget {
         onTap: onTap,
         child: Card(
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
           elevation: 10,
           color: Colors.indigo.shade900,
           child: Column(

@@ -26,7 +26,7 @@ class ScreenGestion extends StatelessWidget {
       body: GridView.count(
         crossAxisSpacing: 1,
         mainAxisSpacing: 2,
-        crossAxisCount: 2,
+        crossAxisCount: 1,
         children: <Widget>[
           CardButton(
               icon: const Icon(

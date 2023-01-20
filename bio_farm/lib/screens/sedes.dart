@@ -9,6 +9,7 @@ class ScreenSedes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var lista = ['CAAZAPA', 'YUTY', 'SAN JUAN NEP'];
+
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
@@ -28,7 +29,8 @@ class ScreenSedes extends StatelessWidget {
       ),
       body: GridView.builder(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
+          crossAxisCount: 1,
+          mainAxisSpacing: 0,
         ),
         itemCount: lista.length,
         itemBuilder: (BuildContext context, int index) {

@@ -36,6 +36,10 @@ class TransactionDataSource extends DataGridSource {
         .toList(growable: false);
   }
 
+  void updateDataGridDataSource() {
+    notifyListeners();
+  }
+
   @override
   List<DataGridRow> get rows => dataGridRows;
 
