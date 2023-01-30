@@ -38,7 +38,50 @@ class _ScreenIngresosState extends State<ScreenIngresos> {
                 title: 'AGREGAR',
                 description: 'Agregar un valor al registro de ingresos',
                 onTap: () {
-                  Navigator.of(context).pushNamed('IngresosAgregar');
+                  showModalBottomSheet(
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0)),
+                      elevation: 0.5,
+                      context: context,
+                      builder: ((context) {
+                        return Form(
+                            child: Column(
+                          children: const [
+                            CardTitle(
+                                title: ' Agregar Ingreso',
+                                icon: Icon(
+                                  Icons.add,
+                                  color: Colors.white,
+                                )),
+                            Padding(
+                              padding: EdgeInsets.all(12),
+                              child: TextField(
+                                keyboardType: TextInputType.text,
+                                decoration: InputDecoration(
+                                    label: Text('Concepto del Ingreso')),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(12),
+                              child: TextField(
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                    label:
+                                        Text('Valor del Ingreso (Guaranies)')),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(12),
+                              child: TextField(
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                    label: Text('Descuento (Guaranies)')),
+                              ),
+                            ),
+                          ],
+                        ));
+                      }));
                 }),
             CardButton(
                 icon: const Icon(

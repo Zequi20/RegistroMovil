@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:bio_farm/screens/my_classes/my_widgets.dart';
 //import 'package:bio_farm/other/elementos.dart';
 
-class ScreenIngresosAgregar extends StatefulWidget {
-  const ScreenIngresosAgregar({super.key});
+class IngresosAgregar extends StatefulWidget {
+  const IngresosAgregar({super.key});
 
   @override
-  State<ScreenIngresosAgregar> createState() => _ScreenIngresosAgregarState();
+  State<IngresosAgregar> createState() => _IngresosAgregarState();
 }
 
-class _ScreenIngresosAgregarState extends State<ScreenIngresosAgregar> {
+class _IngresosAgregarState extends State<IngresosAgregar> {
   var lista = ['Elem1', 'Elem2'];
   @override
   Widget build(BuildContext context) {
@@ -36,14 +36,14 @@ class _ScreenIngresosAgregarState extends State<ScreenIngresosAgregar> {
                 color: Colors.white,
               )),
           const Padding(
-            padding: EdgeInsets.all(12),
+            padding: EdgeInsets.symmetric(horizontal: 12.0),
             child: TextField(
               keyboardType: TextInputType.text,
               decoration: InputDecoration(label: Text('Concepto de Ingreso')),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: Row(
               children: const [
                 Expanded(

@@ -1,18 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
+import 'package:intl/intl.dart';
 
 class ModelTransaction {
   factory ModelTransaction.fromJson(Map<String, dynamic> json) {
-    return ModelTransaction(json['id_ingreso'], json['concepto_ingreso'], 0.0,
-        0.0, DateTime(2022, 12, 3, 6));
+    return ModelTransaction(
+        json['id_ingreso'],
+        json['concepto_ingreso'],
+        double.parse(json['valor_ingreso'].toString()),
+        double.parse(json['descuento_ingreso'].toString()),
+        DateFormat('yyy-mm-dd')
+            .format(DateTime.parse(json['fecha_ingreso'].toString())),
+        json['hora_ingreso'].toString());
   }
-  ModelTransaction(this.transactionId, this.transactionConcept,
-      this.transactionValue, this.transactionDesc, this.transactionDate);
+  ModelTransaction(
+      this.transactionId,
+      this.transactionConcept,
+      this.transactionValue,
+      this.transactionDesc,
+      this.transactionDate,
+      this.transactionTime);
   int transactionId;
   double transactionValue;
   double transactionDesc;
   String transactionConcept;
-  DateTime transactionDate;
+  String transactionDate;
+  String transactionTime;
 }
 
 class TransactionDataSource extends DataGridSource {
@@ -28,8 +41,10 @@ class TransactionDataSource extends DataGridSource {
                   value: dataGridRow.transactionConcept),
               DataGridCell<double>(
                   columnName: 'Valor', value: dataGridRow.transactionValue),
-              DataGridCell<DateTime>(
+              DataGridCell<String>(
                   columnName: 'Fecha', value: dataGridRow.transactionDate),
+              DataGridCell<String>(
+                  columnName: 'Hora', value: dataGridRow.transactionTime),
               DataGridCell<double>(
                   columnName: 'Descuento', value: dataGridRow.transactionDesc),
             ]))
