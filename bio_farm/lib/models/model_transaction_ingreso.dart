@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:intl/intl.dart';
 
-class ModelTransaction {
-  factory ModelTransaction.fromJson(Map<String, dynamic> json) {
-    return ModelTransaction(
+class ModelTransactionIngreso {
+  factory ModelTransactionIngreso.fromJson(Map<String, dynamic> json) {
+    return ModelTransactionIngreso(
         json['id_ingreso'],
         json['concepto_ingreso'],
         double.parse(json['valor_ingreso'].toString()),
@@ -13,7 +13,7 @@ class ModelTransaction {
             .format(DateTime.parse(json['fecha_ingreso'].toString())),
         json['hora_ingreso'].toString());
   }
-  ModelTransaction(
+  ModelTransactionIngreso(
       this.transactionId,
       this.transactionConcept,
       this.transactionValue,
@@ -31,13 +31,13 @@ class ModelTransaction {
 class TransactionDataSource extends DataGridSource {
   List<DataGridRow> dataGridRows = [];
 
-  TransactionDataSource(List<ModelTransaction> transactions) {
+  TransactionDataSource(List<ModelTransactionIngreso> transactions) {
     dataGridRows = transactions
         .map<DataGridRow>((dataGridRow) => DataGridRow(cells: [
               DataGridCell<int>(
-                  columnName: 'id', value: dataGridRow.transactionId),
+                  columnName: 'Id', value: dataGridRow.transactionId),
               DataGridCell<String>(
-                  columnName: 'Concepto',
+                  columnName: 'Detalles',
                   value: dataGridRow.transactionConcept),
               DataGridCell<double>(
                   columnName: 'Valor', value: dataGridRow.transactionValue),
@@ -61,15 +61,15 @@ class TransactionDataSource extends DataGridSource {
   @override
   DataGridRowAdapter? buildRow(DataGridRow row) {
     return DataGridRowAdapter(
+        color: Colors.white,
         cells: row.getCells().map<Widget>((dataGridCell) {
-      return Container(
-          alignment: AlignmentDirectional.center,
-          child: SingleChildScrollView(
+          return Container(
+            alignment: AlignmentDirectional.center,
             child: Text(
               dataGridCell.value.toString(),
               textAlign: TextAlign.center,
             ),
-          ));
-    }).toList());
+          );
+        }).toList());
   }
 }

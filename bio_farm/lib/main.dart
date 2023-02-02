@@ -1,7 +1,7 @@
-import 'package:bio_farm/screens/datagrid.dart';
+import 'package:bio_farm/screens/gastos_registro.dart';
+import 'package:bio_farm/screens/ingresos_registro.dart';
 import 'package:flutter/material.dart';
 import 'package:bio_farm/screens/gestion.dart';
-//import 'package:bio_farm/screens/ingresos.dart';
 import 'screens/sedes.dart';
 
 void main() {
@@ -16,12 +16,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'BioFarmApp',
+      title: 'GestionBioFarm',
       routes: {
         'Sedes': (context) => const ScreenSedes(),
         'Gestion': (context) => const ScreenGestion(),
-        'Ingresos': (context) => const ScreenDataGrids(),
-        'IngresosBorrar': (context) => const ScreenDataGrids(),
+        'Ingresos': (context) => const ScreenIngresosRegistro(),
+        'Gastos': (context) => const ScreenGastosRegistro(),
       },
       initialRoute: 'Sedes',
     );
