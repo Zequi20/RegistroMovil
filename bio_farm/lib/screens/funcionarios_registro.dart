@@ -334,420 +334,450 @@ class _ScreenFuncionariosRegistroState
               elevation: 0.5,
               context: context,
               builder: (context) {
-                return Padding(
-                  padding: EdgeInsets.only(
-                      bottom: MediaQuery.of(context).viewInsets.bottom),
-                  child: Form(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                boxShadow: const [
-                                  BoxShadow(
-                                      color: Colors.black,
-                                      offset: Offset(1, 1),
-                                      blurRadius: 3)
-                                ],
-                                border: Border.all(
-                                    color: Colors.white,
-                                    width: 1,
-                                    strokeAlign: StrokeAlign.inside),
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(10.0)),
-                                color: Colors.blue.shade600),
-                            child: Center(
-                              child: Padding(
-                                padding: const EdgeInsets.all(12),
-                                child: Text(
-                                  'Agregar al registro',
-                                  style: bfTextStyle,
+                return SingleChildScrollView(
+                  child: Padding(
+                    padding: MediaQuery.of(context).viewInsets,
+                    child: Form(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  boxShadow: const [
+                                    BoxShadow(
+                                        color: Colors.black,
+                                        offset: Offset(1, 1),
+                                        blurRadius: 3)
+                                  ],
+                                  border: Border.all(
+                                      color: Colors.white,
+                                      width: 1,
+                                      strokeAlign: StrokeAlign.inside),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(10.0)),
+                                  color: Colors.blue.shade600),
+                              child: Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Text(
+                                    'Agregar al registro',
+                                    style: bfTextStyle,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                          child: TextField(
-                            inputFormatters: [
-                              FilteringTextInputFormatter.allow(RegExp(r'\d'))
-                            ],
-                            controller: ciController,
-                            keyboardType: TextInputType.text,
-                            decoration: const InputDecoration(
-                                label: Text('Cedula de Identidad')),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 12.0),
+                            child: TextField(
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(RegExp(r'\d'))
+                              ],
+                              controller: ciController,
+                              keyboardType: TextInputType.text,
+                              decoration: const InputDecoration(
+                                  label: Text('Cedula de Identidad')),
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                          child: TextField(
-                            controller: nombreController,
-                            keyboardType: TextInputType.text,
-                            decoration: const InputDecoration(
-                                label: Text('Nombre del funcionario')),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 12.0),
+                            child: TextField(
+                              controller: nombreController,
+                              keyboardType: TextInputType.text,
+                              decoration: const InputDecoration(
+                                  label: Text('Nombre del funcionario')),
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                          child: TextField(
-                            inputFormatters: [
-                              FilteringTextInputFormatter.allow(RegExp(r'\d'))
-                            ],
-                            controller: sueldoController,
-                            keyboardType: TextInputType.text,
-                            decoration: const InputDecoration(
-                                label: Text('Sueldo del funcionario')),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 12.0),
+                            child: TextField(
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(RegExp(r'\d'))
+                              ],
+                              controller: sueldoController,
+                              keyboardType: TextInputType.text,
+                              decoration: const InputDecoration(
+                                  label: Text('Sueldo del funcionario')),
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                          child: TextField(
-                            inputFormatters: [
-                              FilteringTextInputFormatter.allow(RegExp(r'\d'))
-                            ],
-                            controller: fechaCobroController,
-                            keyboardType: TextInputType.text,
-                            decoration: const InputDecoration(
-                                label: Text('Fecha de Cobro')),
-                            onTap: () async {
-                              fechaCobroController.text = await showDatePicker(
-                                      cancelText: 'Cancelar',
-                                      confirmText: 'Aceptar',
-                                      initialEntryMode:
-                                          DatePickerEntryMode.calendarOnly,
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 12.0),
+                            child: TextField(
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(RegExp(r'\d'))
+                              ],
+                              controller: fechaCobroController,
+                              keyboardType: TextInputType.text,
+                              decoration: const InputDecoration(
+                                  label: Text('Fecha de Cobro')),
+                              onTap: () async {
+                                fechaCobroController
+                                    .text = await showDatePicker(
+                                        cancelText: 'Cancelar',
+                                        confirmText: 'Aceptar',
+                                        initialEntryMode:
+                                            DatePickerEntryMode.calendarOnly,
+                                        context: context,
+                                        initialDate: DateTime.now(),
+                                        firstDate: DateTime(2000, 1, 1),
+                                        lastDate: DateTime.now())
+                                    .then((value) {
+                                  if (value != null) {
+                                    return DateFormat('yyyy-MM-dd')
+                                        .format(value);
+                                  } else {
+                                    return fechaCobroControllerEdit.text;
+                                  }
+                                });
+                              },
+                            ),
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 12.0),
+                            child: TextField(
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(RegExp(r'\d'))
+                              ],
+                              controller: telefController,
+                              keyboardType: TextInputType.text,
+                              decoration: const InputDecoration(
+                                  label: Text('Telefono del funcionario')),
+                            ),
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 12.0),
+                            child: TextField(
+                              controller: correoController,
+                              keyboardType: TextInputType.text,
+                              decoration: const InputDecoration(
+                                  label: Text(
+                                      'Direccion de correo del funcionario')),
+                            ),
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 12.0),
+                            child: TextField(
+                              readOnly: true,
+                              controller: horarioController,
+                              keyboardType: TextInputType.text,
+                              decoration: const InputDecoration(
+                                  label: Text('Horario del funcionario')),
+                              onTap: () async {
+                                String first = '';
+                                String second = '';
+                                try {
+                                  TimeRange rangue = await showTimeRangePicker(
                                       context: context,
-                                      initialDate: DateTime.now(),
-                                      firstDate: DateTime(2000, 1, 1),
-                                      lastDate: DateTime.now())
-                                  .then((value) {
-                                if (value != null) {
-                                  return DateFormat('yyyy-MM-dd').format(value);
-                                } else {
-                                  return fechaCobroControllerEdit.text;
-                                }
-                              });
-                            },
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                          child: TextField(
-                            inputFormatters: [
-                              FilteringTextInputFormatter.allow(RegExp(r'\d'))
-                            ],
-                            controller: telefController,
-                            keyboardType: TextInputType.text,
-                            decoration: const InputDecoration(
-                                label: Text('Telefono del funcionario')),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                          child: TextField(
-                            controller: correoController,
-                            keyboardType: TextInputType.text,
-                            decoration: const InputDecoration(
-                                label: Text(
-                                    'Direccion de correo del funcionario')),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                          child: TextField(
-                            readOnly: true,
-                            controller: horarioController,
-                            keyboardType: TextInputType.text,
-                            decoration: const InputDecoration(
-                                label: Text('Horario del funcionario')),
-                            onTap: () async {
-                              String first = '';
-                              String second = '';
-                              try {
-                                TimeRange rangue = await showTimeRangePicker(
-                                    context: context,
-                                    fromText: 'Desde las:',
-                                    toText: 'Hasta las:')!;
+                                      fromText: 'Desde las:',
+                                      toText: 'Hasta las:')!;
 
-                                DateTime firstDate = DateTime(
-                                    0,
-                                    0,
-                                    0,
-                                    rangue.startTime.hour,
-                                    rangue.startTime.minute);
-                                DateTime secondtDate = DateTime(0, 0, 0,
-                                    rangue.endTime.hour, rangue.endTime.minute);
+                                  DateTime firstDate = DateTime(
+                                      0,
+                                      0,
+                                      0,
+                                      rangue.startTime.hour,
+                                      rangue.startTime.minute);
+                                  DateTime secondtDate = DateTime(
+                                      0,
+                                      0,
+                                      0,
+                                      rangue.endTime.hour,
+                                      rangue.endTime.minute);
 
-                                first = DateFormat('hh:mm').format(firstDate);
-                                second =
-                                    DateFormat('hh:mm').format(secondtDate);
-                                horarioController.text = '$first - $second';
-                              } on Error catch (_) {
-                                horarioController.text = '00:00 - 00:00';
-                              }
-                            },
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                          child: TextField(
-                            controller: puestoController,
-                            keyboardType: TextInputType.text,
-                            decoration: const InputDecoration(
-                                label: Text('Puesto del funcionario')),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                          child: TextField(
-                            onTap: () async {
-                              fechaInicioController.text = await showDatePicker(
-                                      cancelText: 'Cancelar',
-                                      confirmText: 'Aceptar',
-                                      initialEntryMode:
-                                          DatePickerEntryMode.calendarOnly,
-                                      context: context,
-                                      initialDate: DateTime.now(),
-                                      firstDate: DateTime(2000, 1, 1),
-                                      lastDate: DateTime.now())
-                                  .then((value) {
-                                if (value != null) {
-                                  return DateFormat('yyyy-MM-dd').format(value);
-                                } else {
-                                  return fechaInicioController.text;
+                                  first = DateFormat('hh:mm').format(firstDate);
+                                  second =
+                                      DateFormat('hh:mm').format(secondtDate);
+                                  horarioController.text = '$first - $second';
+                                } on Error catch (_) {
+                                  horarioController.text = '00:00 - 00:00';
                                 }
-                              });
-                            },
-                            decoration: const InputDecoration(
-                                labelText: 'Fecha del ingreso'),
-                            readOnly: true,
-                            controller: fechaInicioController,
+                              },
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                  child: TextButton(
-                                      style: ButtonStyle(
-                                          side: const MaterialStatePropertyAll(
-                                              BorderSide(
-                                                  color: Colors.white,
-                                                  width: 1)),
-                                          elevation:
-                                              MaterialStateProperty.all(5),
-                                          shadowColor:
-                                              const MaterialStatePropertyAll(
-                                                  Colors.black),
-                                          backgroundColor:
-                                              MaterialStatePropertyAll(
-                                                  bfColor)),
-                                      onPressed: () {
-                                        showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              return AlertDialog(
-                                                titleTextStyle: bfTextStyle,
-                                                contentTextStyle: bfTextStyle,
-                                                backgroundColor: bfColor,
-                                                shape: RoundedRectangleBorder(
-                                                    side: const BorderSide(
-                                                        width: 1,
-                                                        color: Colors.white),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12.0)),
-                                                iconColor: Colors.white,
-                                                actions: [
-                                                  TextButton(
-                                                      onPressed: () {
-                                                        Navigator.pop(context);
-                                                      },
-                                                      child: Text(
-                                                          style: bfTextStyle,
-                                                          'Cancelar')),
-                                                  TextButton(
-                                                      onPressed: () {
-                                                        if (ciController.text ==
-                                                            '') {
-                                                          ciController.text =
-                                                              '0';
-                                                        }
-                                                        if (nombreController
-                                                                .text
-                                                                .toString() ==
-                                                            '') {
-                                                          nombreController
-                                                                  .text =
-                                                              '(Sin nombre)';
-                                                        }
-                                                        if (sueldoController
-                                                                .text
-                                                                .toString() ==
-                                                            '') {
-                                                          sueldoController
-                                                              .text = '0.0';
-                                                        }
-                                                        if (telefController.text
-                                                                .toString() ==
-                                                            '') {
-                                                          telefController.text =
-                                                              '0';
-                                                        }
-                                                        if (correoController
-                                                                .text
-                                                                .toString() ==
-                                                            '') {
-                                                          correoController
-                                                              .text = '0';
-                                                        }
-                                                        if (puestoController
-                                                                .text
-                                                                .toString() ==
-                                                            '') {
-                                                          puestoController
-                                                                  .text =
-                                                              '(Sin puesto)';
-                                                        }
-                                                        var headers = {
-                                                          'Content-Type':
-                                                              'application/x-www-form-urlencoded'
-                                                        };
-                                                        var request = http.Request(
-                                                            'POST',
-                                                            Uri.parse(
-                                                                'http://192.168.0.7:8474/funcionarios/agregar'));
-                                                        request.bodyFields = {
-                                                          'ci_funcionario':
-                                                              ciController.text,
-                                                          'nombre_funcionario':
-                                                              nombreController
-                                                                  .text,
-                                                          'sueldo_funcionario':
-                                                              sueldoController
-                                                                  .text,
-                                                          'fecha_pago_funcionario':
-                                                              fechaCobroController
-                                                                  .text,
-                                                          'telefono_funcionario':
-                                                              telefController
-                                                                  .text,
-                                                          'correo_funcionario':
-                                                              correoController
-                                                                  .text,
-                                                          'horario_funcionario':
-                                                              horarioController
-                                                                  .text,
-                                                          'cargo_funcionario':
-                                                              puestoController
-                                                                  .text,
-                                                          'fecha_inicio_funcionario':
-                                                              fechaInicioController
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 12.0),
+                            child: TextField(
+                              controller: puestoController,
+                              keyboardType: TextInputType.text,
+                              decoration: const InputDecoration(
+                                  label: Text('Puesto del funcionario')),
+                            ),
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 12.0),
+                            child: TextField(
+                              onTap: () async {
+                                fechaInicioController
+                                    .text = await showDatePicker(
+                                        cancelText: 'Cancelar',
+                                        confirmText: 'Aceptar',
+                                        initialEntryMode:
+                                            DatePickerEntryMode.calendarOnly,
+                                        context: context,
+                                        initialDate: DateTime.now(),
+                                        firstDate: DateTime(2000, 1, 1),
+                                        lastDate: DateTime.now())
+                                    .then((value) {
+                                  if (value != null) {
+                                    return DateFormat('yyyy-MM-dd')
+                                        .format(value);
+                                  } else {
+                                    return fechaInicioController.text;
+                                  }
+                                });
+                              },
+                              decoration: const InputDecoration(
+                                  labelText: 'Fecha del ingreso'),
+                              readOnly: true,
+                              controller: fechaInicioController,
+                            ),
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 12.0),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                    child: TextButton(
+                                        style: ButtonStyle(
+                                            side:
+                                                const MaterialStatePropertyAll(
+                                                    BorderSide(
+                                                        color: Colors.white,
+                                                        width: 1)),
+                                            elevation:
+                                                MaterialStateProperty.all(5),
+                                            shadowColor:
+                                                const MaterialStatePropertyAll(
+                                                    Colors.black),
+                                            backgroundColor:
+                                                MaterialStatePropertyAll(
+                                                    bfColor)),
+                                        onPressed: () {
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                  titleTextStyle: bfTextStyle,
+                                                  contentTextStyle: bfTextStyle,
+                                                  backgroundColor: bfColor,
+                                                  shape: RoundedRectangleBorder(
+                                                      side: const BorderSide(
+                                                          width: 1,
+                                                          color: Colors.white),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              12.0)),
+                                                  iconColor: Colors.white,
+                                                  actions: [
+                                                    TextButton(
+                                                        onPressed: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                        child: Text(
+                                                            style: bfTextStyle,
+                                                            'Cancelar')),
+                                                    TextButton(
+                                                        onPressed: () {
+                                                          if (ciController
+                                                                  .text ==
+                                                              '') {
+                                                            ciController.text =
+                                                                '0';
+                                                          }
+                                                          if (nombreController
                                                                   .text
-                                                        };
-                                                        request.headers
-                                                            .addAll(headers);
+                                                                  .toString() ==
+                                                              '') {
+                                                            nombreController
+                                                                    .text =
+                                                                '(Sin nombre)';
+                                                          }
+                                                          if (sueldoController
+                                                                  .text
+                                                                  .toString() ==
+                                                              '') {
+                                                            sueldoController
+                                                                .text = '0.0';
+                                                          }
+                                                          if (telefController
+                                                                  .text
+                                                                  .toString() ==
+                                                              '') {
+                                                            telefController
+                                                                .text = '0';
+                                                          }
+                                                          if (correoController
+                                                                  .text
+                                                                  .toString() ==
+                                                              '') {
+                                                            correoController
+                                                                .text = '0';
+                                                          }
+                                                          if (puestoController
+                                                                  .text
+                                                                  .toString() ==
+                                                              '') {
+                                                            puestoController
+                                                                    .text =
+                                                                '(Sin puesto)';
+                                                          }
+                                                          var headers = {
+                                                            'Content-Type':
+                                                                'application/x-www-form-urlencoded'
+                                                          };
+                                                          var request =
+                                                              http.Request(
+                                                                  'POST',
+                                                                  Uri.parse(
+                                                                      'http://192.168.0.7:8474/funcionarios/agregar'));
+                                                          request.bodyFields = {
+                                                            'ci_funcionario':
+                                                                ciController
+                                                                    .text,
+                                                            'nombre_funcionario':
+                                                                nombreController
+                                                                    .text,
+                                                            'sueldo_funcionario':
+                                                                sueldoController
+                                                                    .text,
+                                                            'fecha_pago_funcionario':
+                                                                fechaCobroController
+                                                                    .text,
+                                                            'telefono_funcionario':
+                                                                telefController
+                                                                    .text,
+                                                            'correo_funcionario':
+                                                                correoController
+                                                                    .text,
+                                                            'horario_funcionario':
+                                                                horarioController
+                                                                    .text,
+                                                            'cargo_funcionario':
+                                                                puestoController
+                                                                    .text,
+                                                            'fecha_inicio_funcionario':
+                                                                fechaInicioController
+                                                                    .text
+                                                          };
+                                                          request.headers
+                                                              .addAll(headers);
 
-                                                        request.send();
+                                                          request.send();
 
-                                                        Navigator.pop(context);
-                                                        Navigator.pop(context);
-                                                        setState(() {});
-                                                      },
-                                                      child: Text(
-                                                        'Agregar',
-                                                        style: bfTextStyle,
-                                                      ))
-                                                ],
-                                                icon: const Icon(Icons.publish),
-                                                title: const Text(
-                                                    'Confirmar Operacion'),
-                                                content: const Text(
-                                                    'Seguro que desea agregar cambios al registro?'),
-                                              );
-                                            });
-                                      },
-                                      child: Text(
-                                        'Agregar',
-                                        style: bfTextStyle,
-                                      ))),
-                              const Divider(
-                                indent: 5.0,
-                              ),
-                              Expanded(
-                                  child: TextButton(
-                                      style: ButtonStyle(
-                                          side: const MaterialStatePropertyAll(
-                                              BorderSide(
-                                                  color: Colors.white,
-                                                  width: 1)),
-                                          elevation:
-                                              MaterialStateProperty.all(5),
-                                          shadowColor:
-                                              const MaterialStatePropertyAll(
-                                                  Colors.black),
-                                          backgroundColor:
-                                              MaterialStatePropertyAll(
-                                                  bfColor)),
-                                      onPressed: () {
-                                        showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              return AlertDialog(
-                                                titleTextStyle: bfTextStyle,
-                                                contentTextStyle: bfTextStyle,
-                                                iconColor: Colors.white,
-                                                backgroundColor: bfColor,
-                                                shape: RoundedRectangleBorder(
-                                                    side: const BorderSide(
-                                                        width: 1,
-                                                        color: Colors.white),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12.0)),
-                                                actions: [
-                                                  TextButton(
+                                                          Navigator.pop(
+                                                              context);
+                                                          Navigator.pop(
+                                                              context);
+                                                          setState(() {});
+                                                        },
+                                                        child: Text(
+                                                          'Agregar',
+                                                          style: bfTextStyle,
+                                                        ))
+                                                  ],
+                                                  icon:
+                                                      const Icon(Icons.publish),
+                                                  title: const Text(
+                                                      'Confirmar Operacion'),
+                                                  content: const Text(
+                                                      'Seguro que desea agregar cambios al registro?'),
+                                                );
+                                              });
+                                        },
+                                        child: Text(
+                                          'Agregar',
+                                          style: bfTextStyle,
+                                        ))),
+                                const Divider(
+                                  indent: 5.0,
+                                ),
+                                Expanded(
+                                    child: TextButton(
+                                        style: ButtonStyle(
+                                            side:
+                                                const MaterialStatePropertyAll(
+                                                    BorderSide(
+                                                        color: Colors.white,
+                                                        width: 1)),
+                                            elevation:
+                                                MaterialStateProperty.all(5),
+                                            shadowColor:
+                                                const MaterialStatePropertyAll(
+                                                    Colors.black),
+                                            backgroundColor:
+                                                MaterialStatePropertyAll(
+                                                    bfColor)),
+                                        onPressed: () {
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                  titleTextStyle: bfTextStyle,
+                                                  contentTextStyle: bfTextStyle,
+                                                  iconColor: Colors.white,
+                                                  backgroundColor: bfColor,
+                                                  shape: RoundedRectangleBorder(
+                                                      side: const BorderSide(
+                                                          width: 1,
+                                                          color: Colors.white),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              12.0)),
+                                                  actions: [
+                                                    TextButton(
+                                                        onPressed: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                        child: Text(
+                                                          'Cancelar',
+                                                          style: bfTextStyle,
+                                                        )),
+                                                    TextButton(
                                                       onPressed: () {
                                                         Navigator.pop(context);
+                                                        Navigator.pop(context);
                                                       },
-                                                      child: Text(
-                                                        'Cancelar',
-                                                        style: bfTextStyle,
-                                                      )),
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                      Navigator.pop(context);
-                                                    },
-                                                    child: Text('Descartar',
-                                                        style: bfTextStyle),
-                                                  )
-                                                ],
-                                                icon: const Icon(
-                                                    Icons.unpublished),
-                                                title: Text(
-                                                  'Descartar Operacion',
-                                                  style: bfTextStyle,
-                                                ),
-                                                content: Text(
-                                                  'Seguro que desea descartar la operacion?',
-                                                  style: bfTextStyle,
-                                                ),
-                                              );
-                                            });
-                                      },
-                                      child: Text(
-                                        'Descartar',
-                                        style: bfTextStyle,
-                                      )))
-                            ],
-                          ),
-                        )
-                      ],
+                                                      child: Text('Descartar',
+                                                          style: bfTextStyle),
+                                                    )
+                                                  ],
+                                                  icon: const Icon(
+                                                      Icons.unpublished),
+                                                  title: Text(
+                                                    'Descartar Operacion',
+                                                    style: bfTextStyle,
+                                                  ),
+                                                  content: Text(
+                                                    'Seguro que desea descartar la operacion?',
+                                                    style: bfTextStyle,
+                                                  ),
+                                                );
+                                              });
+                                        },
+                                        child: Text(
+                                          'Descartar',
+                                          style: bfTextStyle,
+                                        )))
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 );
@@ -814,470 +844,484 @@ class _ScreenFuncionariosRegistroState
                   elevation: 0.5,
                   context: context,
                   builder: (context) {
-                    return Padding(
-                      padding: EdgeInsets.only(
-                          bottom: MediaQuery.of(context).viewInsets.bottom),
-                      child: Form(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    boxShadow: const [
-                                      BoxShadow(
-                                          color: Colors.black,
-                                          offset: Offset(1, 1),
-                                          blurRadius: 3)
-                                    ],
-                                    border: Border.all(
-                                        color: Colors.white,
-                                        width: 1,
-                                        strokeAlign: StrokeAlign.inside),
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(10.0)),
-                                    color: Colors.blue.shade600),
-                                child: Center(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12),
-                                    child: Text(
-                                      'Editar el registro $regId',
-                                      style: bfTextStyle,
+                    return SingleChildScrollView(
+                      child: Padding(
+                        padding: MediaQuery.of(context).viewInsets,
+                        child: Form(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      boxShadow: const [
+                                        BoxShadow(
+                                            color: Colors.black,
+                                            offset: Offset(1, 1),
+                                            blurRadius: 3)
+                                      ],
+                                      border: Border.all(
+                                          color: Colors.white,
+                                          width: 1,
+                                          strokeAlign: StrokeAlign.inside),
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(10.0)),
+                                      color: Colors.blue.shade600),
+                                  child: Center(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(12),
+                                      child: Text(
+                                        'Editar el registro $regId',
+                                        style: bfTextStyle,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 12.0),
-                              child: TextField(
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.allow(
-                                      RegExp(r'\d'))
-                                ],
-                                controller: ciControllerEdit,
-                                keyboardType: TextInputType.text,
-                                decoration: const InputDecoration(
-                                    label: Text('Cedula de Identidad')),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0),
+                                child: TextField(
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp(r'\d'))
+                                  ],
+                                  controller: ciControllerEdit,
+                                  keyboardType: TextInputType.text,
+                                  decoration: const InputDecoration(
+                                      label: Text('Cedula de Identidad')),
+                                ),
                               ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 12.0),
-                              child: TextField(
-                                controller: nombreControllerEdit,
-                                keyboardType: TextInputType.text,
-                                decoration: const InputDecoration(
-                                    label: Text('Nombre del funcionario')),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0),
+                                child: TextField(
+                                  controller: nombreControllerEdit,
+                                  keyboardType: TextInputType.text,
+                                  decoration: const InputDecoration(
+                                      label: Text('Nombre del funcionario')),
+                                ),
                               ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 12.0),
-                              child: TextField(
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.allow(
-                                      RegExp(r'\d'))
-                                ],
-                                controller: sueldoControllerEdit,
-                                keyboardType: TextInputType.text,
-                                decoration: const InputDecoration(
-                                    label: Text('Sueldo del funcionario')),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0),
+                                child: TextField(
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp(r'\d'))
+                                  ],
+                                  controller: sueldoControllerEdit,
+                                  keyboardType: TextInputType.text,
+                                  decoration: const InputDecoration(
+                                      label: Text('Sueldo del funcionario')),
+                                ),
                               ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 12.0),
-                              child: TextField(
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.allow(
-                                      RegExp(r'\d'))
-                                ],
-                                controller: fechaCobroControllerEdit,
-                                keyboardType: TextInputType.text,
-                                decoration: const InputDecoration(
-                                    label: Text('Fecha de Cobro')),
-                                onTap: () async {
-                                  fechaCobroControllerEdit
-                                      .text = await showDatePicker(
-                                          cancelText: 'Cancelar',
-                                          confirmText: 'Aceptar',
-                                          initialEntryMode:
-                                              DatePickerEntryMode.calendarOnly,
-                                          context: context,
-                                          initialDate: DateTime.now(),
-                                          firstDate: DateTime(2000, 1, 1),
-                                          lastDate: DateTime.now())
-                                      .then((value) {
-                                    if (value != null) {
-                                      return DateFormat('yyyy-MM-dd')
-                                          .format(value);
-                                    } else {
-                                      return fechaCobroControllerEdit.text;
-                                    }
-                                  });
-                                },
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 12.0),
-                              child: TextField(
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.allow(
-                                      RegExp(r'\d'))
-                                ],
-                                controller: telefControllerEdit,
-                                keyboardType: TextInputType.text,
-                                decoration: const InputDecoration(
-                                    label: Text('Telefono del funcionario')),
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 12.0),
-                              child: TextField(
-                                controller: correoControllerEdit,
-                                keyboardType: TextInputType.text,
-                                decoration: const InputDecoration(
-                                    label: Text(
-                                        'Direccion de correo del funcionario')),
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 12.0),
-                              child: TextField(
-                                readOnly: true,
-                                controller: horarioControllerEdit,
-                                keyboardType: TextInputType.text,
-                                decoration: const InputDecoration(
-                                    label: Text('Horario del funcionario')),
-                                onTap: () async {
-                                  String first = '';
-                                  String second = '';
-                                  try {
-                                    TimeRange rangue =
-                                        await showTimeRangePicker(
-                                            context: context,
-                                            fromText: 'Desde las:',
-                                            toText: 'Hasta las:')!;
-
-                                    DateTime firstDate = DateTime(
-                                        0,
-                                        0,
-                                        0,
-                                        rangue.startTime.hour,
-                                        rangue.startTime.minute);
-                                    DateTime secondtDate = DateTime(
-                                        0,
-                                        0,
-                                        0,
-                                        rangue.endTime.hour,
-                                        rangue.endTime.minute);
-
-                                    first =
-                                        DateFormat('hh:mm').format(firstDate);
-                                    second =
-                                        DateFormat('hh:mm').format(secondtDate);
-                                    horarioControllerEdit.text =
-                                        '$first - $second';
-                                  } on Error catch (_) {
-                                    horarioControllerEdit.text =
-                                        '00:00 - 00:00';
-                                  }
-                                },
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 12.0),
-                              child: TextField(
-                                controller: puestoControllerEdit,
-                                keyboardType: TextInputType.text,
-                                decoration: const InputDecoration(
-                                    label: Text('Puesto del funcionario')),
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 12.0),
-                              child: TextField(
-                                onTap: () async {
-                                  fechaInicioControllerEdit
-                                      .text = await showDatePicker(
-                                          cancelText: 'Cancelar',
-                                          confirmText: 'Aceptar',
-                                          initialEntryMode:
-                                              DatePickerEntryMode.calendarOnly,
-                                          context: context,
-                                          initialDate: DateTime.now(),
-                                          firstDate: DateTime(2000, 1, 1),
-                                          lastDate: DateTime.now())
-                                      .then((value) {
-                                    if (value != null) {
-                                      return DateFormat('yyyy-MM-dd')
-                                          .format(value);
-                                    } else {
-                                      return fechaInicioControllerEdit.text;
-                                    }
-                                  });
-                                },
-                                decoration: const InputDecoration(
-                                    labelText: 'Fecha del ingreso'),
-                                readOnly: true,
-                                controller: fechaInicioControllerEdit,
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 12.0),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                      child: TextButton(
-                                          style: ButtonStyle(
-                                              side:
-                                                  const MaterialStatePropertyAll(
-                                                      BorderSide(
-                                                          color: Colors.white,
-                                                          width: 1)),
-                                              elevation:
-                                                  MaterialStateProperty.all(5),
-                                              shadowColor:
-                                                  const MaterialStatePropertyAll(
-                                                      Colors.black),
-                                              backgroundColor:
-                                                  MaterialStatePropertyAll(
-                                                      bfColor)),
-                                          onPressed: () {
-                                            showDialog(
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0),
+                                child: TextField(
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp(r'\d'))
+                                  ],
+                                  controller: fechaCobroControllerEdit,
+                                  keyboardType: TextInputType.text,
+                                  decoration: const InputDecoration(
+                                      label: Text('Fecha de Cobro')),
+                                  onTap: () async {
+                                    fechaCobroControllerEdit.text =
+                                        await showDatePicker(
+                                                cancelText: 'Cancelar',
+                                                confirmText: 'Aceptar',
+                                                initialEntryMode:
+                                                    DatePickerEntryMode
+                                                        .calendarOnly,
                                                 context: context,
-                                                builder: (context) {
-                                                  return AlertDialog(
-                                                    titleTextStyle: bfTextStyle,
-                                                    contentTextStyle:
-                                                        bfTextStyle,
-                                                    backgroundColor: bfColor,
-                                                    shape: RoundedRectangleBorder(
-                                                        side: const BorderSide(
-                                                            width: 1,
-                                                            color:
-                                                                Colors.white),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                    12.0)),
-                                                    iconColor: Colors.white,
-                                                    actions: [
-                                                      TextButton(
-                                                          onPressed: () {
-                                                            Navigator.pop(
-                                                                context);
-                                                          },
-                                                          child: Text(
+                                                initialDate: DateTime.now(),
+                                                firstDate: DateTime(2000, 1, 1),
+                                                lastDate: DateTime.now())
+                                            .then((value) {
+                                      if (value != null) {
+                                        return DateFormat('yyyy-MM-dd')
+                                            .format(value);
+                                      } else {
+                                        return fechaCobroControllerEdit.text;
+                                      }
+                                    });
+                                  },
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0),
+                                child: TextField(
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp(r'\d'))
+                                  ],
+                                  controller: telefControllerEdit,
+                                  keyboardType: TextInputType.text,
+                                  decoration: const InputDecoration(
+                                      label: Text('Telefono del funcionario')),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0),
+                                child: TextField(
+                                  controller: correoControllerEdit,
+                                  keyboardType: TextInputType.text,
+                                  decoration: const InputDecoration(
+                                      label: Text(
+                                          'Direccion de correo del funcionario')),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0),
+                                child: TextField(
+                                  readOnly: true,
+                                  controller: horarioControllerEdit,
+                                  keyboardType: TextInputType.text,
+                                  decoration: const InputDecoration(
+                                      label: Text('Horario del funcionario')),
+                                  onTap: () async {
+                                    String first = '';
+                                    String second = '';
+                                    try {
+                                      TimeRange rangue =
+                                          await showTimeRangePicker(
+                                              context: context,
+                                              fromText: 'Desde las:',
+                                              toText: 'Hasta las:')!;
+
+                                      DateTime firstDate = DateTime(
+                                          0,
+                                          0,
+                                          0,
+                                          rangue.startTime.hour,
+                                          rangue.startTime.minute);
+                                      DateTime secondtDate = DateTime(
+                                          0,
+                                          0,
+                                          0,
+                                          rangue.endTime.hour,
+                                          rangue.endTime.minute);
+
+                                      first =
+                                          DateFormat('hh:mm').format(firstDate);
+                                      second = DateFormat('hh:mm')
+                                          .format(secondtDate);
+                                      horarioControllerEdit.text =
+                                          '$first - $second';
+                                    } on Error catch (_) {
+                                      horarioControllerEdit.text =
+                                          '00:00 - 00:00';
+                                    }
+                                  },
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0),
+                                child: TextField(
+                                  controller: puestoControllerEdit,
+                                  keyboardType: TextInputType.text,
+                                  decoration: const InputDecoration(
+                                      label: Text('Puesto del funcionario')),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0),
+                                child: TextField(
+                                  onTap: () async {
+                                    fechaInicioControllerEdit.text =
+                                        await showDatePicker(
+                                                cancelText: 'Cancelar',
+                                                confirmText: 'Aceptar',
+                                                initialEntryMode:
+                                                    DatePickerEntryMode
+                                                        .calendarOnly,
+                                                context: context,
+                                                initialDate: DateTime.now(),
+                                                firstDate: DateTime(2000, 1, 1),
+                                                lastDate: DateTime.now())
+                                            .then((value) {
+                                      if (value != null) {
+                                        return DateFormat('yyyy-MM-dd')
+                                            .format(value);
+                                      } else {
+                                        return fechaInicioControllerEdit.text;
+                                      }
+                                    });
+                                  },
+                                  decoration: const InputDecoration(
+                                      labelText: 'Fecha del ingreso'),
+                                  readOnly: true,
+                                  controller: fechaInicioControllerEdit,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                        child: TextButton(
+                                            style: ButtonStyle(
+                                                side:
+                                                    const MaterialStatePropertyAll(
+                                                        BorderSide(
+                                                            color: Colors.white,
+                                                            width: 1)),
+                                                elevation:
+                                                    MaterialStateProperty.all(
+                                                        5),
+                                                shadowColor:
+                                                    const MaterialStatePropertyAll(
+                                                        Colors.black),
+                                                backgroundColor:
+                                                    MaterialStatePropertyAll(
+                                                        bfColor)),
+                                            onPressed: () {
+                                              showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return AlertDialog(
+                                                      titleTextStyle:
+                                                          bfTextStyle,
+                                                      contentTextStyle:
+                                                          bfTextStyle,
+                                                      backgroundColor: bfColor,
+                                                      shape: RoundedRectangleBorder(
+                                                          side:
+                                                              const BorderSide(
+                                                                  width: 1,
+                                                                  color: Colors
+                                                                      .white),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      12.0)),
+                                                      iconColor: Colors.white,
+                                                      actions: [
+                                                        TextButton(
+                                                            onPressed: () {
+                                                              Navigator.pop(
+                                                                  context);
+                                                            },
+                                                            child: Text(
+                                                                style:
+                                                                    bfTextStyle,
+                                                                'Cancelar')),
+                                                        TextButton(
+                                                            onPressed: () {
+                                                              if (ciControllerEdit
+                                                                      .text ==
+                                                                  '') {
+                                                                ciControllerEdit
+                                                                        .text =
+                                                                    '(Sin Ci)';
+                                                              }
+                                                              if (nombreControllerEdit
+                                                                      .text
+                                                                      .toString() ==
+                                                                  '') {
+                                                                nombreControllerEdit
+                                                                        .text =
+                                                                    '(Sin nombre)';
+                                                              }
+                                                              if (sueldoControllerEdit
+                                                                      .text
+                                                                      .toString() ==
+                                                                  '') {
+                                                                sueldoControllerEdit
+                                                                        .text =
+                                                                    '0.0';
+                                                              }
+                                                              if (telefControllerEdit
+                                                                      .text
+                                                                      .toString() ==
+                                                                  '') {
+                                                                telefControllerEdit
+                                                                    .text = '0';
+                                                              }
+                                                              if (correoControllerEdit
+                                                                      .text
+                                                                      .toString() ==
+                                                                  '') {
+                                                                correoControllerEdit
+                                                                    .text = '0';
+                                                              }
+                                                              if (puestoControllerEdit
+                                                                      .text
+                                                                      .toString() ==
+                                                                  '') {
+                                                                puestoControllerEdit
+                                                                    .text = '0';
+                                                              }
+                                                              var headers = {
+                                                                'Content-Type':
+                                                                    'application/x-www-form-urlencoded'
+                                                              };
+                                                              var request =
+                                                                  http.Request(
+                                                                      'POST',
+                                                                      Uri.parse(
+                                                                          'http://192.168.0.7:8474/funcionarios/editar'));
+                                                              request
+                                                                  .bodyFields = {
+                                                                'id_funcionario':
+                                                                    '$regId',
+                                                                'ci_funcionario':
+                                                                    ciControllerEdit
+                                                                        .text,
+                                                                'nombre_funcionario':
+                                                                    nombreControllerEdit
+                                                                        .text,
+                                                                'sueldo_funcionario':
+                                                                    sueldoControllerEdit
+                                                                        .text,
+                                                                'fecha_pago_funcionario':
+                                                                    fechaCobroControllerEdit
+                                                                        .text,
+                                                                'telefono_funcionario':
+                                                                    telefControllerEdit
+                                                                        .text,
+                                                                'correo_funcionario':
+                                                                    correoControllerEdit
+                                                                        .text,
+                                                                'horario_funcionario':
+                                                                    horarioControllerEdit
+                                                                        .text,
+                                                                'cargo_funcionario':
+                                                                    puestoControllerEdit
+                                                                        .text,
+                                                                'fecha_inicio_funcionario':
+                                                                    fechaInicioControllerEdit
+                                                                        .text
+                                                              };
+                                                              request.headers
+                                                                  .addAll(
+                                                                      headers);
+
+                                                              request.send();
+
+                                                              Navigator.pop(
+                                                                  context);
+                                                              Navigator.pop(
+                                                                  context);
+                                                              setState(() {});
+                                                            },
+                                                            child: Text(
+                                                              'Agregar',
                                                               style:
                                                                   bfTextStyle,
-                                                              'Cancelar')),
-                                                      TextButton(
+                                                            ))
+                                                      ],
+                                                      icon: const Icon(
+                                                          Icons.publish),
+                                                      title: const Text(
+                                                          'Confirmar Operacion'),
+                                                      content: const Text(
+                                                          'Seguro que desea agregar cambios al registro?'),
+                                                    );
+                                                  });
+                                            },
+                                            child: Text(
+                                              'Editar',
+                                              style: bfTextStyle,
+                                            ))),
+                                    const Divider(
+                                      indent: 5.0,
+                                    ),
+                                    Expanded(
+                                        child: TextButton(
+                                            style: ButtonStyle(
+                                                side:
+                                                    const MaterialStatePropertyAll(
+                                                        BorderSide(
+                                                            color: Colors.white,
+                                                            width: 1)),
+                                                elevation:
+                                                    MaterialStateProperty.all(
+                                                        5),
+                                                shadowColor:
+                                                    const MaterialStatePropertyAll(
+                                                        Colors.black),
+                                                backgroundColor:
+                                                    MaterialStatePropertyAll(
+                                                        bfColor)),
+                                            onPressed: () {
+                                              showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return AlertDialog(
+                                                      titleTextStyle:
+                                                          bfTextStyle,
+                                                      contentTextStyle:
+                                                          bfTextStyle,
+                                                      iconColor: Colors.white,
+                                                      backgroundColor: bfColor,
+                                                      shape: RoundedRectangleBorder(
+                                                          side:
+                                                              const BorderSide(
+                                                                  width: 1,
+                                                                  color: Colors
+                                                                      .white),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      12.0)),
+                                                      actions: [
+                                                        TextButton(
+                                                            onPressed: () {
+                                                              Navigator.pop(
+                                                                  context);
+                                                            },
+                                                            child: Text(
+                                                              'Cancelar',
+                                                              style:
+                                                                  bfTextStyle,
+                                                            )),
+                                                        TextButton(
                                                           onPressed: () {
-                                                            if (ciControllerEdit
-                                                                    .text ==
-                                                                '') {
-                                                              ciControllerEdit
-                                                                      .text =
-                                                                  '(Sin Ci)';
-                                                            }
-                                                            if (nombreControllerEdit
-                                                                    .text
-                                                                    .toString() ==
-                                                                '') {
-                                                              nombreControllerEdit
-                                                                      .text =
-                                                                  '(Sin nombre)';
-                                                            }
-                                                            if (sueldoControllerEdit
-                                                                    .text
-                                                                    .toString() ==
-                                                                '') {
-                                                              sueldoControllerEdit
-                                                                  .text = '0.0';
-                                                            }
-                                                            if (telefControllerEdit
-                                                                    .text
-                                                                    .toString() ==
-                                                                '') {
-                                                              telefControllerEdit
-                                                                  .text = '0';
-                                                            }
-                                                            if (correoControllerEdit
-                                                                    .text
-                                                                    .toString() ==
-                                                                '') {
-                                                              correoControllerEdit
-                                                                  .text = '0';
-                                                            }
-                                                            if (puestoControllerEdit
-                                                                    .text
-                                                                    .toString() ==
-                                                                '') {
-                                                              puestoControllerEdit
-                                                                  .text = '0';
-                                                            }
-                                                            var headers = {
-                                                              'Content-Type':
-                                                                  'application/x-www-form-urlencoded'
-                                                            };
-                                                            var request =
-                                                                http.Request(
-                                                                    'POST',
-                                                                    Uri.parse(
-                                                                        'http://192.168.0.7:8474/funcionarios/editar'));
-                                                            request.bodyFields =
-                                                                {
-                                                              'id_funcionario':
-                                                                  '$regId',
-                                                              'ci_funcionario':
-                                                                  ciControllerEdit
-                                                                      .text,
-                                                              'nombre_funcionario':
-                                                                  nombreControllerEdit
-                                                                      .text,
-                                                              'sueldo_funcionario':
-                                                                  sueldoControllerEdit
-                                                                      .text,
-                                                              'fecha_pago_funcionario':
-                                                                  fechaCobroControllerEdit
-                                                                      .text,
-                                                              'telefono_funcionario':
-                                                                  telefControllerEdit
-                                                                      .text,
-                                                              'correo_funcionario':
-                                                                  correoControllerEdit
-                                                                      .text,
-                                                              'horario_funcionario':
-                                                                  horarioControllerEdit
-                                                                      .text,
-                                                              'cargo_funcionario':
-                                                                  puestoControllerEdit
-                                                                      .text,
-                                                              'fecha_inicio_funcionario':
-                                                                  fechaInicioControllerEdit
-                                                                      .text
-                                                            };
-                                                            request.headers
-                                                                .addAll(
-                                                                    headers);
-
-                                                            request.send();
-
                                                             Navigator.pop(
                                                                 context);
-                                                            Navigator.pop(
-                                                                context);
-                                                            setState(() {});
-                                                          },
-                                                          child: Text(
-                                                            'Agregar',
-                                                            style: bfTextStyle,
-                                                          ))
-                                                    ],
-                                                    icon: const Icon(
-                                                        Icons.publish),
-                                                    title: const Text(
-                                                        'Confirmar Operacion'),
-                                                    content: const Text(
-                                                        'Seguro que desea agregar cambios al registro?'),
-                                                  );
-                                                });
-                                          },
-                                          child: Text(
-                                            'Editar',
-                                            style: bfTextStyle,
-                                          ))),
-                                  const Divider(
-                                    indent: 5.0,
-                                  ),
-                                  Expanded(
-                                      child: TextButton(
-                                          style: ButtonStyle(
-                                              side:
-                                                  const MaterialStatePropertyAll(
-                                                      BorderSide(
-                                                          color: Colors.white,
-                                                          width: 1)),
-                                              elevation:
-                                                  MaterialStateProperty.all(5),
-                                              shadowColor:
-                                                  const MaterialStatePropertyAll(
-                                                      Colors.black),
-                                              backgroundColor:
-                                                  MaterialStatePropertyAll(
-                                                      bfColor)),
-                                          onPressed: () {
-                                            showDialog(
-                                                context: context,
-                                                builder: (context) {
-                                                  return AlertDialog(
-                                                    titleTextStyle: bfTextStyle,
-                                                    contentTextStyle:
-                                                        bfTextStyle,
-                                                    iconColor: Colors.white,
-                                                    backgroundColor: bfColor,
-                                                    shape: RoundedRectangleBorder(
-                                                        side: const BorderSide(
-                                                            width: 1,
-                                                            color:
-                                                                Colors.white),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                    12.0)),
-                                                    actions: [
-                                                      TextButton(
-                                                          onPressed: () {
                                                             Navigator.pop(
                                                                 context);
                                                           },
                                                           child: Text(
-                                                            'Cancelar',
-                                                            style: bfTextStyle,
-                                                          )),
-                                                      TextButton(
-                                                        onPressed: () {
-                                                          Navigator.pop(
-                                                              context);
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                        child: Text('Descartar',
-                                                            style: bfTextStyle),
-                                                      )
-                                                    ],
-                                                    icon: const Icon(
-                                                        Icons.unpublished),
-                                                    title: Text(
-                                                      'Descartar Operacion',
-                                                      style: bfTextStyle,
-                                                    ),
-                                                    content: Text(
-                                                      'Seguro que desea descartar la operacion?',
-                                                      style: bfTextStyle,
-                                                    ),
-                                                  );
-                                                });
-                                          },
-                                          child: Text(
-                                            'Descartar',
-                                            style: bfTextStyle,
-                                          )))
-                                ],
-                              ),
-                            )
-                          ],
+                                                              'Descartar',
+                                                              style:
+                                                                  bfTextStyle),
+                                                        )
+                                                      ],
+                                                      icon: const Icon(
+                                                          Icons.unpublished),
+                                                      title: Text(
+                                                        'Descartar Operacion',
+                                                        style: bfTextStyle,
+                                                      ),
+                                                      content: Text(
+                                                        'Seguro que desea descartar la operacion?',
+                                                        style: bfTextStyle,
+                                                      ),
+                                                    );
+                                                  });
+                                            },
+                                            child: Text(
+                                              'Descartar',
+                                              style: bfTextStyle,
+                                            )))
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     );
