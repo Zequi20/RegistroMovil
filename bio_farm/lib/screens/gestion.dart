@@ -125,7 +125,10 @@ class ScreenGestion extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12.0)),
             elevation: 5,
             child: ListTile(
-              onTap: null,
+              onTap: () {
+                Navigator.of(context).pushNamed('Funcionarios',
+                    arguments: GestionArguments(sede, 'Mensaje de prueba'));
+              },
               shape: RoundedRectangleBorder(
                   side: const BorderSide(width: 1, color: Colors.white),
                   borderRadius: BorderRadius.circular(12.0)),
