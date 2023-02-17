@@ -8,7 +8,6 @@ class ScreenGestion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as GestionArguments;
-    String sede = args.sede;
 
     return SafeArea(
         child: Scaffold(
@@ -39,12 +38,12 @@ class ScreenGestion extends StatelessWidget {
                 scale: 0.7,
                 image: NetworkImage(
                     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXSEk-x5K-zS2LOFQzL8Z9KcxSQ1GZhtcCPggbjg0dsl98cZE2qZ7pJ2MgB5tr90rBRtY&usqp=CAU'))),
-        child: getRegistros(sede, context),
+        child: getRegistros(args, context),
       ),
     ));
   }
 
-  Widget getRegistros(String sede, context) {
+  Widget getRegistros(args, context) {
     var bfTextStyle = const TextStyle(
       shadows: [
         Shadow(color: Colors.black, offset: Offset(1, 1), blurRadius: 12)
@@ -63,7 +62,7 @@ class ScreenGestion extends StatelessWidget {
             child: ListTile(
               onTap: () {
                 Navigator.of(context).pushNamed('Ingresos',
-                    arguments: GestionArguments(sede, 'Mensaje de prueba'));
+                    arguments: GestionArguments(args.idSede, args.nombreSede));
               },
               shape: RoundedRectangleBorder(
                   side: const BorderSide(width: 1, color: Colors.white),
@@ -74,7 +73,7 @@ class ScreenGestion extends StatelessWidget {
                 color: Colors.white,
               ),
               subtitle: Text(
-                'Gestionar el registro de ingresos en $sede',
+                'Gestionar el registro de ingresos en ${args.nombreSede}',
                 style: bfTextStyle,
               ),
               tileColor: Colors.blue.shade600.withOpacity(0.7),
@@ -95,7 +94,7 @@ class ScreenGestion extends StatelessWidget {
             child: ListTile(
               onTap: () {
                 Navigator.of(context).pushNamed('Gastos',
-                    arguments: GestionArguments(sede, 'Mensaje de prueba'));
+                    arguments: GestionArguments(args.idSede, args.nombreSede));
               },
               shape: RoundedRectangleBorder(
                   side: const BorderSide(width: 1, color: Colors.white),
@@ -106,7 +105,7 @@ class ScreenGestion extends StatelessWidget {
                 color: Colors.white,
               ),
               subtitle: Text(
-                'Gestionar el registro de gastos en $sede',
+                'Gestionar el registro de gastos en ${args.nombreSede}',
                 style: bfTextStyle,
               ),
               tileColor: Colors.blue.shade600.withOpacity(0.7),
@@ -127,7 +126,7 @@ class ScreenGestion extends StatelessWidget {
             child: ListTile(
               onTap: () {
                 Navigator.of(context).pushNamed('Funcionarios',
-                    arguments: GestionArguments(sede, 'Mensaje de prueba'));
+                    arguments: GestionArguments(args.idSede, args.nombreSede));
               },
               shape: RoundedRectangleBorder(
                   side: const BorderSide(width: 1, color: Colors.white),
@@ -138,7 +137,7 @@ class ScreenGestion extends StatelessWidget {
                 color: Colors.white,
               ),
               subtitle: Text(
-                'Gestionar el registro de funcionarios en $sede',
+                'Gestionar el registro de funcionarios en ${args.nombreSede}',
                 style: bfTextStyle,
               ),
               tileColor: Colors.blue.shade600.withOpacity(0.7),

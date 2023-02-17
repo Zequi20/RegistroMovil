@@ -1,6 +1,6 @@
 class GestionArguments {
-  final String sede;
-  final String mensaje;
+  final int idSede;
+  final String nombreSede;
 
-  GestionArguments(this.sede, this.mensaje);
+  GestionArguments(this.idSede, this.nombreSede);
 }

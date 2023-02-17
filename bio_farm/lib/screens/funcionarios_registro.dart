@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:bio_farm/models/model_transaction_funcionario.dart';
+import 'package:bio_farm/models/model_funcionario.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';

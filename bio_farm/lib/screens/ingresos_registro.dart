@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:bio_farm/models/model_transaction_ingreso.dart';
+import 'package:bio_farm/models/model_transaccion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
@@ -29,7 +29,7 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
     fontSize: 16,
   );
 
-  List<ModelTransactionIngreso> _transactions = [];
+  List<ModelTransaccion> _transactions = [];
   late TransactionDataSource _transactionDataSource;
 
   @override
@@ -155,10 +155,10 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
     return _transactionDataSource;
   }
 
-  List<ModelTransactionIngreso> listToModel(List mapa) {
-    List<ModelTransactionIngreso> lista = [];
+  List<ModelTransaccion> listToModel(List mapa) {
+    List<ModelTransaccion> lista = [];
     for (var v in mapa) {
-      lista.add(ModelTransactionIngreso.fromJson(v));
+      lista.add(ModelTransaccion.fromJson(v));
     }
 
     return lista;

@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import '../screenParams/arguments.dart';
 import '../models/model_sedes.dart';
 import 'dart:convert';
+import 'package:fl_chart/fl_chart.dart';
 
 class ScreenSedes extends StatefulWidget {
   const ScreenSedes({super.key});
@@ -13,52 +14,96 @@ class ScreenSedes extends StatefulWidget {
 }
 
 class _ScreenSedesState extends State<ScreenSedes> {
-  final String link = 'http://192.168.0.7:8474/sedes';
+  final String sedesUrl = 'http://192.168.0.7:8474/sedes';
 
   List<Sede> lista = [];
+
+  var bfColor = Colors.blue.shade600.withOpacity(0.7);
+  var bfColorBtn = Colors.indigo.shade900.withOpacity(0.7);
+  var bfTextStyle = const TextStyle(
+    shadows: [
+      Shadow(color: Colors.black, offset: Offset(1, 1), blurRadius: 12)
+    ],
+    color: Colors.white,
+    fontSize: 16,
+  );
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-            backgroundColor: Colors.white,
-            appBar: AppBar(
-              shape: const RoundedRectangleBorder(
-                side: BorderSide(
-                    strokeAlign: StrokeAlign.outside,
-                    width: 1,
-                    color: Colors.white),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        shape: const RoundedRectangleBorder(
+          side: BorderSide(
+              strokeAlign: StrokeAlign.outside, width: 1, color: Colors.white),
+        ),
+        title: const Center(
+            child: Text(
+          style: TextStyle(color: Colors.white),
+          'SEDES',
+          textAlign: TextAlign.center,
+        )),
+        backgroundColor: Colors.indigo.shade900.withOpacity(0.7),
+        actions: [
+          IconButton(
+              onPressed: () {
+                SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+              },
+              icon: const Icon(Icons.exit_to_app))
+        ],
+      ),
+      body: FutureBuilder(
+          future: getSedesData(sedesUrl),
+          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+            return snapshot.hasData
+                ? sedesBody(lista)
+                : Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.blue.shade600.withOpacity(0.7),
+                      backgroundColor: Colors.white,
+                      strokeWidth: 8,
+                    ),
+                  );
+          }),
+      bottomNavigationBar: SizedBox(
+        height: 300,
+        child: Row(
+          children: [
+            Expanded(
+              child: AspectRatio(
+                aspectRatio: 1.3,
+                child: PieChart(PieChartData(
+                    pieTouchData: PieTouchData(
+                      enabled: true,
+                    ),
+                    centerSpaceRadius: 50,
+                    sections: [
+                      PieChartSectionData(
+                        value: 1200,
+                        color: bfColor,
+                        showTitle: true,
+                        title: 'Gastos',
+                        titleStyle: bfTextStyle,
+                        badgePositionPercentageOffset: 1.2,
+                      ),
+                      PieChartSectionData(
+                          value: 1700,
+                          color: bfColorBtn,
+                          showTitle: true,
+                          title: 'Ingresos',
+                          titleStyle: bfTextStyle)
+                    ])),
               ),
-              title: const Center(
-                  child: Text(
-                style: TextStyle(color: Colors.white),
-                'SEDES',
-                textAlign: TextAlign.center,
-              )),
-              backgroundColor: Colors.indigo.shade900.withOpacity(0.7),
-              actions: [
-                IconButton(
-                    onPressed: () {
-                      SystemChannels.platform
-                          .invokeMethod('SystemNavigator.pop');
-                    },
-                    icon: const Icon(Icons.exit_to_app))
-              ],
             ),
-            body: FutureBuilder(
-                future: getSedesData(link),
-                builder:
-                    (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                  return snapshot.hasData
-                      ? sedesBody(lista)
-                      : Center(
-                          child: CircularProgressIndicator(
-                            color: Colors.blue.shade600.withOpacity(0.7),
-                            backgroundColor: Colors.white,
-                            strokeWidth: 8,
-                          ),
-                        );
-                })));
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: const [],
+            )
+          ],
+        ),
+      ),
+    ));
   }
 
   Future getSedesData(String url) async {
@@ -117,42 +162,12 @@ class _ScreenSedesState extends State<ScreenSedes> {
                   borderRadius: BorderRadius.circular(12.0)),
               onTap: () {
                 Navigator.of(context).pushNamed('Gestion',
-                    arguments: GestionArguments(
-                        lista[i].nombreSede, 'Mensaje de prueba'));
+                    arguments:
+                        GestionArguments(lista[i].idSede, lista[i].nombreSede));
               },
               trailing: IconButton(
                 onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          shape: RoundedRectangleBorder(
-                              side: const BorderSide(
-                                  width: 1, color: Colors.white),
-                              borderRadius: BorderRadius.circular(12.0)),
-                          iconColor: Colors.white,
-                          backgroundColor:
-                              Colors.blue.shade600.withOpacity(0.6),
-                          actions: [
-                            TextButton(
-                                child: Text(
-                                  'Aceptar',
-                                  style: bfTextStyle,
-                                ),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                })
-                          ],
-                          title: Text(
-                            lista[i].nombreSede,
-                            style: bfTextStyle,
-                          ),
-                          content: Text(
-                            'Se muestra la cantidad de empleados, empleados en caja, direccion, ingresos y egresos totales cuando los datos esten disponibles en la base de datos del servidor',
-                            style: bfTextStyle,
-                          ),
-                        );
-                      });
+                  infoDialog(lista, i);
                 },
                 icon: const Icon(
                   Icons.info_outline,
@@ -179,5 +194,42 @@ class _ScreenSedesState extends State<ScreenSedes> {
         );
       },
     );
+  }
+
+  dynamic infoDialog(List<dynamic> lista, int i) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            titleTextStyle: bfTextStyle,
+            contentTextStyle: bfTextStyle,
+            shape: RoundedRectangleBorder(
+                side: const BorderSide(width: 1, color: Colors.white),
+                borderRadius: BorderRadius.circular(12.0)),
+            iconColor: Colors.white,
+            backgroundColor: Colors.blue.shade600.withOpacity(0.6),
+            actions: [
+              TextButton(
+                  child: Text(
+                    'Aceptar',
+                    style: bfTextStyle,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  })
+            ],
+            title: Text(
+              lista[i].nombreSede,
+            ),
+            content: Wrap(
+              direction: Axis.vertical,
+              children: [
+                Text('Ubicacion: ${lista[i].ubicacionSede}'),
+                Text('Cantidad de funcionarios: ${lista[i].funcionariosSede}'),
+                Text('Telefono: ${lista[i].telefonoSede}'),
+              ],
+            ),
+          );
+        });
   }
 }

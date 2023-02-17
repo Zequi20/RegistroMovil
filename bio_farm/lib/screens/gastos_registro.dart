@@ -1,10 +1,12 @@
 import 'dart:convert';
-import 'package:bio_farm/models/model_transaction_gasto.dart';
+import 'package:bio_farm/models/model_transaccion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+
+import '../screenParams/arguments.dart';
 
 class ScreenGastosRegistro extends StatefulWidget {
   const ScreenGastosRegistro({super.key});
@@ -16,7 +18,7 @@ class ScreenGastosRegistro extends StatefulWidget {
 class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
   final DataGridController _dataGridController = DataGridController();
   var link = 'http://192.168.0.7:8474/gastos';
-  var queryController = TextEditingController();
+  //var queryController = TextEditingController();
   bool visible = false;
   Icon searchIcon = const Icon(Icons.search);
   var bfColor = Colors.blue.shade600.withOpacity(0.7);
@@ -29,7 +31,7 @@ class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
     fontSize: 16,
   );
 
-  List<ModelTransactionGasto> _transactions = [];
+  List<ModelTransaccion> _transactions = [];
   late TransactionDataSource _transactionDataSource;
 
   @override
@@ -39,18 +41,18 @@ class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
 
   @override
   Widget build(BuildContext context) {
-    var conceptController = TextEditingController();
-    var valueController = TextEditingController();
+    final args = ModalRoute.of(context)!.settings.arguments as GestionArguments;
     var curDate = DateTime.now();
-    var dateController =
+    var valorController = TextEditingController();
+    var fechaController =
         TextEditingController(text: DateFormat('yyyy-MM-dd').format(curDate));
-    var timeController =
-        TextEditingController(text: DateFormat.Hm().format(curDate));
-
-    var conceptControllerEdit = TextEditingController();
-    var valueControllerEdit = TextEditingController();
-    var dateControllerEdit = TextEditingController();
-    var timeControllerEdit = TextEditingController();
+    var horaController =
+        TextEditingController(text: DateFormat.Hms().format(curDate));
+    var observacionController = TextEditingController();
+    var valorControllerEdit = TextEditingController();
+    var fechaControllerEdit = TextEditingController();
+    var horaControllerEdit = TextEditingController();
+    var observacionControllerEdit = TextEditingController();
 
     return SafeArea(
         child: Scaffold(
@@ -58,14 +60,15 @@ class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
         direction: Axis.horizontal,
         spacing: 6.5,
         children: getActions(
-            conceptController,
-            valueController,
-            dateController,
-            timeController,
-            conceptControllerEdit,
-            valueControllerEdit,
-            dateControllerEdit,
-            timeControllerEdit),
+            args,
+            valorController,
+            fechaController,
+            horaController,
+            observacionController,
+            valorControllerEdit,
+            fechaControllerEdit,
+            horaControllerEdit,
+            observacionControllerEdit),
       ),
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -77,6 +80,7 @@ class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
         ),
       ),
       body: FutureBuilder(
+        future: getTransaccionData(link, args),
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           return snapshot.hasData
               ? SfDataGrid(
@@ -140,25 +144,33 @@ class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
                   ,
                 );
         },
-        future: getTransactionData(link),
       ),
     ));
   }
 
-  Future getTransactionData(String url) async {
-    var response = await http.get(Uri.parse(url));
+  Future getTransaccionData(String url, GestionArguments args) async {
+    var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+    var request = http.Request('GET', Uri.parse(url));
+    request.bodyFields = {'id_sede': args.idSede.toString()};
+    request.headers.addAll(headers);
+
+    http.StreamedResponse responseStream = await request.send();
+    var response = await http.Response.fromStream(responseStream);
+
     List list = json.decode(response.body);
+
     _transactions = listToModel(list);
+
     _transactionDataSource = TransactionDataSource(_transactions);
+
     return _transactionDataSource;
   }
 
-  List<ModelTransactionGasto> listToModel(List mapa) {
-    List<ModelTransactionGasto> lista = [];
+  List<ModelTransaccion> listToModel(List mapa) {
+    List<ModelTransaccion> lista = [];
     for (var v in mapa) {
-      lista.add(ModelTransactionGasto.fromJson(v));
+      lista.add(ModelTransaccion.fromJson(v));
     }
-
     return lista;
   }
 
@@ -174,26 +186,18 @@ class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
             child: const Text('ID'),
           )),
       GridColumn(
-          allowSorting: false,
-          allowFiltering: true,
-          columnName: 'Detalles',
-          columnWidthMode: ColumnWidthMode.fitByColumnName,
-          label: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            alignment: Alignment.center,
-            child: const Text('Detalles'),
-          )),
-      GridColumn(
+          allowSorting: true,
           allowFiltering: true,
           columnName: 'Valor',
           columnWidthMode: ColumnWidthMode.fitByColumnName,
           label: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
             alignment: Alignment.center,
             child: const Text('Valor'),
           )),
       GridColumn(
-          allowFiltering: false,
+          allowSorting: true,
+          allowFiltering: true,
           columnName: 'Fecha',
           columnWidthMode: ColumnWidthMode.fitByColumnName,
           label: Container(
@@ -202,26 +206,39 @@ class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
             child: const Text('Fecha'),
           )),
       GridColumn(
-          allowFiltering: false,
+          allowSorting: true,
+          allowFiltering: true,
           columnName: 'Hora',
           columnWidthMode: ColumnWidthMode.fitByColumnName,
           label: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.center,
             child: const Text('Hora'),
+          )),
+      GridColumn(
+          allowFiltering: true,
+          columnName: 'Observacion',
+          columnWidthMode: ColumnWidthMode.fitByColumnName,
+          label: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            alignment: Alignment.center,
+            child: const Text('Observacion'),
           ))
     ];
   }
 
   List<Widget> getActions(
-      conceptController,
-      valueController,
-      dateController,
-      timeController,
-      conceptControllerEdit,
-      valueControllerEdit,
-      dateControllerEdit,
-      timeControllerEdit) {
+      args,
+      valorController,
+      fechaController,
+      horaController,
+      observacionController,
+      valorControllerEdit,
+      fechaControllerEdit,
+      horaControllerEdit,
+      observacionControllerEdit) {
+    ShapeBorder bfShape =
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0));
     return [
       FloatingActionButton(
           heroTag: 'btn_add',
@@ -229,8 +246,7 @@ class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
             showModalBottomSheet(
                 isScrollControlled: true,
                 clipBehavior: Clip.antiAliasWithSaveLayer,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0)),
+                shape: bfShape,
                 elevation: 0.5,
                 context: context,
                 builder: ((context) {
@@ -273,19 +289,10 @@ class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 12.0),
                           child: TextField(
-                            controller: conceptController,
-                            keyboardType: TextInputType.text,
-                            decoration: const InputDecoration(
-                                label: Text('Concepto del Gasto')),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                          child: TextField(
                             inputFormatters: [
                               FilteringTextInputFormatter.allow(RegExp(r'\d')),
                             ],
-                            controller: valueController,
+                            controller: valorController,
                             keyboardType: TextInputType.number,
                             decoration: const InputDecoration(
                                 label: Text('Valor del Gasto (Guaranies)')),
@@ -295,7 +302,7 @@ class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
                           padding: const EdgeInsets.symmetric(horizontal: 12.0),
                           child: TextField(
                             onTap: () async {
-                              dateController.text = await showDatePicker(
+                              fechaController.text = await showDatePicker(
                                       cancelText: 'Cancelar',
                                       confirmText: 'Aceptar',
                                       initialEntryMode:
@@ -308,42 +315,49 @@ class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
                                 if (value != null) {
                                   return DateFormat('yyyy-MM-dd').format(value);
                                 } else {
-                                  return dateController.text;
+                                  return fechaController.text;
                                 }
                               });
                             },
                             decoration: const InputDecoration(
                                 labelText: 'Fecha del gasto'),
                             readOnly: true,
-                            controller: dateController,
+                            controller: fechaController,
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(12.0),
                           child: TextField(
                             onTap: () async {
-                              timeController.text = await showTimePicker(
-                                      helpText: 'Fijar hora del Gasto',
-                                      cancelText: 'Cancelar',
-                                      confirmText: 'Aceptar',
-                                      context: context,
-                                      initialTime: TimeOfDay.now(),
-                                      initialEntryMode:
-                                          TimePickerEntryMode.dialOnly)
-                                  .then((value) {
+                              horaController.text = await showTimePicker(
+                                helpText: 'Fijar hora del Gasto',
+                                cancelText: 'Cancelar',
+                                confirmText: 'Aceptar',
+                                context: context,
+                                initialTime: TimeOfDay.now(),
+                                initialEntryMode: TimePickerEntryMode.inputOnly,
+                              ).then((value) {
                                 if (value != null) {
-                                  return MaterialLocalizations.of(context)
-                                      .formatTimeOfDay(value,
-                                          alwaysUse24HourFormat: true);
+                                  return '${MaterialLocalizations.of(context).formatTimeOfDay(value, alwaysUse24HourFormat: true)}:00';
                                 } else {
-                                  return timeController.text;
+                                  return horaController.text;
                                 }
                               });
                             },
                             decoration: const InputDecoration(
                                 labelText: 'Hora del gasto'),
                             readOnly: true,
-                            controller: timeController,
+                            controller: horaController,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                          child: TextField(
+                            maxLength: 50,
+                            controller: observacionController,
+                            keyboardType: TextInputType.text,
+                            decoration: const InputDecoration(
+                                label: Text('Observacion del Gasto')),
                           ),
                         ),
                         Padding(
@@ -373,13 +387,7 @@ class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
                                                 titleTextStyle: bfTextStyle,
                                                 contentTextStyle: bfTextStyle,
                                                 backgroundColor: bfColor,
-                                                shape: RoundedRectangleBorder(
-                                                    side: const BorderSide(
-                                                        width: 1,
-                                                        color: Colors.white),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12.0)),
+                                                shape: bfShape,
                                                 iconColor: Colors.white,
                                                 actions: [
                                                   TextButton(
@@ -391,20 +399,12 @@ class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
                                                           'Cancelar')),
                                                   TextButton(
                                                       onPressed: () {
-                                                        if (conceptController
+                                                        if (valorController
                                                                 .text ==
                                                             '') {
-                                                          conceptController
-                                                                  .text =
-                                                              '(Sin concepto)';
+                                                          valorController.text =
+                                                              '0';
                                                         }
-                                                        if (valueController
-                                                                .text ==
-                                                            '') {
-                                                          valueController.text =
-                                                              '0.0';
-                                                        }
-
                                                         var headers = {
                                                           'Content-Type':
                                                               'application/x-www-form-urlencoded'
@@ -414,17 +414,20 @@ class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
                                                             Uri.parse(
                                                                 'http://192.168.0.7:8474/gastos/agregar'));
                                                         request.bodyFields = {
-                                                          'concepto':
-                                                              conceptController
+                                                          'id_sede': args.idSede
+                                                              .toString(),
+                                                          'valor_transaccion':
+                                                              valorController
                                                                   .text,
-                                                          'valor':
-                                                              valueController
+                                                          'fecha_transaccion':
+                                                              fechaController
                                                                   .text,
-                                                          'fecha':
-                                                              dateController
+                                                          'hora_transaccion':
+                                                              horaController
                                                                   .text,
-                                                          'hora': timeController
-                                                              .text
+                                                          'observacion_transaccion':
+                                                              observacionController
+                                                                  .text
                                                         };
                                                         request.headers
                                                             .addAll(headers);
@@ -479,13 +482,7 @@ class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
                                                 contentTextStyle: bfTextStyle,
                                                 iconColor: Colors.white,
                                                 backgroundColor: bfColor,
-                                                shape: RoundedRectangleBorder(
-                                                    side: const BorderSide(
-                                                        width: 1,
-                                                        color: Colors.white),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12.0)),
+                                                shape: bfShape,
                                                 actions: [
                                                   TextButton(
                                                       onPressed: () {
@@ -542,10 +539,7 @@ class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
                       return AlertDialog(
                         titleTextStyle: bfTextStyle,
                         contentTextStyle: bfTextStyle,
-                        shape: RoundedRectangleBorder(
-                            side:
-                                const BorderSide(width: 1, color: Colors.white),
-                            borderRadius: BorderRadius.circular(12.0)),
+                        shape: bfShape,
                         iconColor: Colors.white,
                         backgroundColor: bfColor,
                         actions: [
@@ -572,16 +566,15 @@ class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
                 var selection =
                     _dataGridController.selectedRows.first.getCells();
                 int regId = selection[0].value;
-                conceptControllerEdit.text = selection[1].value;
-                valueControllerEdit.text = selection[2].value.toString();
-                dateControllerEdit.text = selection[3].value.toString();
-                timeControllerEdit.text = selection[4].value.toString();
+                valorControllerEdit.text = selection[1].value.toString();
+                fechaControllerEdit.text = selection[2].value.toString();
+                horaControllerEdit.text = selection[3].value.toString();
+                observacionControllerEdit.text = selection[4].value.toString();
 
                 showModalBottomSheet(
                     isScrollControlled: true,
                     clipBehavior: Clip.antiAliasWithSaveLayer,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0)),
+                    shape: bfShape,
                     elevation: 0.5,
                     context: context,
                     builder: ((context) {
@@ -625,21 +618,11 @@ class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 12.0),
                               child: TextField(
-                                controller: conceptControllerEdit,
-                                keyboardType: TextInputType.text,
-                                decoration: const InputDecoration(
-                                    label: Text('Concepto del Gasto')),
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 12.0),
-                              child: TextField(
                                 inputFormatters: [
                                   FilteringTextInputFormatter.allow(
                                       RegExp(r'\d')),
                                 ],
-                                controller: valueControllerEdit,
+                                controller: valorControllerEdit,
                                 keyboardType: TextInputType.number,
                                 decoration: const InputDecoration(
                                     label: Text('Valor del Gasto (Guaranies)')),
@@ -650,7 +633,8 @@ class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
                                   const EdgeInsets.symmetric(horizontal: 12.0),
                               child: TextField(
                                 onTap: () async {
-                                  dateController.text = await showDatePicker(
+                                  fechaControllerEdit
+                                      .text = await showDatePicker(
                                           cancelText: 'Cancelar',
                                           confirmText: 'Aceptar',
                                           initialEntryMode:
@@ -664,42 +648,52 @@ class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
                                       return DateFormat('yyyy-MM-dd')
                                           .format(value);
                                     } else {
-                                      return dateControllerEdit.text;
+                                      return fechaControllerEdit.text;
                                     }
                                   });
                                 },
                                 decoration: const InputDecoration(
                                     labelText: 'Fecha del gasto'),
                                 readOnly: true,
-                                controller: dateControllerEdit,
+                                controller: fechaControllerEdit,
                               ),
                             ),
                             Padding(
                               padding: const EdgeInsets.all(12.0),
                               child: TextField(
                                 onTap: () async {
-                                  timeController.text = await showTimePicker(
-                                          helpText: 'Fijar hora del Gasto',
-                                          cancelText: 'Cancelar',
-                                          confirmText: 'Aceptar',
-                                          context: context,
-                                          initialTime: TimeOfDay.now(),
-                                          initialEntryMode:
-                                              TimePickerEntryMode.dialOnly)
-                                      .then((value) {
+                                  horaControllerEdit.text =
+                                      await showTimePicker(
+                                              helpText: 'Fijar hora del Gasto',
+                                              cancelText: 'Cancelar',
+                                              confirmText: 'Aceptar',
+                                              context: context,
+                                              initialTime: TimeOfDay.now(),
+                                              initialEntryMode:
+                                                  TimePickerEntryMode.dialOnly)
+                                          .then((value) {
                                     if (value != null) {
-                                      return MaterialLocalizations.of(context)
-                                          .formatTimeOfDay(value,
-                                              alwaysUse24HourFormat: true);
+                                      return '${MaterialLocalizations.of(context).formatTimeOfDay(value, alwaysUse24HourFormat: true)}:00';
                                     } else {
-                                      return timeControllerEdit.text;
+                                      return horaControllerEdit.text;
                                     }
                                   });
                                 },
                                 decoration: const InputDecoration(
                                     labelText: 'Hora del gasto'),
                                 readOnly: true,
-                                controller: timeControllerEdit,
+                                controller: horaControllerEdit,
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 12.0),
+                              child: TextField(
+                                maxLength: 50,
+                                controller: observacionControllerEdit,
+                                keyboardType: TextInputType.text,
+                                decoration: const InputDecoration(
+                                    label: Text('Observacion del Gasto')),
                               ),
                             ),
                             Padding(
@@ -732,15 +726,7 @@ class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
                                                     contentTextStyle:
                                                         bfTextStyle,
                                                     backgroundColor: bfColor,
-                                                    shape: RoundedRectangleBorder(
-                                                        side: const BorderSide(
-                                                            width: 1,
-                                                            color:
-                                                                Colors.white),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                    12.0)),
+                                                    shape: bfShape,
                                                     iconColor: Colors.white,
                                                     actions: [
                                                       TextButton(
@@ -753,20 +739,12 @@ class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
                                                       ),
                                                       TextButton(
                                                         onPressed: () {
-                                                          if (conceptControllerEdit
+                                                          if (valorControllerEdit
                                                                   .text ==
                                                               '') {
-                                                            conceptControllerEdit
-                                                                    .text =
-                                                                '(Sin concepto)';
+                                                            valorControllerEdit
+                                                                .text = '0';
                                                           }
-                                                          if (valueControllerEdit
-                                                                  .text ==
-                                                              '') {
-                                                            valueControllerEdit
-                                                                .text = '0.0';
-                                                          }
-
                                                           var headers = {
                                                             'Content-Type':
                                                                 'application/x-www-form-urlencoded'
@@ -777,19 +755,23 @@ class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
                                                                   Uri.parse(
                                                                       'http://192.168.0.7:8474/gastos/editar'));
                                                           request.bodyFields = {
-                                                            'id_gasto': regId
-                                                                .toString(),
-                                                            'concepto':
-                                                                conceptControllerEdit
+                                                            'id_transaccion':
+                                                                regId
+                                                                    .toString(),
+                                                            'id_sede': '0',
+                                                            'tipo_transaccion':
+                                                                '0',
+                                                            'valor_transaccion':
+                                                                valorControllerEdit
                                                                     .text,
-                                                            'valor':
-                                                                valueControllerEdit
+                                                            'fecha_transaccion':
+                                                                fechaControllerEdit
                                                                     .text,
-                                                            'fecha':
-                                                                dateControllerEdit
+                                                            'hora_transaccion':
+                                                                horaControllerEdit
                                                                     .text,
-                                                            'hora':
-                                                                timeControllerEdit
+                                                            'observacion_transaccion':
+                                                                observacionControllerEdit
                                                                     .text
                                                           };
                                                           request.headers
