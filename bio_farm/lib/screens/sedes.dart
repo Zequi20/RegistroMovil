@@ -144,6 +144,10 @@ class _ScreenSedesState extends State<ScreenSedes> {
       color: Colors.white,
       fontSize: 16,
     );
+    ShapeBorder bfShape = RoundedRectangleBorder(
+        side: BorderSide.merge(const BorderSide(color: Colors.white),
+            const BorderSide(color: Colors.white)),
+        borderRadius: BorderRadius.circular(10.0));
     return ListView.builder(
       padding: const EdgeInsets.all(12.0),
       scrollDirection: Axis.vertical,
@@ -153,13 +157,10 @@ class _ScreenSedesState extends State<ScreenSedes> {
           padding: const EdgeInsets.all(12.0),
           child: Card(
             color: Colors.white.withOpacity(0),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0)),
+            shape: bfShape,
             elevation: 5,
             child: ListTile(
-              shape: RoundedRectangleBorder(
-                  side: const BorderSide(width: 1, color: Colors.white),
-                  borderRadius: BorderRadius.circular(12.0)),
+              shape: bfShape,
               onTap: () {
                 Navigator.of(context).pushNamed('Gestion',
                     arguments:
@@ -175,12 +176,12 @@ class _ScreenSedesState extends State<ScreenSedes> {
                 ),
               ),
               leading: const Icon(
-                Icons.query_stats,
+                Icons.backup_table,
                 size: 32,
                 color: Colors.white,
               ),
               subtitle: Text(
-                'Ubicado ${lista[i].ubicacionSede}',
+                'Ubicado en ${lista[i].ubicacionSede}',
                 style: bfTextStyle,
               ),
               tileColor: Colors.blue.shade600.withOpacity(0.7),

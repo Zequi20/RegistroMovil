@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-
 import '../screenParams/arguments.dart';
 
 class ScreenGastosRegistro extends StatefulWidget {
@@ -104,11 +103,11 @@ class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
                                   SizedBox(
                                     width: 250,
                                     child: Text(
-                                        'Detalles: ${row.getCells()[1].value}'),
+                                        'Observacion: ${row.getCells()[4].value}'),
                                   ),
-                                  Text('Valor: ${row.getCells()[2].value}'),
-                                  Text('Fecha: ${row.getCells()[3].value}'),
-                                  Text('Hora: ${row.getCells()[4].value}'),
+                                  Text('Fecha: ${row.getCells()[2].value}'),
+                                  Text('Hora: ${row.getCells()[3].value}'),
+                                  Text('Valor: ${row.getCells()[1].value}'),
                                 ],
                               ),
                               titleTextStyle: bfTextStyle,
@@ -237,8 +236,10 @@ class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
       fechaControllerEdit,
       horaControllerEdit,
       observacionControllerEdit) {
-    ShapeBorder bfShape =
-        RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0));
+    ShapeBorder bfShape = RoundedRectangleBorder(
+        side: BorderSide.merge(const BorderSide(color: Colors.white),
+            const BorderSide(color: Colors.white)),
+        borderRadius: BorderRadius.circular(10.0));
     return [
       FloatingActionButton(
           heroTag: 'btn_add',
@@ -924,7 +925,7 @@ class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
                               var request = http.Request(
                                   'DELETE',
                                   Uri.parse(
-                                      'http://192.168.0.7:8474/gastos/borrar'));
+                                      'http://192.168.0.7:8474/transacciones/borrar'));
                               String idList = '';
                               for (var element in selected) {
                                 idList += '${element.getCells().first.value},';

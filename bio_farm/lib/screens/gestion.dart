@@ -124,6 +124,35 @@ class ScreenGestion extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12.0)),
             elevation: 5,
             child: ListTile(
+              onTap: null,
+              shape: RoundedRectangleBorder(
+                  side: const BorderSide(width: 1, color: Colors.white),
+                  borderRadius: BorderRadius.circular(12.0)),
+              leading: const Icon(
+                Icons.handshake,
+                size: 32,
+                color: Colors.white,
+              ),
+              subtitle: Text(
+                'Gestionar el registro de retiros en ${args.nombreSede}',
+                style: bfTextStyle,
+              ),
+              tileColor: Colors.blue.shade600.withOpacity(0.7),
+              contentPadding: const EdgeInsets.all(12.0),
+              title: Text(
+                'Retiros',
+                style: bfTextStyle,
+              ),
+            )),
+      ),
+      Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Card(
+            color: Colors.white.withOpacity(0),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0)),
+            elevation: 5,
+            child: ListTile(
               onTap: () {
                 Navigator.of(context).pushNamed('Funcionarios',
                     arguments: GestionArguments(args.idSede, args.nombreSede));

@@ -5,7 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:time_range_picker/time_range_picker.dart';
+
+import '../screenParams/arguments.dart';
 
 class ScreenFuncionariosRegistro extends StatefulWidget {
   const ScreenFuncionariosRegistro({super.key});
@@ -32,7 +33,7 @@ class _ScreenFuncionariosRegistroState
     fontSize: 16,
   );
 
-  List<ModelTransactionFuncionario> _transactions = [];
+  List<ModelFuncionario> _transactions = [];
   late TransactionDataSource _transactionDataSource;
 
   @override
@@ -42,30 +43,27 @@ class _ScreenFuncionariosRegistroState
 
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)!.settings.arguments as GestionArguments;
     var curDate = DateTime.now();
     var ciController = TextEditingController();
     var nombreController = TextEditingController();
-    var sueldoController = TextEditingController();
-    var fechaCobroController = TextEditingController(
-        text: DateFormat('yyyy-MM-dd')
-            .format(curDate.add(const Duration(days: 30))));
-    var telefController = TextEditingController();
+    var telefonoController = TextEditingController();
     var correoController = TextEditingController();
-    var horarioController = TextEditingController(text: '00:00 - 00:00');
-    var puestoController = TextEditingController();
     var fechaInicioController =
         TextEditingController(text: DateFormat('yyyy-MM-dd').format(curDate));
+    var sueldoController = TextEditingController();
+    var horaEntradaController = TextEditingController();
+    var horaSalidaController = TextEditingController();
 
     var ciControllerEdit = TextEditingController();
     var nombreControllerEdit = TextEditingController();
-    var sueldoControllerEdit = TextEditingController();
-    var fechaCobroControllerEdit =
-        TextEditingController(text: DateFormat('yyyy-MM-dd').format(curDate));
-    var telefControllerEdit = TextEditingController();
+    var telefonoControllerEdit = TextEditingController();
     var correoControllerEdit = TextEditingController();
-    var horarioControllerEdit = TextEditingController(text: '00:00 - 00:00');
-    var puestoControllerEdit = TextEditingController();
-    var fechaInicioControllerEdit = TextEditingController();
+    var fechaInicioControllerEdit =
+        TextEditingController(text: DateFormat('yyyy-MM-dd').format(curDate));
+    var sueldoControllerEdit = TextEditingController();
+    var horaEntradaControllerEdit = TextEditingController();
+    var horaSalidaControllerEdit = TextEditingController();
 
     return SafeArea(
         child: Scaffold(
@@ -73,24 +71,24 @@ class _ScreenFuncionariosRegistroState
         direction: Axis.horizontal,
         spacing: 6.5,
         children: getActions(
-            ciController,
-            nombreController,
-            sueldoController,
-            fechaCobroController,
-            telefController,
-            correoController,
-            horarioController,
-            puestoController,
-            fechaInicioController,
-            ciControllerEdit,
-            nombreControllerEdit,
-            sueldoControllerEdit,
-            fechaCobroControllerEdit,
-            telefControllerEdit,
-            correoControllerEdit,
-            horarioControllerEdit,
-            puestoControllerEdit,
-            fechaInicioControllerEdit),
+          args,
+          ciController,
+          nombreController,
+          telefonoController,
+          correoController,
+          fechaInicioController,
+          sueldoController,
+          horaEntradaController,
+          horaSalidaController,
+          ciControllerEdit,
+          nombreControllerEdit,
+          telefonoControllerEdit,
+          correoControllerEdit,
+          fechaInicioControllerEdit,
+          sueldoControllerEdit,
+          horaEntradaControllerEdit,
+          horaSalidaControllerEdit,
+        ),
       ),
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -177,23 +175,33 @@ class _ScreenFuncionariosRegistroState
                   ),
                 );
         },
-        future: getTransactionData(link),
+        future: getTransaccionData(link, args),
       ),
     ));
   }
 
-  Future getTransactionData(String url) async {
-    var response = await http.get(Uri.parse(url));
+  Future getTransaccionData(String url, GestionArguments args) async {
+    var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+    var request = http.Request('GET', Uri.parse(url));
+    request.bodyFields = {'id_sede': args.idSede.toString()};
+    request.headers.addAll(headers);
+
+    http.StreamedResponse responseStream = await request.send();
+    var response = await http.Response.fromStream(responseStream);
+
     List list = json.decode(response.body);
+
     _transactions = listToModel(list);
+
     _transactionDataSource = TransactionDataSource(_transactions);
+
     return _transactionDataSource;
   }
 
-  List<ModelTransactionFuncionario> listToModel(List mapa) {
-    List<ModelTransactionFuncionario> lista = [];
+  List<ModelFuncionario> listToModel(List mapa) {
+    List<ModelFuncionario> lista = [];
     for (var v in mapa) {
-      lista.add(ModelTransactionFuncionario.fromJson(v));
+      lista.add(ModelFuncionario.fromJson(v));
     }
 
     return lista;
@@ -203,6 +211,7 @@ class _ScreenFuncionariosRegistroState
     return [
       GridColumn(
           columnName: 'Id',
+          allowSorting: true,
           allowFiltering: true,
           columnWidthMode: ColumnWidthMode.fitByColumnName,
           label: Container(
@@ -233,32 +242,12 @@ class _ScreenFuncionariosRegistroState
       GridColumn(
           allowSorting: true,
           allowFiltering: true,
-          columnName: 'Sueldo',
-          columnWidthMode: ColumnWidthMode.fitByColumnName,
-          label: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            alignment: Alignment.center,
-            child: const Text('Sueldo'),
-          )),
-      GridColumn(
-          allowSorting: true,
-          allowFiltering: true,
-          columnName: 'Fecha Pago',
-          columnWidthMode: ColumnWidthMode.fitByColumnName,
-          label: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            alignment: Alignment.center,
-            child: const Text('Fecha de cobro'),
-          )),
-      GridColumn(
-          allowSorting: true,
-          allowFiltering: true,
           columnName: 'Telefono',
           columnWidthMode: ColumnWidthMode.fitByColumnName,
           label: Container(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             alignment: Alignment.center,
-            child: const Text('Nro de telefono'),
+            child: const Text('Numero de telefono'),
           )),
       GridColumn(
           allowSorting: true,
@@ -273,55 +262,65 @@ class _ScreenFuncionariosRegistroState
       GridColumn(
           allowSorting: true,
           allowFiltering: true,
-          columnName: 'Horario',
-          columnWidthMode: ColumnWidthMode.fitByColumnName,
-          label: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            alignment: Alignment.center,
-            child: const Text('Horario'),
-          )),
-      GridColumn(
-          allowSorting: true,
-          allowFiltering: true,
-          columnName: 'Cargo',
-          columnWidthMode: ColumnWidthMode.fitByColumnName,
-          label: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            alignment: Alignment.center,
-            child: const Text('Puesto'),
-          )),
-      GridColumn(
-          allowSorting: true,
-          allowFiltering: true,
-          columnName: 'Fecha Inicio',
+          columnName: 'Fecha de Inicio',
           columnWidthMode: ColumnWidthMode.fitByColumnName,
           label: Container(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             alignment: Alignment.center,
             child: const Text('Fecha de inicio'),
           )),
+      GridColumn(
+          allowSorting: true,
+          allowFiltering: true,
+          columnName: 'Sueldo',
+          columnWidthMode: ColumnWidthMode.fitByColumnName,
+          label: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            alignment: Alignment.center,
+            child: const Text('Sueldo'),
+          )),
+      GridColumn(
+          allowSorting: true,
+          allowFiltering: true,
+          columnName: 'Entrada',
+          columnWidthMode: ColumnWidthMode.fitByColumnName,
+          label: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            alignment: Alignment.center,
+            child: const Text('Hora de entrada'),
+          )),
+      GridColumn(
+          allowSorting: true,
+          allowFiltering: true,
+          columnName: 'Salida',
+          columnWidthMode: ColumnWidthMode.fitByColumnName,
+          label: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            alignment: Alignment.center,
+            child: const Text('Hora de salida'),
+          )),
     ];
   }
 
   List<Widget> getActions(
-      ciController,
-      nombreController,
-      sueldoController,
-      fechaCobroController,
-      telefController,
-      correoController,
-      horarioController,
-      puestoController,
-      fechaInicioController,
-      ciControllerEdit,
-      nombreControllerEdit,
-      sueldoControllerEdit,
-      fechaCobroControllerEdit,
-      telefControllerEdit,
-      correoControllerEdit,
-      horarioControllerEdit,
-      puestoControllerEdit,
-      fechaInicioControllerEdit) {
+    GestionArguments args,
+    TextEditingController ciController,
+    TextEditingController nombreController,
+    TextEditingController telefonoController,
+    TextEditingController correoController,
+    TextEditingController fechaInicioController,
+    TextEditingController sueldoController,
+    TextEditingController horaEntradaController,
+    TextEditingController horaSalidaController,
+    TextEditingController ciControllerEdit,
+    TextEditingController nombreControllerEdit,
+    TextEditingController telefonoControllerEdit,
+    TextEditingController correoControllerEdit,
+    TextEditingController fechaInicioControllerEdit,
+    TextEditingController sueldoControllerEdit,
+    TextEditingController horaEntradaControllerEdit,
+    TextEditingController horaSalidaControllerEdit,
+  ) {
     return [
       FloatingActionButton(
           heroTag: 'btn_add',
@@ -396,152 +395,132 @@ class _ScreenFuncionariosRegistroState
                           Padding(
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 12.0),
-                            child: TextField(
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(RegExp(r'\d'))
+                            child: Row(
+                              children: [
+                                Expanded(
+                                    child: TextField(
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp(r'\d'))
+                                  ],
+                                  controller: telefonoController,
+                                  keyboardType: TextInputType.text,
+                                  decoration: const InputDecoration(
+                                      label: Text('Telefono del funcionario')),
+                                )),
+                                Expanded(
+                                    child: TextField(
+                                  controller: correoController,
+                                  keyboardType: TextInputType.text,
+                                  decoration: const InputDecoration(
+                                      label: Text('Correo del funcionario')),
+                                ))
                               ],
-                              controller: sueldoController,
-                              keyboardType: TextInputType.text,
-                              decoration: const InputDecoration(
-                                  label: Text('Sueldo del funcionario')),
                             ),
                           ),
                           Padding(
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 12.0),
-                            child: TextField(
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(RegExp(r'\d'))
+                            child: Row(
+                              children: [
+                                Expanded(
+                                    child: TextField(
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp(r'\d'))
+                                  ],
+                                  controller: sueldoController,
+                                  keyboardType: TextInputType.text,
+                                  decoration: const InputDecoration(
+                                      label: Text('Sueldo del funcionario')),
+                                )),
+                                Expanded(
+                                    child: TextField(
+                                  onTap: () async {
+                                    fechaInicioController.text =
+                                        await showDatePicker(
+                                                cancelText: 'Cancelar',
+                                                confirmText: 'Aceptar',
+                                                initialEntryMode:
+                                                    DatePickerEntryMode
+                                                        .calendarOnly,
+                                                context: context,
+                                                initialDate: DateTime.now(),
+                                                firstDate: DateTime(2000, 1, 1),
+                                                lastDate: DateTime.now())
+                                            .then((value) {
+                                      if (value != null) {
+                                        return DateFormat('yyyy-MM-dd')
+                                            .format(value);
+                                      } else {
+                                        return fechaInicioController.text;
+                                      }
+                                    });
+                                  },
+                                  decoration: const InputDecoration(
+                                      labelText: 'Fecha de inicio'),
+                                  readOnly: true,
+                                  controller: fechaInicioController,
+                                ))
                               ],
-                              controller: fechaCobroController,
-                              keyboardType: TextInputType.text,
-                              decoration: const InputDecoration(
-                                  label: Text('Fecha de Cobro')),
-                              onTap: () async {
-                                fechaCobroController
-                                    .text = await showDatePicker(
-                                        cancelText: 'Cancelar',
-                                        confirmText: 'Aceptar',
-                                        initialEntryMode:
-                                            DatePickerEntryMode.calendarOnly,
-                                        context: context,
-                                        initialDate: DateTime.now(),
-                                        firstDate: DateTime(2000, 1, 1),
-                                        lastDate: DateTime.now())
-                                    .then((value) {
-                                  if (value != null) {
-                                    return DateFormat('yyyy-MM-dd')
-                                        .format(value);
-                                  } else {
-                                    return fechaCobroControllerEdit.text;
-                                  }
-                                });
-                              },
                             ),
                           ),
                           Padding(
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 12.0),
-                            child: TextField(
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(RegExp(r'\d'))
-                              ],
-                              controller: telefController,
-                              keyboardType: TextInputType.text,
-                              decoration: const InputDecoration(
-                                  label: Text('Telefono del funcionario')),
-                            ),
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 12.0),
-                            child: TextField(
-                              controller: correoController,
-                              keyboardType: TextInputType.text,
-                              decoration: const InputDecoration(
-                                  label: Text(
-                                      'Direccion de correo del funcionario')),
-                            ),
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 12.0),
-                            child: TextField(
-                              readOnly: true,
-                              controller: horarioController,
-                              keyboardType: TextInputType.text,
-                              decoration: const InputDecoration(
-                                  label: Text('Horario del funcionario')),
-                              onTap: () async {
-                                String first = '';
-                                String second = '';
-                                try {
-                                  TimeRange rangue = await showTimeRangePicker(
+                            child: Row(
+                              children: [
+                                Expanded(
+                                    child: TextField(
+                                  onTap: () async {
+                                    horaEntradaController.text =
+                                        await showTimePicker(
+                                      helpText: 'Fijar hora de Entrada',
+                                      cancelText: 'Cancelar',
+                                      confirmText: 'Aceptar',
                                       context: context,
-                                      fromText: 'Desde las:',
-                                      toText: 'Hasta las:')!;
-
-                                  DateTime firstDate = DateTime(
-                                      0,
-                                      0,
-                                      0,
-                                      rangue.startTime.hour,
-                                      rangue.startTime.minute);
-                                  DateTime secondtDate = DateTime(
-                                      0,
-                                      0,
-                                      0,
-                                      rangue.endTime.hour,
-                                      rangue.endTime.minute);
-
-                                  first = DateFormat('hh:mm').format(firstDate);
-                                  second =
-                                      DateFormat('hh:mm').format(secondtDate);
-                                  horarioController.text = '$first - $second';
-                                } on Error catch (_) {
-                                  horarioController.text = '00:00 - 00:00';
-                                }
-                              },
-                            ),
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 12.0),
-                            child: TextField(
-                              controller: puestoController,
-                              keyboardType: TextInputType.text,
-                              decoration: const InputDecoration(
-                                  label: Text('Puesto del funcionario')),
-                            ),
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 12.0),
-                            child: TextField(
-                              onTap: () async {
-                                fechaInicioController
-                                    .text = await showDatePicker(
-                                        cancelText: 'Cancelar',
-                                        confirmText: 'Aceptar',
-                                        initialEntryMode:
-                                            DatePickerEntryMode.calendarOnly,
-                                        context: context,
-                                        initialDate: DateTime.now(),
-                                        firstDate: DateTime(2000, 1, 1),
-                                        lastDate: DateTime.now())
-                                    .then((value) {
-                                  if (value != null) {
-                                    return DateFormat('yyyy-MM-dd')
-                                        .format(value);
-                                  } else {
-                                    return fechaInicioController.text;
-                                  }
-                                });
-                              },
-                              decoration: const InputDecoration(
-                                  labelText: 'Fecha del ingreso'),
-                              readOnly: true,
-                              controller: fechaInicioController,
+                                      initialTime: TimeOfDay.now(),
+                                      initialEntryMode:
+                                          TimePickerEntryMode.inputOnly,
+                                    ).then((value) {
+                                      if (value != null) {
+                                        return '${MaterialLocalizations.of(context).formatTimeOfDay(value, alwaysUse24HourFormat: true)}:00';
+                                      } else {
+                                        return horaEntradaController.text;
+                                      }
+                                    });
+                                  },
+                                  decoration: const InputDecoration(
+                                      labelText: 'Hora de Entrada'),
+                                  readOnly: true,
+                                  controller: horaEntradaController,
+                                )),
+                                Expanded(
+                                    child: TextField(
+                                  onTap: () async {
+                                    horaSalidaController.text =
+                                        await showTimePicker(
+                                      helpText: 'Fijar hora de Salida',
+                                      cancelText: 'Cancelar',
+                                      confirmText: 'Aceptar',
+                                      context: context,
+                                      initialTime: TimeOfDay.now(),
+                                      initialEntryMode:
+                                          TimePickerEntryMode.inputOnly,
+                                    ).then((value) {
+                                      if (value != null) {
+                                        return '${MaterialLocalizations.of(context).formatTimeOfDay(value, alwaysUse24HourFormat: true)}:00';
+                                      } else {
+                                        return horaSalidaController.text;
+                                      }
+                                    });
+                                  },
+                                  decoration: const InputDecoration(
+                                      labelText: 'Hora de Salida'),
+                                  readOnly: true,
+                                  controller: horaSalidaController,
+                                ))
+                              ],
                             ),
                           ),
                           Padding(
@@ -613,11 +592,11 @@ class _ScreenFuncionariosRegistroState
                                                             sueldoController
                                                                 .text = '0.0';
                                                           }
-                                                          if (telefController
+                                                          if (telefonoController
                                                                   .text
                                                                   .toString() ==
                                                               '') {
-                                                            telefController
+                                                            telefonoController
                                                                 .text = '0';
                                                           }
                                                           if (correoController
@@ -627,14 +606,7 @@ class _ScreenFuncionariosRegistroState
                                                             correoController
                                                                 .text = '0';
                                                           }
-                                                          if (puestoController
-                                                                  .text
-                                                                  .toString() ==
-                                                              '') {
-                                                            puestoController
-                                                                    .text =
-                                                                '(Sin puesto)';
-                                                          }
+
                                                           var headers = {
                                                             'Content-Type':
                                                                 'application/x-www-form-urlencoded'
@@ -645,32 +617,32 @@ class _ScreenFuncionariosRegistroState
                                                                   Uri.parse(
                                                                       'http://192.168.0.7:8474/funcionarios/agregar'));
                                                           request.bodyFields = {
+                                                            'id_sede': args
+                                                                .idSede
+                                                                .toString(),
                                                             'ci_funcionario':
                                                                 ciController
                                                                     .text,
                                                             'nombre_funcionario':
                                                                 nombreController
                                                                     .text,
-                                                            'sueldo_funcionario':
-                                                                sueldoController
-                                                                    .text,
-                                                            'fecha_pago_funcionario':
-                                                                fechaCobroController
-                                                                    .text,
                                                             'telefono_funcionario':
-                                                                telefController
+                                                                telefonoController
                                                                     .text,
                                                             'correo_funcionario':
                                                                 correoController
                                                                     .text,
-                                                            'horario_funcionario':
-                                                                horarioController
-                                                                    .text,
-                                                            'cargo_funcionario':
-                                                                puestoController
-                                                                    .text,
                                                             'fecha_inicio_funcionario':
                                                                 fechaInicioController
+                                                                    .text,
+                                                            'sueldo_funcionario':
+                                                                sueldoController
+                                                                    .text,
+                                                            'hora_entrada_funcionario':
+                                                                horaEntradaController
+                                                                    .text,
+                                                            'hora_salida_funcionario':
+                                                                horaSalidaController
                                                                     .text
                                                           };
                                                           request.headers
@@ -829,13 +801,12 @@ class _ScreenFuncionariosRegistroState
                 int regId = selection[0].value;
                 ciControllerEdit.text = selection[1].value.toString();
                 nombreControllerEdit.text = selection[2].value.toString();
-                sueldoControllerEdit.text = selection[3].value.toString();
-                fechaCobroControllerEdit.text = selection[4].value.toString();
-                telefControllerEdit.text = selection[5].value.toString();
-                correoControllerEdit.text = selection[6].value.toString();
-                horarioControllerEdit.text = selection[7].value.toString();
-                puestoControllerEdit.text = selection[8].value.toString();
-                fechaInicioControllerEdit.text = selection[9].value.toString();
+                telefonoControllerEdit.text = selection[3].value.toString();
+                correoControllerEdit.text = selection[4].value.toString();
+                fechaInicioControllerEdit.text = selection[5].value.toString();
+                sueldoControllerEdit.text = selection[6].value.toString();
+                horaEntradaControllerEdit.text = selection[7].value.toString();
+                horaSalidaControllerEdit.text = selection[8].value.toString();
                 showModalBottomSheet(
                   isScrollControlled: true,
                   clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -907,32 +878,53 @@ class _ScreenFuncionariosRegistroState
                               Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 12.0),
-                                child: TextField(
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.allow(
-                                        RegExp(r'\d'))
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                        child: TextField(
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.allow(
+                                            RegExp(r'\d'))
+                                      ],
+                                      controller: telefonoControllerEdit,
+                                      keyboardType: TextInputType.text,
+                                      decoration: const InputDecoration(
+                                          label:
+                                              Text('Telefono del funcionario')),
+                                    )),
+                                    Expanded(
+                                        child: TextField(
+                                      controller: correoControllerEdit,
+                                      keyboardType: TextInputType.text,
+                                      decoration: const InputDecoration(
+                                          label:
+                                              Text('Correo del funcionario')),
+                                    ))
                                   ],
-                                  controller: sueldoControllerEdit,
-                                  keyboardType: TextInputType.text,
-                                  decoration: const InputDecoration(
-                                      label: Text('Sueldo del funcionario')),
                                 ),
                               ),
                               Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 12.0),
-                                child: TextField(
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.allow(
-                                        RegExp(r'\d'))
-                                  ],
-                                  controller: fechaCobroControllerEdit,
-                                  keyboardType: TextInputType.text,
-                                  decoration: const InputDecoration(
-                                      label: Text('Fecha de Cobro')),
-                                  onTap: () async {
-                                    fechaCobroControllerEdit.text =
-                                        await showDatePicker(
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                        child: TextField(
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.allow(
+                                            RegExp(r'\d'))
+                                      ],
+                                      controller: sueldoControllerEdit,
+                                      keyboardType: TextInputType.text,
+                                      decoration: const InputDecoration(
+                                          label:
+                                              Text('Sueldo del funcionario')),
+                                    )),
+                                    Expanded(
+                                        child: TextField(
+                                      onTap: () async {
+                                        fechaInicioControllerEdit
+                                            .text = await showDatePicker(
                                                 cancelText: 'Cancelar',
                                                 confirmText: 'Aceptar',
                                                 initialEntryMode:
@@ -943,125 +935,81 @@ class _ScreenFuncionariosRegistroState
                                                 firstDate: DateTime(2000, 1, 1),
                                                 lastDate: DateTime.now())
                                             .then((value) {
-                                      if (value != null) {
-                                        return DateFormat('yyyy-MM-dd')
-                                            .format(value);
-                                      } else {
-                                        return fechaCobroControllerEdit.text;
-                                      }
-                                    });
-                                  },
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12.0),
-                                child: TextField(
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.allow(
-                                        RegExp(r'\d'))
+                                          if (value != null) {
+                                            return DateFormat('yyyy-MM-dd')
+                                                .format(value);
+                                          } else {
+                                            return fechaInicioControllerEdit
+                                                .text;
+                                          }
+                                        });
+                                      },
+                                      decoration: const InputDecoration(
+                                          labelText: 'Fecha de inicio'),
+                                      readOnly: true,
+                                      controller: fechaInicioControllerEdit,
+                                    ))
                                   ],
-                                  controller: telefControllerEdit,
-                                  keyboardType: TextInputType.text,
-                                  decoration: const InputDecoration(
-                                      label: Text('Telefono del funcionario')),
                                 ),
                               ),
                               Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 12.0),
-                                child: TextField(
-                                  controller: correoControllerEdit,
-                                  keyboardType: TextInputType.text,
-                                  decoration: const InputDecoration(
-                                      label: Text(
-                                          'Direccion de correo del funcionario')),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12.0),
-                                child: TextField(
-                                  readOnly: true,
-                                  controller: horarioControllerEdit,
-                                  keyboardType: TextInputType.text,
-                                  decoration: const InputDecoration(
-                                      label: Text('Horario del funcionario')),
-                                  onTap: () async {
-                                    String first = '';
-                                    String second = '';
-                                    try {
-                                      TimeRange rangue =
-                                          await showTimeRangePicker(
-                                              context: context,
-                                              fromText: 'Desde las:',
-                                              toText: 'Hasta las:')!;
-
-                                      DateTime firstDate = DateTime(
-                                          0,
-                                          0,
-                                          0,
-                                          rangue.startTime.hour,
-                                          rangue.startTime.minute);
-                                      DateTime secondtDate = DateTime(
-                                          0,
-                                          0,
-                                          0,
-                                          rangue.endTime.hour,
-                                          rangue.endTime.minute);
-
-                                      first =
-                                          DateFormat('hh:mm').format(firstDate);
-                                      second = DateFormat('hh:mm')
-                                          .format(secondtDate);
-                                      horarioControllerEdit.text =
-                                          '$first - $second';
-                                    } on Error catch (_) {
-                                      horarioControllerEdit.text =
-                                          '00:00 - 00:00';
-                                    }
-                                  },
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12.0),
-                                child: TextField(
-                                  controller: puestoControllerEdit,
-                                  keyboardType: TextInputType.text,
-                                  decoration: const InputDecoration(
-                                      label: Text('Puesto del funcionario')),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12.0),
-                                child: TextField(
-                                  onTap: () async {
-                                    fechaInicioControllerEdit.text =
-                                        await showDatePicker(
-                                                cancelText: 'Cancelar',
-                                                confirmText: 'Aceptar',
-                                                initialEntryMode:
-                                                    DatePickerEntryMode
-                                                        .calendarOnly,
-                                                context: context,
-                                                initialDate: DateTime.now(),
-                                                firstDate: DateTime(2000, 1, 1),
-                                                lastDate: DateTime.now())
-                                            .then((value) {
-                                      if (value != null) {
-                                        return DateFormat('yyyy-MM-dd')
-                                            .format(value);
-                                      } else {
-                                        return fechaInicioControllerEdit.text;
-                                      }
-                                    });
-                                  },
-                                  decoration: const InputDecoration(
-                                      labelText: 'Fecha del ingreso'),
-                                  readOnly: true,
-                                  controller: fechaInicioControllerEdit,
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                        child: TextField(
+                                      onTap: () async {
+                                        horaEntradaControllerEdit.text =
+                                            await showTimePicker(
+                                          helpText: 'Fijar hora de Entrada',
+                                          cancelText: 'Cancelar',
+                                          confirmText: 'Aceptar',
+                                          context: context,
+                                          initialTime: TimeOfDay.now(),
+                                          initialEntryMode:
+                                              TimePickerEntryMode.inputOnly,
+                                        ).then((value) {
+                                          if (value != null) {
+                                            return '${MaterialLocalizations.of(context).formatTimeOfDay(value, alwaysUse24HourFormat: true)}:00';
+                                          } else {
+                                            return horaEntradaControllerEdit
+                                                .text;
+                                          }
+                                        });
+                                      },
+                                      decoration: const InputDecoration(
+                                          labelText: 'Hora de Entrada'),
+                                      readOnly: true,
+                                      controller: horaEntradaControllerEdit,
+                                    )),
+                                    Expanded(
+                                        child: TextField(
+                                      onTap: () async {
+                                        horaSalidaControllerEdit.text =
+                                            await showTimePicker(
+                                          helpText: 'Fijar hora de Salida',
+                                          cancelText: 'Cancelar',
+                                          confirmText: 'Aceptar',
+                                          context: context,
+                                          initialTime: TimeOfDay.now(),
+                                          initialEntryMode:
+                                              TimePickerEntryMode.inputOnly,
+                                        ).then((value) {
+                                          if (value != null) {
+                                            return '${MaterialLocalizations.of(context).formatTimeOfDay(value, alwaysUse24HourFormat: true)}:00';
+                                          } else {
+                                            return horaSalidaControllerEdit
+                                                .text;
+                                          }
+                                        });
+                                      },
+                                      decoration: const InputDecoration(
+                                          labelText: 'Hora de Salida'),
+                                      readOnly: true,
+                                      controller: horaSalidaControllerEdit,
+                                    ))
+                                  ],
                                 ),
                               ),
                               Padding(
@@ -1142,11 +1090,11 @@ class _ScreenFuncionariosRegistroState
                                                                         .text =
                                                                     '0.0';
                                                               }
-                                                              if (telefControllerEdit
+                                                              if (telefonoControllerEdit
                                                                       .text
                                                                       .toString() ==
                                                                   '') {
-                                                                telefControllerEdit
+                                                                telefonoControllerEdit
                                                                     .text = '0';
                                                               }
                                                               if (correoControllerEdit
@@ -1156,13 +1104,7 @@ class _ScreenFuncionariosRegistroState
                                                                 correoControllerEdit
                                                                     .text = '0';
                                                               }
-                                                              if (puestoControllerEdit
-                                                                      .text
-                                                                      .toString() ==
-                                                                  '') {
-                                                                puestoControllerEdit
-                                                                    .text = '0';
-                                                              }
+
                                                               var headers = {
                                                                 'Content-Type':
                                                                     'application/x-www-form-urlencoded'
@@ -1185,24 +1127,21 @@ class _ScreenFuncionariosRegistroState
                                                                 'sueldo_funcionario':
                                                                     sueldoControllerEdit
                                                                         .text,
-                                                                'fecha_pago_funcionario':
-                                                                    fechaCobroControllerEdit
+                                                                'fecha_inicio_funcionario':
+                                                                    fechaInicioControllerEdit
                                                                         .text,
                                                                 'telefono_funcionario':
-                                                                    telefControllerEdit
+                                                                    telefonoControllerEdit
                                                                         .text,
                                                                 'correo_funcionario':
                                                                     correoControllerEdit
                                                                         .text,
-                                                                'horario_funcionario':
-                                                                    horarioControllerEdit
+                                                                'hora_entrada_funcionario':
+                                                                    horaEntradaControllerEdit
                                                                         .text,
-                                                                'cargo_funcionario':
-                                                                    puestoControllerEdit
+                                                                'hora_salida_funcionario':
+                                                                    horaSalidaControllerEdit
                                                                         .text,
-                                                                'fecha_inicio_funcionario':
-                                                                    fechaInicioControllerEdit
-                                                                        .text
                                                               };
                                                               request.headers
                                                                   .addAll(

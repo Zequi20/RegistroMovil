@@ -2,74 +2,73 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:intl/intl.dart';
 
-class ModelTransactionFuncionario {
-  factory ModelTransactionFuncionario.fromJson(Map<String, dynamic> json) {
-    return ModelTransactionFuncionario(
-        json['id_funcionario'],
-        json['ci_funcionario'],
-        json['nombre_funcionario'],
-        double.parse(json['sueldo_funcionario'].toString()),
-        DateFormat('yyy-mm-dd')
-            .format(DateTime.parse(json['fecha_pago_funcionario'].toString())),
-        json['telefono_funcionario'],
-        json['correo_funcionario'],
-        json['horario_funcionario'],
-        json['cargo_funcionario'],
-        DateFormat('yyy-mm-dd').format(
-            DateTime.parse(json['fecha_inicio_funcionario'].toString())));
+class ModelFuncionario {
+  factory ModelFuncionario.fromJson(Map<String, dynamic> json) {
+    return ModelFuncionario(
+      json['id_funcionario'],
+      json['ci_funcionario'],
+      json['id_sede'],
+      json['nombre_funcionario'],
+      json['telefono_funcionario'],
+      json['correo_funcionario'],
+      DateFormat('yyy-mm-dd')
+          .format(DateTime.parse(json['fecha_inicio_funcionario'].toString())),
+      double.parse(json['sueldo_funcionario'].toString()),
+      json['hora_entrada_funcionario'],
+      json['hora_salida_funcionario'],
+    );
   }
-  ModelTransactionFuncionario(
-      this.funcionarioId,
-      this.funcionarioCi,
-      this.funcionarioNombre,
-      this.funcionarioSueldo,
-      this.funcionarioFechaPago,
-      this.funcionarioTelefono,
-      this.funcionarioCorreo,
-      this.funcionarioHorario,
-      this.funcionarioCargo,
-      this.funcionarioFechaInicio);
-  int funcionarioId;
-  int funcionarioCi;
-  String funcionarioNombre;
-  double funcionarioSueldo;
-  String funcionarioFechaPago;
-  String funcionarioTelefono;
-  String funcionarioCorreo;
-  String funcionarioHorario;
-  String funcionarioCargo;
-  String funcionarioFechaInicio;
+  ModelFuncionario(
+      this.idFuncionario,
+      this.ciFuncionario,
+      this.idSede,
+      this.nombreFuncionario,
+      this.telefonoFuncionario,
+      this.correoFuncionario,
+      this.fechaInicioFuncionario,
+      this.sueldoFuncionario,
+      this.horaEntradaFuncionario,
+      this.horaSalidaFuncionario);
+  int idFuncionario;
+  String ciFuncionario;
+  int idSede;
+  String nombreFuncionario;
+  String telefonoFuncionario;
+  String correoFuncionario;
+  String fechaInicioFuncionario;
+  double sueldoFuncionario;
+  String horaEntradaFuncionario;
+  String horaSalidaFuncionario;
 }
 
 class TransactionDataSource extends DataGridSource {
   List<DataGridRow> dataGridRows = [];
 
-  TransactionDataSource(List<ModelTransactionFuncionario> transactions) {
+  TransactionDataSource(List<ModelFuncionario> transactions) {
     dataGridRows = transactions
         .map<DataGridRow>((dataGridRow) => DataGridRow(cells: [
               DataGridCell<int>(
-                  columnName: 'Id', value: dataGridRow.funcionarioId),
-              DataGridCell<int>(
-                  columnName: 'Ci', value: dataGridRow.funcionarioCi),
+                  columnName: 'Id', value: dataGridRow.idFuncionario),
               DataGridCell<String>(
-                  columnName: 'Nombre', value: dataGridRow.funcionarioNombre),
-              DataGridCell<double>(
-                  columnName: 'Sueldo', value: dataGridRow.funcionarioSueldo),
+                  columnName: 'Ci', value: dataGridRow.ciFuncionario),
               DataGridCell<String>(
-                  columnName: 'Fecha Pago',
-                  value: dataGridRow.funcionarioFechaPago),
+                  columnName: 'Nombre', value: dataGridRow.nombreFuncionario),
               DataGridCell<String>(
                   columnName: 'Telefono',
-                  value: dataGridRow.funcionarioTelefono),
+                  value: dataGridRow.telefonoFuncionario),
               DataGridCell<String>(
-                  columnName: 'Correo', value: dataGridRow.funcionarioCorreo),
+                  columnName: 'Correo', value: dataGridRow.correoFuncionario),
               DataGridCell<String>(
-                  columnName: 'Horario', value: dataGridRow.funcionarioHorario),
+                  columnName: 'Fecha de Inicio',
+                  value: dataGridRow.fechaInicioFuncionario),
+              DataGridCell<double>(
+                  columnName: 'Sueldo', value: dataGridRow.sueldoFuncionario),
               DataGridCell<String>(
-                  columnName: 'Cargo', value: dataGridRow.funcionarioCargo),
+                  columnName: 'Entrada',
+                  value: dataGridRow.horaEntradaFuncionario),
               DataGridCell<String>(
-                  columnName: 'Fecha Inicio',
-                  value: dataGridRow.funcionarioFechaInicio),
+                  columnName: 'Salida',
+                  value: dataGridRow.horaSalidaFuncionario),
             ]))
         .toList(growable: false);
   }
