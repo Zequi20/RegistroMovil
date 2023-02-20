@@ -41,7 +41,7 @@ class _ScreenSedesState extends State<ScreenSedes> {
         title: const Center(
             child: Text(
           style: TextStyle(color: Colors.white),
-          'SEDES',
+          'SUCURSALES',
           textAlign: TextAlign.center,
         )),
         backgroundColor: Colors.indigo.shade900.withOpacity(0.7),

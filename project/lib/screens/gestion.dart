@@ -13,9 +13,9 @@ class ScreenGestion extends StatelessWidget {
         child: Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Center(
+        title: Center(
             child: Text(
-          'GESTION',
+          'SUCURSAL ${args.nombreSede.toUpperCase()}',
           textAlign: TextAlign.center,
         )),
         backgroundColor: Colors.indigo.shade900.withOpacity(0.7),
@@ -124,7 +124,10 @@ class ScreenGestion extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12.0)),
             elevation: 5,
             child: ListTile(
-              onTap: null,
+              onTap: () {
+                Navigator.of(context).pushNamed('Retiros',
+                    arguments: GestionArguments(args.idSede, args.nombreSede));
+              },
               shape: RoundedRectangleBorder(
                   side: const BorderSide(width: 1, color: Colors.white),
                   borderRadius: BorderRadius.circular(12.0)),

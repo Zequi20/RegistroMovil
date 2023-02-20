@@ -92,7 +92,7 @@ class _ScreenFuncionariosRegistroState
       ),
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Registro de Funcionarios'),
+        title: Text('Funcionarios ${args.nombreSede}'),
         backgroundColor: Colors.indigo.shade900.withOpacity(0.7),
         shape: const RoundedRectangleBorder(
           side: BorderSide(

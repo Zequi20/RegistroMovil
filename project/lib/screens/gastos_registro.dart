@@ -5,19 +5,18 @@ import 'package:flutter/services.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-
 import '../screenParams/arguments.dart';
 
-class ScreenIngresosRegistro extends StatefulWidget {
-  const ScreenIngresosRegistro({super.key});
+class ScreenGastosRegistro extends StatefulWidget {
+  const ScreenGastosRegistro({super.key});
 
   @override
-  State<ScreenIngresosRegistro> createState() => _ScreenIngresosRegistroState();
+  State<ScreenGastosRegistro> createState() => _ScreenGastosRegistroState();
 }
 
-class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
+class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
   final DataGridController _dataGridController = DataGridController();
-  var link = 'http://192.168.0.7:8474/ingresos';
+  var link = 'http://192.168.0.7:8474/gastos';
   //var queryController = TextEditingController();
   bool visible = false;
   Icon searchIcon = const Icon(Icons.search);
@@ -72,7 +71,7 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
       ),
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Registro de Ingresos'),
+        title: Text('Gastos ${args.nombreSede}'),
         backgroundColor: Colors.indigo.shade900.withOpacity(0.7),
         shape: const RoundedRectangleBorder(
           side: BorderSide(
@@ -151,9 +150,7 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
   Future getTransaccionData(String url, GestionArguments args) async {
     var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
     var request = http.Request('GET', Uri.parse(url));
-    request.bodyFields = {
-      'id_sede': args.idSede.toString(),
-    };
+    request.bodyFields = {'id_sede': args.idSede.toString()};
     request.headers.addAll(headers);
 
     http.StreamedResponse responseStream = await request.send();
@@ -173,7 +170,6 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
     for (var v in mapa) {
       lista.add(ModelTransaccion.fromJson(v));
     }
-
     return lista;
   }
 
@@ -300,7 +296,7 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
                             controller: valorController,
                             keyboardType: TextInputType.number,
                             decoration: const InputDecoration(
-                                label: Text('Valor del Ingreso (Guaranies)')),
+                                label: Text('Valor del Gasto (Guaranies)')),
                           ),
                         ),
                         Padding(
@@ -325,7 +321,7 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
                               });
                             },
                             decoration: const InputDecoration(
-                                labelText: 'Fecha del Ingreso'),
+                                labelText: 'Fecha del gasto'),
                             readOnly: true,
                             controller: fechaController,
                           ),
@@ -335,7 +331,7 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
                           child: TextField(
                             onTap: () async {
                               horaController.text = await showTimePicker(
-                                helpText: 'Fijar hora del Ingreso',
+                                helpText: 'Fijar hora del Gasto',
                                 cancelText: 'Cancelar',
                                 confirmText: 'Aceptar',
                                 context: context,
@@ -350,7 +346,7 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
                               });
                             },
                             decoration: const InputDecoration(
-                                labelText: 'Hora del Ingreso'),
+                                labelText: 'Hora del gasto'),
                             readOnly: true,
                             controller: horaController,
                           ),
@@ -362,7 +358,7 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
                             controller: observacionController,
                             keyboardType: TextInputType.text,
                             decoration: const InputDecoration(
-                                label: Text('Observacion del Ingreso')),
+                                label: Text('Observacion del Gasto')),
                           ),
                         ),
                         Padding(
@@ -417,7 +413,7 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
                                                         var request = http.Request(
                                                             'POST',
                                                             Uri.parse(
-                                                                'http://192.168.0.7:8474/ingresos/agregar'));
+                                                                'http://192.168.0.7:8474/gastos/agregar'));
                                                         request.bodyFields = {
                                                           'id_sede': args.idSede
                                                               .toString(),
@@ -630,8 +626,7 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
                                 controller: valorControllerEdit,
                                 keyboardType: TextInputType.number,
                                 decoration: const InputDecoration(
-                                    label:
-                                        Text('Valor del Ingreso (Guaranies)')),
+                                    label: Text('Valor del Gasto (Guaranies)')),
                               ),
                             ),
                             Padding(
@@ -659,7 +654,7 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
                                   });
                                 },
                                 decoration: const InputDecoration(
-                                    labelText: 'Fecha del Ingreso'),
+                                    labelText: 'Fecha del gasto'),
                                 readOnly: true,
                                 controller: fechaControllerEdit,
                               ),
@@ -668,16 +663,16 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
                               padding: const EdgeInsets.all(12.0),
                               child: TextField(
                                 onTap: () async {
-                                  horaControllerEdit
-                                      .text = await showTimePicker(
-                                          helpText: 'Fijar hora del Ingreso',
-                                          cancelText: 'Cancelar',
-                                          confirmText: 'Aceptar',
-                                          context: context,
-                                          initialTime: TimeOfDay.now(),
-                                          initialEntryMode:
-                                              TimePickerEntryMode.dialOnly)
-                                      .then((value) {
+                                  horaControllerEdit.text =
+                                      await showTimePicker(
+                                              helpText: 'Fijar hora del Gasto',
+                                              cancelText: 'Cancelar',
+                                              confirmText: 'Aceptar',
+                                              context: context,
+                                              initialTime: TimeOfDay.now(),
+                                              initialEntryMode:
+                                                  TimePickerEntryMode.dialOnly)
+                                          .then((value) {
                                     if (value != null) {
                                       return '${MaterialLocalizations.of(context).formatTimeOfDay(value, alwaysUse24HourFormat: true)}:00';
                                     } else {
@@ -686,7 +681,7 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
                                   });
                                 },
                                 decoration: const InputDecoration(
-                                    labelText: 'Hora del Ingreso'),
+                                    labelText: 'Hora del gasto'),
                                 readOnly: true,
                                 controller: horaControllerEdit,
                               ),
@@ -699,7 +694,7 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
                                 controller: observacionControllerEdit,
                                 keyboardType: TextInputType.text,
                                 decoration: const InputDecoration(
-                                    label: Text('Observacion del Ingreso')),
+                                    label: Text('Observacion del Gasto')),
                               ),
                             ),
                             Padding(
@@ -759,7 +754,7 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
                                                               http.Request(
                                                                   'POST',
                                                                   Uri.parse(
-                                                                      'http://192.168.0.7:8474/ingresos/editar'));
+                                                                      'http://192.168.0.7:8474/gastos/editar'));
                                                           request.bodyFields = {
                                                             'id_transaccion':
                                                                 regId

@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:bio_farm/models/model_transaccion.dart';
+import 'package:bio_farm/models/model_retiro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
@@ -7,16 +7,16 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import '../screenParams/arguments.dart';
 
-class ScreenGastosRegistro extends StatefulWidget {
-  const ScreenGastosRegistro({super.key});
+class ScreenRetirosRegistro extends StatefulWidget {
+  const ScreenRetirosRegistro({super.key});
 
   @override
-  State<ScreenGastosRegistro> createState() => _ScreenGastosRegistroState();
+  State<ScreenRetirosRegistro> createState() => _ScreenRetirosRegistroState();
 }
 
-class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
+class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
   final DataGridController _dataGridController = DataGridController();
-  var link = 'http://192.168.0.7:8474/gastos';
+  var link = 'http://192.168.0.7:8474/retiros';
   //var queryController = TextEditingController();
   bool visible = false;
   Icon searchIcon = const Icon(Icons.search);
@@ -30,7 +30,7 @@ class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
     fontSize: 16,
   );
 
-  List<ModelTransaccion> _transactions = [];
+  List<ModelRetiro> _transactions = [];
   late TransactionDataSource _transactionDataSource;
 
   @override
@@ -71,7 +71,7 @@ class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
       ),
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Registro de Gastos'),
+        title: Text('Retiros ${args.nombreSede}'),
         backgroundColor: Colors.indigo.shade900.withOpacity(0.7),
         shape: const RoundedRectangleBorder(
           side: BorderSide(
@@ -165,10 +165,10 @@ class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
     return _transactionDataSource;
   }
 
-  List<ModelTransaccion> listToModel(List mapa) {
-    List<ModelTransaccion> lista = [];
+  List<ModelRetiro> listToModel(List mapa) {
+    List<ModelRetiro> lista = [];
     for (var v in mapa) {
-      lista.add(ModelTransaccion.fromJson(v));
+      lista.add(ModelRetiro.fromJson(v));
     }
     return lista;
   }
