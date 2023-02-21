@@ -17,7 +17,7 @@ class ScreenRetirosRegistro extends StatefulWidget {
 class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
   final DataGridController _dataGridController = DataGridController();
   var link = 'http://192.168.0.7:8474/retiros';
-  //var queryController = TextEditingController();
+
   bool visible = false;
   Icon searchIcon = const Icon(Icons.search);
   var bfColor = Colors.blue.shade600.withOpacity(0.7);
@@ -42,16 +42,20 @@ class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as GestionArguments;
     var curDate = DateTime.now();
+
+    var funcionarioController = TextEditingController();
     var valorController = TextEditingController();
     var fechaController =
         TextEditingController(text: DateFormat('yyyy-MM-dd').format(curDate));
     var horaController =
         TextEditingController(text: DateFormat.Hms().format(curDate));
-    var observacionController = TextEditingController();
+    var motivoController = TextEditingController();
+
+    var funcionarioControllerEdit = TextEditingController();
     var valorControllerEdit = TextEditingController();
     var fechaControllerEdit = TextEditingController();
     var horaControllerEdit = TextEditingController();
-    var observacionControllerEdit = TextEditingController();
+    var motivoControllerEdit = TextEditingController();
 
     return SafeArea(
         child: Scaffold(
@@ -60,14 +64,17 @@ class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
         spacing: 6.5,
         children: getActions(
             args,
+            _transactions,
+            funcionarioController,
             valorController,
             fechaController,
             horaController,
-            observacionController,
+            motivoController,
+            funcionarioControllerEdit,
             valorControllerEdit,
             fechaControllerEdit,
             horaControllerEdit,
-            observacionControllerEdit),
+            motivoControllerEdit),
       ),
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -103,11 +110,12 @@ class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
                                   SizedBox(
                                     width: 250,
                                     child: Text(
-                                        'Observacion: ${row.getCells()[4].value}'),
+                                        'Motivo: ${row.getCells()[4].value}'),
                                   ),
-                                  Text('Fecha: ${row.getCells()[2].value}'),
-                                  Text('Hora: ${row.getCells()[3].value}'),
-                                  Text('Valor: ${row.getCells()[1].value}'),
+                                  Text('Fecha: ${row.getCells()[3].value}'),
+                                  Text(
+                                      'Funcionario: ${row.getCells()[1].value}'),
+                                  Text('Valor: ${row.getCells()[2].value}'),
                                 ],
                               ),
                               titleTextStyle: bfTextStyle,
@@ -170,6 +178,7 @@ class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
     for (var v in mapa) {
       lista.add(ModelRetiro.fromJson(v));
     }
+
     return lista;
   }
 
@@ -187,10 +196,20 @@ class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
       GridColumn(
           allowSorting: true,
           allowFiltering: true,
-          columnName: 'Valor',
+          columnName: 'Funcionario',
           columnWidthMode: ColumnWidthMode.fitByColumnName,
           label: Container(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            alignment: Alignment.center,
+            child: const Text('Funcionario'),
+          )),
+      GridColumn(
+          allowSorting: true,
+          allowFiltering: true,
+          columnName: 'Valor',
+          columnWidthMode: ColumnWidthMode.fitByColumnName,
+          label: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.center,
             child: const Text('Valor'),
           )),
@@ -216,30 +235,34 @@ class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
           )),
       GridColumn(
           allowFiltering: true,
-          columnName: 'Observacion',
+          columnName: 'Motivo',
           columnWidthMode: ColumnWidthMode.fitByColumnName,
           label: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.center,
-            child: const Text('Observacion'),
+            child: const Text('Motivo'),
           ))
     ];
   }
 
   List<Widget> getActions(
       args,
+      listaDropDown,
+      funcionarioController,
       valorController,
       fechaController,
       horaController,
-      observacionController,
+      motivoController,
+      funcionarioControllerEdit,
       valorControllerEdit,
       fechaControllerEdit,
       horaControllerEdit,
-      observacionControllerEdit) {
+      motivoControllerEdit) {
     ShapeBorder bfShape = RoundedRectangleBorder(
         side: BorderSide.merge(const BorderSide(color: Colors.white),
             const BorderSide(color: Colors.white)),
         borderRadius: BorderRadius.circular(10.0));
+    String dropDownValue = listaDropDown.first;
     return [
       FloatingActionButton(
           heroTag: 'btn_add',
@@ -289,6 +312,27 @@ class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                          child: DropdownButton<String>(
+                            value: dropDownValue,
+                            items: _transactions.map<DropdownMenuItem<String>>(
+                                (ModelRetiro value) {
+                              return DropdownMenuItem<String>(
+                                value: value.funcionarioRetiro,
+                                child: Text(
+                                  value.funcionarioRetiro,
+                                  style: const TextStyle(fontSize: 18),
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                dropDownValue = newValue!;
+                              });
+                            },
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
                           child: TextField(
                             inputFormatters: [
                               FilteringTextInputFormatter.allow(RegExp(r'\d')),
@@ -296,7 +340,7 @@ class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
                             controller: valorController,
                             keyboardType: TextInputType.number,
                             decoration: const InputDecoration(
-                                label: Text('Valor del Gasto (Guaranies)')),
+                                label: Text('Valor del retiro (Guaranies)')),
                           ),
                         ),
                         Padding(
@@ -321,23 +365,24 @@ class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
                               });
                             },
                             decoration: const InputDecoration(
-                                labelText: 'Fecha del gasto'),
+                                labelText: 'Fecha del retiro'),
                             readOnly: true,
                             controller: fechaController,
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(12.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
                           child: TextField(
                             onTap: () async {
                               horaController.text = await showTimePicker(
-                                helpText: 'Fijar hora del Gasto',
-                                cancelText: 'Cancelar',
-                                confirmText: 'Aceptar',
-                                context: context,
-                                initialTime: TimeOfDay.now(),
-                                initialEntryMode: TimePickerEntryMode.inputOnly,
-                              ).then((value) {
+                                      helpText: 'Fijar hora del Retiro',
+                                      cancelText: 'Cancelar',
+                                      confirmText: 'Aceptar',
+                                      context: context,
+                                      initialTime: TimeOfDay.now(),
+                                      initialEntryMode:
+                                          TimePickerEntryMode.dialOnly)
+                                  .then((value) {
                                 if (value != null) {
                                   return '${MaterialLocalizations.of(context).formatTimeOfDay(value, alwaysUse24HourFormat: true)}:00';
                                 } else {
@@ -346,7 +391,7 @@ class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
                               });
                             },
                             decoration: const InputDecoration(
-                                labelText: 'Hora del gasto'),
+                                labelText: 'Hora del retiro'),
                             readOnly: true,
                             controller: horaController,
                           ),
@@ -355,10 +400,10 @@ class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
                           padding: const EdgeInsets.symmetric(horizontal: 12.0),
                           child: TextField(
                             maxLength: 50,
-                            controller: observacionController,
+                            controller: motivoController,
                             keyboardType: TextInputType.text,
                             decoration: const InputDecoration(
-                                label: Text('Observacion del Gasto')),
+                                label: Text('Motivo del retiro')),
                           ),
                         ),
                         Padding(
@@ -427,7 +472,7 @@ class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
                                                               horaController
                                                                   .text,
                                                           'observacion_transaccion':
-                                                              observacionController
+                                                              motivoController
                                                                   .text
                                                         };
                                                         request.headers
@@ -570,7 +615,7 @@ class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
                 valorControllerEdit.text = selection[1].value.toString();
                 fechaControllerEdit.text = selection[2].value.toString();
                 horaControllerEdit.text = selection[3].value.toString();
-                observacionControllerEdit.text = selection[4].value.toString();
+                motivoControllerEdit.text = selection[4].value.toString();
 
                 showModalBottomSheet(
                     isScrollControlled: true,
@@ -691,7 +736,7 @@ class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
                                   const EdgeInsets.symmetric(horizontal: 12.0),
                               child: TextField(
                                 maxLength: 50,
-                                controller: observacionControllerEdit,
+                                controller: motivoControllerEdit,
                                 keyboardType: TextInputType.text,
                                 decoration: const InputDecoration(
                                     label: Text('Observacion del Gasto')),
@@ -772,7 +817,7 @@ class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
                                                                 horaControllerEdit
                                                                     .text,
                                                             'observacion_transaccion':
-                                                                observacionControllerEdit
+                                                                motivoControllerEdit
                                                                     .text
                                                           };
                                                           request.headers

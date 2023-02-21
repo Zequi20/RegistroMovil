@@ -1,22 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class ModelRetiro {
   factory ModelRetiro.fromJson(Map<String, dynamic> json) {
     return ModelRetiro(
-        json['id_retiro'],
-        json['funcionario_retiro'],
-        json['fecha_retiro'].toString(),
-        json['motivo_retiro'],
-        json['valor_retiro']);
+      json['id_retiro'],
+      json['id_sede'],
+      double.parse(json['valor_retiro'].toString()),
+      DateFormat('yyy-mm-dd')
+          .format(DateTime.parse(json['fecha_retiro'].toString())),
+      json['hora_retiro'].toString(),
+      json['motivo_retiro'].toString(),
+      json['funcionario_retiro'].toString(),
+    );
   }
-  ModelRetiro(this.idRetiro, this.funcionarioRetiro, this.fechaRetiro,
-      this.motivoRetiro, this.valorRetiro);
+  ModelRetiro(this.idRetiro, this.idSede, this.valorRetiro, this.fechaRetiro,
+      this.horaRetiro, this.motivoRetiro, this.funcionarioRetiro);
   int idRetiro;
-  String funcionarioRetiro;
+  int idSede;
   double valorRetiro;
   String fechaRetiro;
+  String horaRetiro;
   String motivoRetiro;
+  String funcionarioRetiro;
 }
 
 class TransactionDataSource extends DataGridSource {
@@ -33,6 +40,8 @@ class TransactionDataSource extends DataGridSource {
                   columnName: 'Valor', value: dataGridRow.valorRetiro),
               DataGridCell<String>(
                   columnName: 'Fecha', value: dataGridRow.fechaRetiro),
+              DataGridCell<String>(
+                  columnName: 'Hora', value: dataGridRow.horaRetiro),
               DataGridCell<String>(
                   columnName: 'Motivo', value: dataGridRow.motivoRetiro)
             ]))

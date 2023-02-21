@@ -130,19 +130,17 @@ class _ScreenFuncionariosRegistroState
                                     child: Text(
                                         'Nombre: ${row.getCells()[2].value}'),
                                   ),
-                                  Text('Sueldo: ${row.getCells()[3].value}'),
+                                  Text('Sueldo: ${row.getCells()[6].value}'),
                                   Text(
-                                      'Fecha de cobro: ${row.getCells()[4].value}'),
-                                  Text('Telefono: ${row.getCells()[5].value}'),
+                                      'Fecha de inicio: ${row.getCells()[5].value}'),
+                                  Text('Telefono: ${row.getCells()[3].value}'),
                                   SizedBox(
                                     width: 250,
                                     child: Text(
-                                        'Correo: ${row.getCells()[6].value}'),
+                                        'Correo: ${row.getCells()[4].value}'),
                                   ),
-                                  Text('Horario: ${row.getCells()[7].value}'),
-                                  Text('Puesto: ${row.getCells()[8].value}'),
                                   Text(
-                                      'Fecha de inicio: ${row.getCells()[9].value}'),
+                                      'Horario: ${row.getCells()[7].value}-${row.getCells()[8].value}'),
                                 ],
                               ),
                               titleTextStyle: bfTextStyle,
