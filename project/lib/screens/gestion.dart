@@ -21,7 +21,9 @@ class ScreenGestion extends StatelessWidget {
         backgroundColor: Colors.indigo.shade900.withOpacity(0.7),
         shape: const RoundedRectangleBorder(
           side: BorderSide(
-              strokeAlign: StrokeAlign.outside, width: 1, color: Colors.white),
+              strokeAlign: BorderSide.strokeAlignOutside,
+              width: 1,
+              color: Colors.white),
         ),
         actions: [
           IconButton(

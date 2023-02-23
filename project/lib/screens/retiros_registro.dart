@@ -1,10 +1,13 @@
 import 'dart:convert';
 import 'package:bio_farm/models/model_retiro.dart';
+import 'package:bio_farm/widgets/modal_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+
+import '../models/model_funcionario.dart';
 import '../screenParams/arguments.dart';
 
 class ScreenRetirosRegistro extends StatefulWidget {
@@ -31,6 +34,7 @@ class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
   );
 
   List<ModelRetiro> _transactions = [];
+  List<ModelFuncionario> _funcionarios = [];
   late TransactionDataSource _transactionDataSource;
 
   @override
@@ -42,6 +46,8 @@ class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as GestionArguments;
     var curDate = DateTime.now();
+
+    var idFuncionarioController = TextEditingController();
 
     var funcionarioController = TextEditingController();
     var valorController = TextEditingController();
@@ -60,29 +66,31 @@ class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
     return SafeArea(
         child: Scaffold(
       floatingActionButton: Wrap(
-        direction: Axis.horizontal,
-        spacing: 6.5,
-        children: getActions(
-            args,
-            _transactions,
-            funcionarioController,
-            valorController,
-            fechaController,
-            horaController,
-            motivoController,
-            funcionarioControllerEdit,
-            valorControllerEdit,
-            fechaControllerEdit,
-            horaControllerEdit,
-            motivoControllerEdit),
-      ),
+          direction: Axis.horizontal,
+          spacing: 6.5,
+          children: getActions(
+              args,
+              _transactions,
+              funcionarioController,
+              idFuncionarioController,
+              valorController,
+              fechaController,
+              horaController,
+              motivoController,
+              funcionarioControllerEdit,
+              valorControllerEdit,
+              fechaControllerEdit,
+              horaControllerEdit,
+              motivoControllerEdit)),
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text('Retiros ${args.nombreSede}'),
         backgroundColor: Colors.indigo.shade900.withOpacity(0.7),
         shape: const RoundedRectangleBorder(
           side: BorderSide(
-              strokeAlign: StrokeAlign.outside, width: 1, color: Colors.white),
+              strokeAlign: BorderSide.strokeAlignOutside,
+              width: 1,
+              color: Colors.white),
         ),
       ),
       body: FutureBuilder(
@@ -173,10 +181,36 @@ class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
     return _transactionDataSource;
   }
 
+  Future getFuncionarioData(GestionArguments args) async {
+    var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+    var request =
+        http.Request('GET', Uri.parse('http://192.168.0.7:8474/funcionarios'));
+    request.bodyFields = {'id_sede': args.idSede.toString()};
+    request.headers.addAll(headers);
+
+    http.StreamedResponse responseStream = await request.send();
+    var response = await http.Response.fromStream(responseStream);
+
+    List list = json.decode(response.body);
+
+    _funcionarios = listToFuncModel(list);
+
+    return _funcionarios;
+  }
+
   List<ModelRetiro> listToModel(List mapa) {
     List<ModelRetiro> lista = [];
     for (var v in mapa) {
       lista.add(ModelRetiro.fromJson(v));
+    }
+
+    return lista;
+  }
+
+  List<ModelFuncionario> listToFuncModel(List mapa) {
+    List<ModelFuncionario> lista = [];
+    for (var v in mapa) {
+      lista.add(ModelFuncionario.fromJson(v));
     }
 
     return lista;
@@ -245,26 +279,7 @@ class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
     ];
   }
 
-  List<Widget> getActions(
-      args,
-      listaDropDown,
-      funcionarioController,
-      valorController,
-      fechaController,
-      horaController,
-      motivoController,
-      funcionarioControllerEdit,
-      valorControllerEdit,
-      fechaControllerEdit,
-      horaControllerEdit,
-      motivoControllerEdit) {
-    ShapeBorder bfShape = RoundedRectangleBorder(
-        side: BorderSide.merge(const BorderSide(color: Colors.white),
-            const BorderSide(color: Colors.white)),
-        borderRadius: BorderRadius.circular(10.0));
-    String dropDownValue = listaDropDown.first;
-    return [
-      FloatingActionButton(
+  /* FloatingActionButton(
           heroTag: 'btn_add',
           onPressed: () {
             showModalBottomSheet(
@@ -329,6 +344,398 @@ class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
                                 dropDownValue = newValue!;
                               });
                             },
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                          child: TextField(
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(RegExp(r'\d')),
+                            ],
+                            controller: valorController,
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                                label: Text('Valor del retiro (Guaranies)')),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                          child: TextField(
+                            onTap: () async {
+                              fechaController.text = await showDatePicker(
+                                      cancelText: 'Cancelar',
+                                      confirmText: 'Aceptar',
+                                      initialEntryMode:
+                                          DatePickerEntryMode.calendarOnly,
+                                      context: context,
+                                      initialDate: DateTime.now(),
+                                      firstDate: DateTime(2000, 1, 1),
+                                      lastDate: DateTime.now())
+                                  .then((value) {
+                                if (value != null) {
+                                  return DateFormat('yyyy-MM-dd').format(value);
+                                } else {
+                                  return fechaController.text;
+                                }
+                              });
+                            },
+                            decoration: const InputDecoration(
+                                labelText: 'Fecha del retiro'),
+                            readOnly: true,
+                            controller: fechaController,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                          child: TextField(
+                            onTap: () async {
+                              horaController.text = await showTimePicker(
+                                      helpText: 'Fijar hora del Retiro',
+                                      cancelText: 'Cancelar',
+                                      confirmText: 'Aceptar',
+                                      context: context,
+                                      initialTime: TimeOfDay.now(),
+                                      initialEntryMode:
+                                          TimePickerEntryMode.dialOnly)
+                                  .then((value) {
+                                if (value != null) {
+                                  return '${MaterialLocalizations.of(context).formatTimeOfDay(value, alwaysUse24HourFormat: true)}:00';
+                                } else {
+                                  return horaController.text;
+                                }
+                              });
+                            },
+                            decoration: const InputDecoration(
+                                labelText: 'Hora del retiro'),
+                            readOnly: true,
+                            controller: horaController,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                          child: TextField(
+                            maxLength: 50,
+                            controller: motivoController,
+                            keyboardType: TextInputType.text,
+                            decoration: const InputDecoration(
+                                label: Text('Motivo del retiro')),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                  child: TextButton(
+                                      style: ButtonStyle(
+                                          side: const MaterialStatePropertyAll(
+                                              BorderSide(
+                                                  color: Colors.white,
+                                                  width: 1)),
+                                          elevation:
+                                              MaterialStateProperty.all(5),
+                                          shadowColor:
+                                              const MaterialStatePropertyAll(
+                                                  Colors.black),
+                                          backgroundColor:
+                                              MaterialStatePropertyAll(
+                                                  bfColor)),
+                                      onPressed: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                titleTextStyle: bfTextStyle,
+                                                contentTextStyle: bfTextStyle,
+                                                backgroundColor: bfColor,
+                                                shape: bfShape,
+                                                iconColor: Colors.white,
+                                                actions: [
+                                                  TextButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: Text(
+                                                          style: bfTextStyle,
+                                                          'Cancelar')),
+                                                  TextButton(
+                                                      onPressed: () {
+                                                        if (valorController
+                                                                .text ==
+                                                            '') {
+                                                          valorController.text =
+                                                              '0';
+                                                        }
+                                                        var headers = {
+                                                          'Content-Type':
+                                                              'application/x-www-form-urlencoded'
+                                                        };
+                                                        var request = http.Request(
+                                                            'POST',
+                                                            Uri.parse(
+                                                                'http://192.168.0.7:8474/gastos/agregar'));
+                                                        request.bodyFields = {
+                                                          'id_sede': args.idSede
+                                                              .toString(),
+                                                          'valor_transaccion':
+                                                              valorController
+                                                                  .text,
+                                                          'fecha_transaccion':
+                                                              fechaController
+                                                                  .text,
+                                                          'hora_transaccion':
+                                                              horaController
+                                                                  .text,
+                                                          'observacion_transaccion':
+                                                              motivoController
+                                                                  .text
+                                                        };
+                                                        request.headers
+                                                            .addAll(headers);
+
+                                                        request.send();
+
+                                                        Navigator.pop(context);
+                                                        Navigator.pop(context);
+                                                        setState(() {});
+                                                      },
+                                                      child: Text(
+                                                        'Agregar',
+                                                        style: bfTextStyle,
+                                                      ))
+                                                ],
+                                                icon: const Icon(Icons.publish),
+                                                title: const Text(
+                                                    'Confirmar Operacion'),
+                                                content: const Text(
+                                                    'Seguro que desea agregar cambios al registro?'),
+                                              );
+                                            });
+                                      },
+                                      child: Text(
+                                        'Agregar',
+                                        style: bfTextStyle,
+                                      ))),
+                              const Divider(
+                                indent: 5.0,
+                              ),
+                              Expanded(
+                                  child: TextButton(
+                                      style: ButtonStyle(
+                                          side: const MaterialStatePropertyAll(
+                                              BorderSide(
+                                                  color: Colors.white,
+                                                  width: 1)),
+                                          elevation:
+                                              MaterialStateProperty.all(5),
+                                          shadowColor:
+                                              const MaterialStatePropertyAll(
+                                                  Colors.black),
+                                          backgroundColor:
+                                              MaterialStatePropertyAll(
+                                                  bfColor)),
+                                      onPressed: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                titleTextStyle: bfTextStyle,
+                                                contentTextStyle: bfTextStyle,
+                                                iconColor: Colors.white,
+                                                backgroundColor: bfColor,
+                                                shape: bfShape,
+                                                actions: [
+                                                  TextButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: Text(
+                                                        'Cancelar',
+                                                        style: bfTextStyle,
+                                                      )),
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: Text('Descartar',
+                                                        style: bfTextStyle),
+                                                  )
+                                                ],
+                                                icon: const Icon(
+                                                    Icons.unpublished),
+                                                title: Text(
+                                                  'Descartar Operacion',
+                                                  style: bfTextStyle,
+                                                ),
+                                                content: Text(
+                                                  'Seguro que desea descartar la operacion?',
+                                                  style: bfTextStyle,
+                                                ),
+                                              );
+                                            });
+                                      },
+                                      child: Text(
+                                        'Descartar',
+                                        style: bfTextStyle,
+                                      )))
+                            ],
+                          ),
+                        ),
+                      ],
+                    )),
+                  );
+                }));
+          },
+          backgroundColor: bfColor,
+          child: const Icon(Icons.playlist_add, color: Colors.white)) */
+
+  List<Widget> getActions(
+      args,
+      listaDropDown,
+      funcionarioController,
+      idFuncionarioController,
+      valorController,
+      fechaController,
+      horaController,
+      motivoController,
+      funcionarioControllerEdit,
+      valorControllerEdit,
+      fechaControllerEdit,
+      horaControllerEdit,
+      motivoControllerEdit) {
+    ShapeBorder bfShape = RoundedRectangleBorder(
+        side: BorderSide.merge(const BorderSide(color: Colors.white),
+            const BorderSide(color: Colors.white)),
+        borderRadius: BorderRadius.circular(10.0));
+
+    return [
+      FloatingActionButton(
+          heroTag: 'btn_add',
+          onPressed: () {
+            showModalBottomSheet(
+                isScrollControlled: true,
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                shape: bfShape,
+                elevation: 0.5,
+                context: context,
+                builder: ((context) {
+                  return Padding(
+                    padding: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).viewInsets.bottom),
+                    child: Form(
+                        child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                boxShadow: const [
+                                  BoxShadow(
+                                      color: Colors.black,
+                                      offset: Offset(1, 1),
+                                      blurRadius: 3)
+                                ],
+                                border: Border.all(
+                                    color: Colors.white,
+                                    width: 1,
+                                    strokeAlign: BorderSide.strokeAlignInside),
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(10.0)),
+                                color: Colors.blue.shade600),
+                            child: Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(12),
+                                child: Text(
+                                  'Agregar al registro',
+                                  style: bfTextStyle,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                  child: TextField(
+                                onTap: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return FutureBuilder(
+                                          future: getFuncionarioData(args),
+                                          builder: (BuildContext context,
+                                              AsyncSnapshot<dynamic> snapshot) {
+                                            return snapshot.hasData
+                                                ? ModalList(
+                                                    listaFuncionarios:
+                                                        _funcionarios,
+                                                    idTextController:
+                                                        idFuncionarioController,
+                                                    funcionarioTextController:
+                                                        funcionarioController)
+                                                : const Center(
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                      color: Colors.white,
+                                                    ),
+                                                  );
+                                          },
+                                        );
+                                      });
+                                },
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp(r'\d')),
+                                ],
+                                enabled: true,
+                                readOnly: true,
+                                controller: idFuncionarioController,
+                                keyboardType: TextInputType.number,
+                                decoration: const InputDecoration(
+                                    label: Text('Id del funcionario')),
+                              )),
+                              const Divider(
+                                indent: 5,
+                              ),
+                              Expanded(
+                                  child: TextFormField(
+                                onTap: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return FutureBuilder(
+                                          future: getFuncionarioData(args),
+                                          builder: (BuildContext context,
+                                              AsyncSnapshot<dynamic> snapshot) {
+                                            return snapshot.hasData
+                                                ? ModalList(
+                                                    listaFuncionarios:
+                                                        _funcionarios,
+                                                    idTextController:
+                                                        idFuncionarioController,
+                                                    funcionarioTextController:
+                                                        funcionarioController)
+                                                : const Center(
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                      color: Colors.white,
+                                                    ),
+                                                  );
+                                          },
+                                        );
+                                      });
+                                },
+                                readOnly: true,
+                                controller: funcionarioController,
+                                decoration: const InputDecoration(
+                                    label: Text('Nombre del funcionario')),
+                              ))
+                            ],
                           ),
                         ),
                         Padding(
@@ -645,7 +1052,8 @@ class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
                                     border: Border.all(
                                         color: Colors.white,
                                         width: 1,
-                                        strokeAlign: StrokeAlign.inside),
+                                        strokeAlign:
+                                            BorderSide.strokeAlignInside),
                                     borderRadius: const BorderRadius.all(
                                         Radius.circular(10.0)),
                                     color: Colors.blue.shade600),
@@ -986,27 +1394,7 @@ class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
                                 setState(() {
                                   Navigator.pop(context);
                                 });
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        icon: const Icon(Icons.check),
-                                        titleTextStyle: bfTextStyle,
-                                        contentTextStyle: bfTextStyle,
-                                        iconColor: Colors.white,
-                                        backgroundColor: bfColor,
-                                        shape: RoundedRectangleBorder(
-                                            side: const BorderSide(
-                                                width: 1, color: Colors.white),
-                                            borderRadius:
-                                                BorderRadius.circular(12.0)),
-                                        title: const Text('Borrar registro'),
-                                        content: const Text(
-                                          'Operacion exitosa',
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      );
-                                    });
+                                succesDelete();
                               }
                             },
                             child: Text(
@@ -1029,5 +1417,27 @@ class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
             color: Colors.white,
           ))
     ];
+  }
+
+  void succesDelete() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            icon: const Icon(Icons.check),
+            titleTextStyle: bfTextStyle,
+            contentTextStyle: bfTextStyle,
+            iconColor: Colors.white,
+            backgroundColor: bfColor,
+            shape: RoundedRectangleBorder(
+                side: const BorderSide(width: 1, color: Colors.white),
+                borderRadius: BorderRadius.circular(12.0)),
+            title: const Text('Borrar registro'),
+            content: const Text(
+              'Operacion exitosa',
+              textAlign: TextAlign.center,
+            ),
+          );
+        });
   }
 }

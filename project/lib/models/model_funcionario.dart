@@ -41,10 +41,10 @@ class ModelFuncionario {
   String horaSalidaFuncionario;
 }
 
-class TransactionDataSource extends DataGridSource {
+class FuncionarioDataSource extends DataGridSource {
   List<DataGridRow> dataGridRows = [];
 
-  TransactionDataSource(List<ModelFuncionario> transactions) {
+  FuncionarioDataSource(List<ModelFuncionario> transactions) {
     dataGridRows = transactions
         .map<DataGridRow>((dataGridRow) => DataGridRow(cells: [
               DataGridCell<int>(

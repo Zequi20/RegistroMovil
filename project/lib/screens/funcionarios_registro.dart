@@ -34,7 +34,7 @@ class _ScreenFuncionariosRegistroState
   );
 
   List<ModelFuncionario> _transactions = [];
-  late TransactionDataSource _transactionDataSource;
+  late FuncionarioDataSource _transactionDataSource;
 
   @override
   void initState() {
@@ -96,7 +96,9 @@ class _ScreenFuncionariosRegistroState
         backgroundColor: Colors.indigo.shade900.withOpacity(0.7),
         shape: const RoundedRectangleBorder(
           side: BorderSide(
-              strokeAlign: StrokeAlign.outside, width: 1, color: Colors.white),
+              strokeAlign: BorderSide.strokeAlignOutside,
+              width: 1,
+              color: Colors.white),
         ),
       ),
       body: FutureBuilder(
@@ -191,7 +193,7 @@ class _ScreenFuncionariosRegistroState
 
     _transactions = listToModel(list);
 
-    _transactionDataSource = TransactionDataSource(_transactions);
+    _transactionDataSource = FuncionarioDataSource(_transactions);
 
     return _transactionDataSource;
   }
@@ -352,7 +354,8 @@ class _ScreenFuncionariosRegistroState
                                   border: Border.all(
                                       color: Colors.white,
                                       width: 1,
-                                      strokeAlign: StrokeAlign.inside),
+                                      strokeAlign:
+                                          BorderSide.strokeAlignInside),
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(10.0)),
                                   color: Colors.blue.shade600),
@@ -758,7 +761,7 @@ class _ScreenFuncionariosRegistroState
           child: const Icon(Icons.playlist_add, color: Colors.white)),
       FloatingActionButton(
           heroTag: 'btn_edit',
-          onPressed: () {
+          onPressed: () async {
             if (_dataGridController.selectedRows.isNotEmpty) {
               if (_dataGridController.selectedRows.length > 1) {
                 showDialog(
@@ -834,7 +837,8 @@ class _ScreenFuncionariosRegistroState
                                       border: Border.all(
                                           color: Colors.white,
                                           width: 1,
-                                          strokeAlign: StrokeAlign.inside),
+                                          strokeAlign:
+                                              BorderSide.strokeAlignInside),
                                       borderRadius: const BorderRadius.all(
                                           Radius.circular(10.0)),
                                       color: Colors.blue.shade600),
@@ -1319,27 +1323,7 @@ class _ScreenFuncionariosRegistroState
                                 setState(() {
                                   Navigator.pop(context);
                                 });
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        icon: const Icon(Icons.check),
-                                        titleTextStyle: bfTextStyle,
-                                        contentTextStyle: bfTextStyle,
-                                        iconColor: Colors.white,
-                                        backgroundColor: bfColor,
-                                        shape: RoundedRectangleBorder(
-                                            side: const BorderSide(
-                                                width: 1, color: Colors.white),
-                                            borderRadius:
-                                                BorderRadius.circular(12.0)),
-                                        title: const Text('Borrar registro'),
-                                        content: const Text(
-                                          'Operacion exitosa',
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      );
-                                    });
+                                succesDelete();
                               }
                             },
                             child: Text(
@@ -1362,5 +1346,27 @@ class _ScreenFuncionariosRegistroState
             color: Colors.white,
           ))
     ];
+  }
+
+  void succesDelete() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            icon: const Icon(Icons.check),
+            titleTextStyle: bfTextStyle,
+            contentTextStyle: bfTextStyle,
+            iconColor: Colors.white,
+            backgroundColor: bfColor,
+            shape: RoundedRectangleBorder(
+                side: const BorderSide(width: 1, color: Colors.white),
+                borderRadius: BorderRadius.circular(12.0)),
+            title: const Text('Borrar registro'),
+            content: const Text(
+              'Operacion exitosa',
+              textAlign: TextAlign.center,
+            ),
+          );
+        });
   }
 }

@@ -36,7 +36,9 @@ class _ScreenSedesState extends State<ScreenSedes> {
       appBar: AppBar(
         shape: const RoundedRectangleBorder(
           side: BorderSide(
-              strokeAlign: StrokeAlign.outside, width: 1, color: Colors.white),
+              strokeAlign: BorderSide.strokeAlignOutside,
+              width: 1,
+              color: Colors.white),
         ),
         title: const Center(
             child: Text(
