@@ -2,16 +2,25 @@ import 'package:flutter/material.dart';
 
 import '../models/model_funcionario.dart';
 
-class ModalList extends StatelessWidget {
-  ModalList(
+class ModalList extends StatefulWidget {
+  const ModalList(
       {super.key,
       required this.listaFuncionarios,
       this.idTextController,
       this.funcionarioTextController});
   final TextEditingController? idTextController;
   final TextEditingController? funcionarioTextController;
+  final List<ModelFuncionario> listaFuncionarios;
+
+  @override
+  State<ModalList> createState() => _ModalListState();
+}
+
+class _ModalListState extends State<ModalList> {
   final bfColor = Colors.blue.shade600.withOpacity(0.7);
+
   final bfColorBtn = Colors.indigo.shade900.withOpacity(0.7);
+
   final bfTextStyle = const TextStyle(
     shadows: [
       Shadow(color: Colors.black, offset: Offset(1, 1), blurRadius: 12)
@@ -19,14 +28,25 @@ class ModalList extends StatelessWidget {
     color: Colors.white,
     fontSize: 16,
   );
+
   final ShapeBorder bfShape = RoundedRectangleBorder(
       side: BorderSide.merge(const BorderSide(color: Colors.white),
           const BorderSide(color: Colors.white)),
       borderRadius: BorderRadius.circular(10.0));
-  final List<ModelFuncionario> listaFuncionarios;
-
+  var busquedaController = TextEditingController();
+  List<ModelFuncionario> listaFiltrada = [];
   @override
   Widget build(BuildContext context) {
+    if (busquedaController.text.trim() == '') {
+      listaFiltrada = widget.listaFuncionarios;
+    } else {
+      listaFiltrada = widget.listaFuncionarios.where((element) {
+        return element.nombreFuncionario
+            .toLowerCase()
+            .contains(busquedaController.text.trim().toLowerCase());
+      }).toList();
+    }
+
     return AlertDialog(
         titlePadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
         contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
@@ -35,6 +55,10 @@ class ModalList extends StatelessWidget {
         titleTextStyle: bfTextStyle,
         actions: [
           TextField(
+            controller: busquedaController,
+            onChanged: (value) {
+              setState(() {});
+            },
             style: bfTextStyle,
             decoration: InputDecoration(
                 border: InputBorder.none,
@@ -63,7 +87,7 @@ class ModalList extends StatelessWidget {
             shape: bfShape,
             child: ListView.builder(
                 padding: const EdgeInsets.symmetric(vertical: 5),
-                itemCount: listaFuncionarios.length,
+                itemCount: listaFiltrada.length,
                 itemBuilder: (context, index) {
                   return Container(
                     padding: const EdgeInsets.symmetric(
@@ -73,24 +97,22 @@ class ModalList extends StatelessWidget {
                             Border(bottom: BorderSide(color: Colors.black54))),
                     child: InkWell(
                       onTap: () {
-                        idTextController!.text =
-                            listaFuncionarios[index].idFuncionario.toString();
-                        funcionarioTextController!.text =
-                            listaFuncionarios[index]
-                                .nombreFuncionario
-                                .toString();
+                        widget.idTextController!.text =
+                            listaFiltrada[index].idFuncionario.toString();
+                        widget.funcionarioTextController!.text =
+                            listaFiltrada[index].nombreFuncionario.toString();
                         Navigator.pop(context);
                       },
                       child: Row(children: [
                         Expanded(
                             flex: 1,
                             child: Text(
-                              '${listaFuncionarios[index].idFuncionario}',
+                              '${listaFiltrada[index].idFuncionario}',
                             )),
                         Expanded(
                             flex: 3,
                             child: Text(
-                              listaFuncionarios[index].nombreFuncionario,
+                              listaFiltrada[index].nombreFuncionario,
                             ))
                       ]),
                     ),

@@ -6,7 +6,7 @@ class ModelRetiro {
   factory ModelRetiro.fromJson(Map<String, dynamic> json) {
     return ModelRetiro(
       json['id_retiro'],
-      json['id_sede'],
+      json['id_funcionario'],
       double.parse(json['valor_retiro'].toString()),
       DateFormat('yyy-mm-dd')
           .format(DateTime.parse(json['fecha_retiro'].toString())),
@@ -15,10 +15,16 @@ class ModelRetiro {
       json['funcionario_retiro'].toString(),
     );
   }
-  ModelRetiro(this.idRetiro, this.idSede, this.valorRetiro, this.fechaRetiro,
-      this.horaRetiro, this.motivoRetiro, this.funcionarioRetiro);
+  ModelRetiro(
+      this.idRetiro,
+      this.idFuncionario,
+      this.valorRetiro,
+      this.fechaRetiro,
+      this.horaRetiro,
+      this.motivoRetiro,
+      this.funcionarioRetiro);
   int idRetiro;
-  int idSede;
+  int idFuncionario;
   double valorRetiro;
   String fechaRetiro;
   String horaRetiro;
@@ -36,6 +42,9 @@ class TransactionDataSource extends DataGridSource {
               DataGridCell<String>(
                   columnName: 'Funcionario',
                   value: dataGridRow.funcionarioRetiro),
+              DataGridCell<int>(
+                  columnName: 'Id Funcionario',
+                  value: dataGridRow.idFuncionario),
               DataGridCell<double>(
                   columnName: 'Valor', value: dataGridRow.valorRetiro),
               DataGridCell<String>(
