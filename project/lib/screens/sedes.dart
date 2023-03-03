@@ -1,10 +1,10 @@
+import 'package:bio_farm/widgets/donut_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import '../screenParams/arguments.dart';
 import '../models/model_sedes.dart';
 import 'dart:convert';
-import 'package:fl_chart/fl_chart.dart';
 
 class ScreenSedes extends StatefulWidget {
   const ScreenSedes({super.key});
@@ -42,7 +42,14 @@ class _ScreenSedesState extends State<ScreenSedes> {
         ),
         title: const Center(
             child: Text(
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+            shadows: [
+              Shadow(color: Colors.grey, offset: Offset(1, 1), blurRadius: 4),
+            ],
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 22,
+          ),
           'SUCURSALES',
           textAlign: TextAlign.center,
         )),
@@ -68,64 +75,32 @@ class _ScreenSedesState extends State<ScreenSedes> {
                     ),
                   );
           }),
-      bottomNavigationBar: SizedBox(
+      bottomNavigationBar: const SizedBox(
         height: 300,
-        child: Row(
-          children: [
-            Expanded(
-              child: AspectRatio(
-                aspectRatio: 1.3,
-                child: PieChart(PieChartData(
-                    pieTouchData: PieTouchData(
-                      enabled: true,
-                    ),
-                    centerSpaceRadius: 50,
-                    sections: [
-                      PieChartSectionData(
-                        value: 1200,
-                        color: bfColor,
-                        showTitle: true,
-                        title: 'Gastos',
-                        titleStyle: bfTextStyle,
-                        badgePositionPercentageOffset: 1.2,
-                      ),
-                      PieChartSectionData(
-                          value: 1700,
-                          color: bfColorBtn,
-                          showTitle: true,
-                          title: 'Ingresos',
-                          titleStyle: bfTextStyle)
-                    ])),
-              ),
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: const [],
-            )
-          ],
+        child: AspectRatio(
+          aspectRatio: 1.9,
+          child: DonutChart(),
         ),
       ),
     ));
   }
 
   Future getSedesData(String url) async {
-    var response = await http.get(Uri.parse(url));
+    var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+    var request = http.Request('GET', Uri.parse(url));
+    request.headers.addAll(headers);
+
+    http.StreamedResponse responseStream = await request.send();
+    var response = await http.Response.fromStream(responseStream);
+
     List list = json.decode(response.body);
     for (var element in list) {
       lista.add(Sede.fromJson(element));
     }
-    return lista;
-  }
-
-  /*  List<ModelTransactionIngreso> listToModel(List mapa) {
-    List<ModelTransactionIngreso> lista = [];
-    for (var v in mapa) {
-      lista.add(ModelTransactionIngreso.fromJson(v));
-    }
 
     return lista;
   }
- */
+
   Widget sedesBody(List<Sede> lista) {
     return Container(
       decoration: const BoxDecoration(

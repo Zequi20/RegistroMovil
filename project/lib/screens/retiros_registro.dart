@@ -86,7 +86,17 @@ class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
               motivoControllerEdit)),
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('Retiros ${args.nombreSede}'),
+        title: Text(
+          'Retiros ${args.nombreSede}',
+          style: const TextStyle(
+            shadows: [
+              Shadow(color: Colors.grey, offset: Offset(1, 1), blurRadius: 4),
+            ],
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 22,
+          ),
+        ),
         backgroundColor: Colors.indigo.shade900.withOpacity(0.7),
         shape: const RoundedRectangleBorder(
           side: BorderSide(

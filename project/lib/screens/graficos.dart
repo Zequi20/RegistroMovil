@@ -1,5 +1,7 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+import '../widgets/transacciones_chart.dart';
 
 class GraphScreen extends StatefulWidget {
   const GraphScreen({super.key});
@@ -21,25 +23,53 @@ class _GraphScreenState extends State<GraphScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        body: AspectRatio(
-          aspectRatio: 1.3,
-          child: PieChart(PieChartData(centerSpaceRadius: 50, sections: [
-            PieChartSectionData(
-                value: 1200,
-                color: bfColor,
-                showTitle: true,
-                title: 'Gastos',
-                titleStyle: bfTextStyle),
-            PieChartSectionData(
-                value: 1700,
-                color: bfColorBtn,
-                showTitle: true,
-                title: 'Ingresos',
-                titleStyle: bfTextStyle)
-          ])),
+        child: Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        actions: [
+          IconButton(
+              onPressed: () {
+                SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+              },
+              icon: const Icon(Icons.exit_to_app))
+        ],
+        shape: const RoundedRectangleBorder(
+          side: BorderSide(
+              strokeAlign: BorderSide.strokeAlignOutside,
+              width: 1,
+              color: Colors.white),
         ),
+        title: const Center(
+            child: Text(
+          style: TextStyle(
+            shadows: [
+              Shadow(color: Colors.grey, offset: Offset(1, 1), blurRadius: 4),
+            ],
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 22,
+          ),
+          'Analisis general',
+          textAlign: TextAlign.center,
+        )),
+        backgroundColor: Colors.indigo.shade900.withOpacity(0.7),
       ),
-    );
+      body: Center(
+          child: AspectRatio(
+              aspectRatio: 1.3,
+              child: Container(
+                  padding: const EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                      boxShadow: const [
+                        BoxShadow(
+                            color: Colors.grey,
+                            offset: Offset(1, 2),
+                            blurRadius: 4),
+                      ],
+                      border: Border.all(color: Colors.white),
+                      color: bfColor,
+                      borderRadius: BorderRadius.circular(5)),
+                  child: const BarChartTransacciones()))),
+    ));
   }
 }
