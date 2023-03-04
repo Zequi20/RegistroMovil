@@ -450,10 +450,9 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
                                                             .addAll(headers);
 
                                                         request.send();
-
-                                                        Navigator.pop(context);
-                                                        Navigator.pop(context);
                                                         setState(() {});
+                                                        Navigator.pop(context);
+                                                        Navigator.pop(context);
                                                       },
                                                       child: Text(
                                                         'Agregar',

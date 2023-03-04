@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:http/http.dart' as http;
-import '../models/transaccion_anual.dart';
+import '../models/model_transaccion_anual.dart';
 
 class BarChartTransacciones extends StatefulWidget {
   const BarChartTransacciones({super.key});
@@ -13,7 +13,9 @@ class BarChartTransacciones extends StatefulWidget {
 
 class _BarChartTransaccionesState extends State<BarChartTransacciones> {
   List<TransaccionAnual> transacciones = [];
-
+  List<String> anios = [];
+  String anual = '2023';
+  double mayor = 0;
   @override
   Widget build(BuildContext context) {
     var bfColor = Colors.blue.shade600.withOpacity(0.7);
@@ -61,8 +63,9 @@ class _BarChartTransaccionesState extends State<BarChartTransacciones> {
       fontWeight: FontWeight.bold,
       fontSize: 18,
     );
+
     return FutureBuilder(
-      future: getChartData('http://192.168.0.7:8474/anales'),
+      future: getChartData('http://192.168.0.7:8474/ingresos/anuales'),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return Column(
@@ -79,41 +82,40 @@ class _BarChartTransaccionesState extends State<BarChartTransacciones> {
                             sideTitles: SideTitles(showTitles: false)),
                         leftTitles: AxisTitles(
                             sideTitles: SideTitles(
+                          interval: mayor / 4,
                           showTitles: true,
                           reservedSize: 50,
-                          getTitlesWidget: (value, meta) {
-                            return Center(
-                              child: Text(
-                                meta.formattedValue,
-                                style: charTextStyle,
-                              ),
-                            );
-                          },
+                          getTitlesWidget: (value, meta) => Text(
+                            meta.formattedValue,
+                            style: charTextStyle,
+                            textAlign: TextAlign.center,
+                          ),
                         )),
                         topTitles: AxisTitles(
+                            drawBehindEverything: true,
                             axisNameSize: 50,
                             axisNameWidget: Text(
-                              'Ingresos 2023',
+                              'Ingresos $anual',
                               style: charTextStyle,
                             ),
                             sideTitles: SideTitles(showTitles: false)),
                         show: true,
                         bottomTitles: AxisTitles(
                           sideTitles: SideTitles(
-                            reservedSize: 50,
+                            reservedSize: 30,
                             showTitles: true,
                             getTitlesWidget: (value, meta) {
                               return Padding(
                                 padding: const EdgeInsets.all(4.0),
                                 child: Text(
-                                  meses[value.toInt()],
+                                  meses[value.toInt() - 1],
                                   style: mesTextStyle,
                                 ),
                               );
                             },
                           ),
                         )),
-                    maxY: getMayor(transacciones),
+                    maxY: mayor,
                     barGroups: List.generate(transacciones.length, (index) {
                       return BarChartGroupData(barRods: [
                         BarChartRodData(
@@ -121,9 +123,47 @@ class _BarChartTransaccionesState extends State<BarChartTransacciones> {
                             toY: transacciones[index].valor,
                             width: 6,
                             borderSide: barsBorder)
-                      ], x: index);
+                      ], x: transacciones[index].mes);
                     }))),
-              )
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                        child: Text(
+                      'Año a mostrar:',
+                      style: charTextStyle,
+                      textAlign: TextAlign.center,
+                    )),
+                    Expanded(
+                      child: DropdownButtonFormField(
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(5)),
+                            fillColor: bfColorBtn,
+                            filled: true),
+                        dropdownColor: bfColorBtn,
+                        value: anual,
+                        items: List.generate(
+                            anios.length,
+                            (index) => DropdownMenuItem(
+                                  value: anios[index],
+                                  child: Text(
+                                    anios[index],
+                                    style: charTextStyle,
+                                  ),
+                                )),
+                        onChanged: (value) {
+                          setState(() {
+                            anual = value!;
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           );
         } else {
@@ -140,7 +180,13 @@ class _BarChartTransaccionesState extends State<BarChartTransacciones> {
   }
 
   Future getChartData(String dataUrl) async {
+    transacciones.clear();
+    anios.clear();
+    var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
     var request = http.Request('GET', Uri.parse(dataUrl));
+    request.bodyFields = {'anio': anual};
+
+    request.headers.addAll(headers);
 
     http.StreamedResponse responseStream = await request.send();
     var response = await http.Response.fromStream(responseStream);
@@ -151,7 +197,20 @@ class _BarChartTransaccionesState extends State<BarChartTransacciones> {
       transacciones.add(TransaccionAnual(
           double.parse(element['valor'].toString()), element['mes']));
     }
-    //print(transacciones);
+
+    var request2 =
+        http.Request('GET', Uri.parse('http://192.168.0.7:8474/anios'));
+
+    http.StreamedResponse responseStream2 = await request2.send();
+    var response2 = await http.Response.fromStream(responseStream2);
+
+    List lista2 = jsonDecode(response2.body);
+
+    for (var element in lista2) {
+      anios.add(element['anios'].toString());
+    }
+
+    mayor = getMayor(transacciones);
     return transacciones;
   }
 
@@ -163,6 +222,7 @@ class _BarChartTransaccionesState extends State<BarChartTransacciones> {
         res = element.valor;
       }
     }
+
     return res;
   }
 }

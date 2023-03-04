@@ -129,9 +129,11 @@ class _DonutChartState extends State<DonutChart> {
                               Icons.pie_chart,
                               color: Colors.white,
                             ),
-                            Text(
-                              ' Análisis',
-                              style: charTextStyle,
+                            Center(
+                              child: Text(
+                                ' Análisis',
+                                style: charTextStyle,
+                              ),
                             )
                           ],
                         ),

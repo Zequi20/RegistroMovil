@@ -130,12 +130,12 @@ class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
                                   SizedBox(
                                     width: 250,
                                     child: Text(
-                                        'Motivo: ${row.getCells()[4].value}'),
+                                        'Motivo: ${row.getCells()[6].value}'),
                                   ),
-                                  Text('Fecha: ${row.getCells()[3].value}'),
+                                  Text('Fecha: ${row.getCells()[4].value}'),
                                   Text(
                                       'Funcionario: ${row.getCells()[1].value}'),
-                                  Text('Valor: ${row.getCells()[2].value}'),
+                                  Text('Valor: ${row.getCells()[3].value}'),
                                 ],
                               ),
                               titleTextStyle: bfTextStyle,

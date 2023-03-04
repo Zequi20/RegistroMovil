@@ -86,6 +86,7 @@ class _ScreenSedesState extends State<ScreenSedes> {
   }
 
   Future getSedesData(String url) async {
+    lista.clear();
     var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
     var request = http.Request('GET', Uri.parse(url));
     request.headers.addAll(headers);

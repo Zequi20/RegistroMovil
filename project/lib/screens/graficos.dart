@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../widgets/transacciones_chart.dart';
+import '../widgets/transacciones_chart_anual.dart';
+import '../widgets/transacciones_chart_mensual.dart';
 
 class GraphScreen extends StatefulWidget {
   const GraphScreen({super.key});
@@ -54,22 +55,42 @@ class _GraphScreenState extends State<GraphScreen> {
         )),
         backgroundColor: Colors.indigo.shade900.withOpacity(0.7),
       ),
-      body: Center(
-          child: AspectRatio(
-              aspectRatio: 1.3,
-              child: Container(
-                  padding: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                      boxShadow: const [
-                        BoxShadow(
-                            color: Colors.grey,
-                            offset: Offset(1, 2),
-                            blurRadius: 4),
-                      ],
-                      border: Border.all(color: Colors.white),
-                      color: bfColor,
-                      borderRadius: BorderRadius.circular(5)),
-                  child: const BarChartTransacciones()))),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            AspectRatio(
+                aspectRatio: 1,
+                child: Container(
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                        boxShadow: const [
+                          BoxShadow(
+                              color: Colors.grey,
+                              offset: Offset(1, 2),
+                              blurRadius: 4),
+                        ],
+                        border: Border.all(color: Colors.white, width: 3),
+                        color: bfColor,
+                        borderRadius: BorderRadius.circular(5)),
+                    child: const BarChartTransacciones())),
+            AspectRatio(
+                aspectRatio: 1,
+                child: Container(
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                        boxShadow: const [
+                          BoxShadow(
+                              color: Colors.grey,
+                              offset: Offset(1, 2),
+                              blurRadius: 4),
+                        ],
+                        border: Border.all(color: Colors.white, width: 3),
+                        color: bfColor,
+                        borderRadius: BorderRadius.circular(5)),
+                    child: const BarChartTransaccionesMensuales()))
+          ],
+        ),
+      ),
     ));
   }
 }

@@ -15,7 +15,7 @@ class ModelTransaccion {
         json['id_sede'],
         tipo,
         double.parse(json['valor_transaccion'].toString()),
-        DateFormat('yyy-mm-dd')
+        DateFormat('yyy-MM-dd')
             .format(DateTime.parse(json['fecha_transaccion'].toString())),
         json['hora_transaccion'].toString(),
         json['observacion_transaccion']);
@@ -67,13 +67,20 @@ class TransactionDataSource extends DataGridSource {
 
   @override
   DataGridRowAdapter? buildRow(DataGridRow row) {
+    NumberFormat f = NumberFormat("#,##0.00", "es_AR");
+    String data;
     return DataGridRowAdapter(
         color: Colors.white,
         cells: row.getCells().map<Widget>((dataGridCell) {
+          if (dataGridCell.columnName == 'Valor') {
+            data = f.format(dataGridCell.value);
+          } else {
+            data = dataGridCell.value.toString();
+          }
           return Container(
             alignment: AlignmentDirectional.center,
             child: Text(
-              dataGridCell.value.toString(),
+              data,
               textAlign: TextAlign.center,
             ),
           );
