@@ -123,12 +123,12 @@ class _BarChartTransaccionesMensualesState
                     barGroups: List.generate(transacciones.length, (index) {
                       return BarChartGroupData(barRods: [
                         BarChartRodData(
-                            gradient:
-                                LinearGradient(colors: [Colors.white, bfColor]),
-                            toY: transacciones[index].valor,
-                            width: 6,
-                            borderSide: barsBorder,
-                            borderRadius: BorderRadius.circular(0))
+                          gradient:
+                              LinearGradient(colors: [Colors.white, bfColor]),
+                          toY: transacciones[index].valor,
+                          width: 6,
+                          borderSide: barsBorder,
+                        )
                       ], x: transacciones[index].dia);
                     }))),
               ),

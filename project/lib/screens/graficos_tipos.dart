@@ -56,6 +56,14 @@ class _GraphSelectScreenState extends State<GraphSelectScreen> {
   int anioPorMes = DateTime.now().year;
   @override
   Widget build(BuildContext context) {
+    var dropDownStyle = InputDecoration(
+      focusedBorder:
+          const OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+      enabledBorder:
+          const OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+      fillColor: bfColorBtn,
+      filled: true,
+    );
     return SafeArea(
         child: Scaffold(
       backgroundColor: Colors.white,
@@ -109,89 +117,195 @@ class _GraphSelectScreenState extends State<GraphSelectScreen> {
                     return snapshot.hasData
                         ? Column(
                             children: [
-                              Text(
+                              const Text(
                                 'Generales',
-                                style: bfTitleStyle,
+                                style: TextStyle(
+                                  shadows: [
+                                    Shadow(
+                                        color: Colors.black54,
+                                        offset: Offset(1, 1),
+                                        blurRadius: 4),
+                                  ],
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 22,
+                                ),
                               ),
                               Row(
                                 children: [
                                   Expanded(
-                                      child: Column(
-                                    children: [
-                                      Text(
-                                        'Por dias',
-                                        style: bfTitleStyle,
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      DropdownButtonFormField(
-                                        value: anioPorDia,
-                                        items: List.generate(
-                                            anios.length,
-                                            (index) => DropdownMenuItem(
-                                                value: anios[index],
-                                                child:
-                                                    Text('${anios[index]}'))),
-                                        onChanged: (value) {
-                                          setState(() {
-                                            anioPorDia = value!;
-                                          });
-                                        },
-                                      ),
-                                      DropdownButtonFormField(
-                                        value: mesPorDia,
-                                        items: List.generate(
-                                            meses.length,
-                                            (index) => DropdownMenuItem(
-                                                value: meses[index],
-                                                child: Text(mesesNombres[
-                                                    meses[index] - 1]))),
-                                        onChanged: (value) {
-                                          setState(() {
-                                            mesPorDia = value!;
-                                          });
-                                        },
-                                      ),
-                                      TextButton(
-                                          onPressed: () {
-                                            setState(() {});
+                                      child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          'Por dias',
+                                          style: bfTitleStyle,
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        const Divider(
+                                          height: 8,
+                                        ),
+                                        DropdownButtonFormField(
+                                          dropdownColor: bfColorBtn,
+                                          decoration: dropDownStyle,
+                                          value: anioPorDia,
+                                          items: List.generate(
+                                              anios.length,
+                                              (index) => DropdownMenuItem(
+                                                  value: anios[index],
+                                                  child: Text(
+                                                    '${anios[index]}',
+                                                    style: bfTextStyle,
+                                                  ))),
+                                          onChanged: (value) {
+                                            setState(() {
+                                              anioPorDia = value!;
+                                            });
                                           },
-                                          child: Text(
-                                            'Generar',
-                                            style: bfTextStyle,
-                                          ))
-                                    ],
+                                        ),
+                                        const Divider(
+                                          height: 8,
+                                        ),
+                                        DropdownButtonFormField(
+                                          dropdownColor: bfColorBtn,
+                                          decoration: dropDownStyle,
+                                          value: mesPorDia,
+                                          items: List.generate(
+                                              meses.length,
+                                              (index) => DropdownMenuItem(
+                                                  value: meses[index],
+                                                  child: Text(
+                                                    mesesNombres[
+                                                        meses[index] - 1],
+                                                    style: bfTextStyle,
+                                                  ))),
+                                          onChanged: (value) {
+                                            setState(() {
+                                              mesPorDia = value!;
+                                            });
+                                          },
+                                        ),
+                                        const Divider(
+                                          height: 5,
+                                        ),
+                                        ElevatedButton(
+                                            onPressed: () {
+                                              showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return AlertDialog(
+                                                      actions: [
+                                                        IconButton(
+                                                            onPressed: () {
+                                                              setState(() {});
+                                                            },
+                                                            icon: const Icon(
+                                                              Icons
+                                                                  .picture_as_pdf,
+                                                              color:
+                                                                  Colors.white,
+                                                            ))
+                                                      ],
+                                                      insetPadding:
+                                                          EdgeInsets.zero,
+                                                      backgroundColor: bfColor,
+                                                      content: Builder(
+                                                          builder: (context) {
+                                                        var width =
+                                                            MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width;
+
+                                                        return SizedBox(
+                                                          width: width,
+                                                          height: width,
+                                                          child: BarChartTransaccionesMensuales(
+                                                              anual: anioPorDia
+                                                                  .toString(),
+                                                              mensual: mesPorDia
+                                                                  .toString()),
+                                                        );
+                                                      }),
+                                                    );
+                                                  });
+                                            },
+                                            child: Text(
+                                              'Generar',
+                                              style: bfTextStyle,
+                                            ))
+                                      ],
+                                    ),
                                   )),
                                   Expanded(
-                                      child: Column(
-                                    children: [
-                                      Text(
-                                        'Por meses',
-                                        style: bfTitleStyle,
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      DropdownButtonFormField(
-                                        value: anioPorMes,
-                                        items: List.generate(
-                                            anios.length,
-                                            (index) => DropdownMenuItem(
-                                                value: anios[index],
-                                                child:
-                                                    Text('${anios[index]}'))),
-                                        onChanged: (value) {
-                                          setState(() {
-                                            anioPorMes = value!;
-                                          });
-                                        },
-                                      ),
-                                      TextButton(
-                                          onPressed: () {
-                                            setState(() {});
+                                      child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          'Por meses',
+                                          style: bfTitleStyle,
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        const Divider(
+                                          height: 8,
+                                        ),
+                                        DropdownButtonFormField(
+                                          decoration: dropDownStyle,
+                                          dropdownColor: bfColorBtn,
+                                          value: anioPorMes,
+                                          items: List.generate(
+                                              anios.length,
+                                              (index) => DropdownMenuItem(
+                                                  value: anios[index],
+                                                  child: Text(
+                                                    '${anios[index]}',
+                                                    style: bfTextStyle,
+                                                  ))),
+                                          onChanged: (value) {
+                                            setState(() {
+                                              anioPorMes = value!;
+                                            });
                                           },
-                                          child: Text(
-                                            'Generar',
-                                            style: bfTextStyle,
-                                          ))
-                                    ],
+                                        ),
+                                        const Divider(
+                                          height: 5,
+                                        ),
+                                        ElevatedButton(
+                                            onPressed: () {
+                                              showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return AlertDialog(
+                                                      insetPadding:
+                                                          EdgeInsets.zero,
+                                                      backgroundColor: bfColor,
+                                                      content: Builder(
+                                                          builder: (context) {
+                                                        var width =
+                                                            MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width;
+
+                                                        return SizedBox(
+                                                          width: width,
+                                                          height: width,
+                                                          child: BarChartTransacciones(
+                                                              anual: anioPorMes
+                                                                  .toString()),
+                                                        );
+                                                      }),
+                                                    );
+                                                  });
+                                            },
+                                            child: Text(
+                                              'Generar',
+                                              style: bfTextStyle,
+                                            ))
+                                      ],
+                                    ),
                                   ))
                                 ],
                               ),
@@ -247,18 +361,3 @@ class _GraphSelectScreenState extends State<GraphSelectScreen> {
     return list2;
   }
 }
-
-
-/*{
-            showDialog(
-                context: context,
-                builder: (context) {
-                  return Dialog(
-                      backgroundColor: bfColor,
-                      child: SizedBox(
-                          height: MediaQuery.of(context).size.height / 2,
-                          child: const BarChartTransaccionesMensuales(
-                              anual: '2023', mensual: '2')));
-                });
-          }*/
-

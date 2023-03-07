@@ -22,7 +22,7 @@ class _BarChartTransaccionesState extends State<BarChartTransacciones> {
 
     var bfColorBtn = Colors.indigo.shade900.withOpacity(0.7);
 
-    var barsBorder = const BorderSide(color: Colors.white, width: 2);
+    var barsBorder = BorderSide(color: bfColor, width: 2);
 
     List<String> meses = [
       'Ene',
@@ -119,7 +119,8 @@ class _BarChartTransaccionesState extends State<BarChartTransacciones> {
                     barGroups: List.generate(transacciones.length, (index) {
                       return BarChartGroupData(barRods: [
                         BarChartRodData(
-                            color: bfColor,
+                            gradient:
+                                LinearGradient(colors: [Colors.white, bfColor]),
                             toY: transacciones[index].valor,
                             width: 6,
                             borderSide: barsBorder)
