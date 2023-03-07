@@ -1,10 +1,10 @@
 import 'package:bio_farm/screens/gastos_registro.dart';
-import 'package:bio_farm/screens/graficos.dart';
 import 'package:bio_farm/screens/ingresos_registro.dart';
 import 'package:bio_farm/screens/funcionarios_registro.dart';
 import 'package:bio_farm/screens/retiros_registro.dart';
 import 'package:flutter/material.dart';
 import 'package:bio_farm/screens/gestion.dart';
+import 'screens/graficos_tipos.dart';
 import 'screens/sedes.dart';
 
 void main() {
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         'Gastos': (context) => const ScreenGastosRegistro(),
         'Funcionarios': (context) => const ScreenFuncionariosRegistro(),
         'Retiros': (context) => const ScreenRetirosRegistro(),
-        'Graph': ((context) => const GraphScreen())
+        'GraphSelect': ((context) => const GraphSelectScreen())
       },
       initialRoute: 'Sedes',
     );

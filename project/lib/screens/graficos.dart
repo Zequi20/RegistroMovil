@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+// ignore: unused_import
 import '../widgets/transacciones_chart_anual.dart';
 import '../widgets/transacciones_chart_mensual.dart';
 
@@ -50,7 +51,7 @@ class _GraphScreenState extends State<GraphScreen> {
             fontWeight: FontWeight.bold,
             fontSize: 22,
           ),
-          'Analisis general',
+          'Generar graficos',
           textAlign: TextAlign.center,
         )),
         backgroundColor: Colors.indigo.shade900.withOpacity(0.7),
@@ -72,22 +73,10 @@ class _GraphScreenState extends State<GraphScreen> {
                         border: Border.all(color: Colors.white, width: 3),
                         color: bfColor,
                         borderRadius: BorderRadius.circular(5)),
-                    child: const BarChartTransacciones())),
-            AspectRatio(
-                aspectRatio: 1,
-                child: Container(
-                    padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                        boxShadow: const [
-                          BoxShadow(
-                              color: Colors.grey,
-                              offset: Offset(1, 2),
-                              blurRadius: 4),
-                        ],
-                        border: Border.all(color: Colors.white, width: 3),
-                        color: bfColor,
-                        borderRadius: BorderRadius.circular(5)),
-                    child: const BarChartTransaccionesMensuales()))
+                    child: const BarChartTransaccionesMensuales(
+                      anual: '2023',
+                      mensual: '2',
+                    ))),
           ],
         ),
       ),

@@ -121,21 +121,21 @@ class _DonutChartState extends State<DonutChart> {
                             borderRadius: BorderRadius.circular(5)),
                         color: bfColor,
                         onPressed: () {
-                          Navigator.of(context).pushNamed('Graph');
+                          Navigator.of(context).pushNamed('GraphSelect');
                         },
-                        child: Row(
-                          children: [
-                            const Icon(
-                              Icons.pie_chart,
-                              color: Colors.white,
-                            ),
-                            Center(
-                              child: Text(
-                                ' Análisis',
+                        child: Center(
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.pie_chart,
+                                color: Colors.white,
+                              ),
+                              Text(
+                                ' Graficos',
                                 style: charTextStyle,
                               ),
-                            )
-                          ],
+                            ],
+                          ),
                         ),
                       ))
                     ],

@@ -5,8 +5,8 @@ import 'package:http/http.dart' as http;
 import '../models/model_transaccion_anual.dart';
 
 class BarChartTransacciones extends StatefulWidget {
-  const BarChartTransacciones({super.key});
-
+  const BarChartTransacciones({super.key, required this.anual});
+  final String anual;
   @override
   State<BarChartTransacciones> createState() => _BarChartTransaccionesState();
 }
@@ -14,7 +14,7 @@ class BarChartTransacciones extends StatefulWidget {
 class _BarChartTransaccionesState extends State<BarChartTransacciones> {
   List<TransaccionAnual> transacciones = [];
   List<String> anios = [];
-  String anual = '2023';
+
   double mayor = 0;
   @override
   Widget build(BuildContext context) {
@@ -95,7 +95,7 @@ class _BarChartTransaccionesState extends State<BarChartTransacciones> {
                             drawBehindEverything: true,
                             axisNameSize: 50,
                             axisNameWidget: Text(
-                              'Ingresos $anual',
+                              'Ingresos ${widget.anual}',
                               style: charTextStyle,
                             ),
                             sideTitles: SideTitles(showTitles: false)),
@@ -126,44 +126,6 @@ class _BarChartTransaccionesState extends State<BarChartTransacciones> {
                       ], x: transacciones[index].mes);
                     }))),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                        child: Text(
-                      'Año a mostrar:',
-                      style: charTextStyle,
-                      textAlign: TextAlign.center,
-                    )),
-                    Expanded(
-                      child: DropdownButtonFormField(
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5)),
-                            fillColor: bfColorBtn,
-                            filled: true),
-                        dropdownColor: bfColorBtn,
-                        value: anual,
-                        items: List.generate(
-                            anios.length,
-                            (index) => DropdownMenuItem(
-                                  value: anios[index],
-                                  child: Text(
-                                    anios[index],
-                                    style: charTextStyle,
-                                  ),
-                                )),
-                        onChanged: (value) {
-                          setState(() {
-                            anual = value!;
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
             ],
           );
         } else {
@@ -184,7 +146,7 @@ class _BarChartTransaccionesState extends State<BarChartTransacciones> {
     anios.clear();
     var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
     var request = http.Request('GET', Uri.parse(dataUrl));
-    request.bodyFields = {'anio': anual};
+    request.bodyFields = {'anio': widget.anual};
 
     request.headers.addAll(headers);
 

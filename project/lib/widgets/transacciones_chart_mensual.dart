@@ -5,8 +5,10 @@ import 'package:http/http.dart' as http;
 import '../models/model_transaccion_mensual.dart';
 
 class BarChartTransaccionesMensuales extends StatefulWidget {
-  const BarChartTransaccionesMensuales({super.key});
-
+  const BarChartTransaccionesMensuales(
+      {super.key, required this.anual, required this.mensual});
+  final String anual;
+  final String mensual;
   @override
   State<BarChartTransaccionesMensuales> createState() =>
       _BarChartTransaccionesMensualesState();
@@ -17,8 +19,7 @@ class _BarChartTransaccionesMensualesState
   List<TransaccionMensual> transacciones = [];
   List<String> anios = [];
   List<String> meses = [];
-  String anual = '2023';
-  String mensual = '2';
+
   double mayor = 0;
   List<String> mesanio = [
     'enero',
@@ -40,7 +41,7 @@ class _BarChartTransaccionesMensualesState
 
     var bfColorBtn = Colors.indigo.shade900.withOpacity(0.7);
 
-    var barsBorder = const BorderSide(color: Colors.white, width: 2);
+    var barsBorder = BorderSide(color: bfColor, width: 2);
 
     var basicShadow =
         const Shadow(color: Colors.black, offset: Offset(1, 2), blurRadius: 8);
@@ -98,7 +99,7 @@ class _BarChartTransaccionesMensualesState
                             drawBehindEverything: true,
                             axisNameSize: 50,
                             axisNameWidget: Text(
-                              'Ingresos ${mesanio[int.parse(mensual) - 1]} del $anual',
+                              'Ingresos ${mesanio[int.parse(widget.mensual) - 1]} del ${widget.anual}',
                               style: charTextStyle,
                             ),
                             sideTitles: SideTitles(showTitles: false)),
@@ -122,90 +123,15 @@ class _BarChartTransaccionesMensualesState
                     barGroups: List.generate(transacciones.length, (index) {
                       return BarChartGroupData(barRods: [
                         BarChartRodData(
-                            color: bfColor,
+                            gradient:
+                                LinearGradient(colors: [Colors.white, bfColor]),
                             toY: transacciones[index].valor,
                             width: 6,
-                            borderSide: barsBorder)
+                            borderSide: barsBorder,
+                            borderRadius: BorderRadius.circular(0))
                       ], x: transacciones[index].dia);
                     }))),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                        child: Text(
-                      'Año a mostrar:',
-                      style: charTextStyle,
-                      textAlign: TextAlign.center,
-                    )),
-                    Expanded(
-                      child: DropdownButtonFormField(
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5)),
-                            fillColor: bfColorBtn,
-                            filled: true),
-                        dropdownColor: bfColorBtn,
-                        value: anual,
-                        items: List.generate(
-                            anios.length,
-                            (index) => DropdownMenuItem(
-                                  value: anios[index],
-                                  child: Text(
-                                    anios[index],
-                                    style: charTextStyle,
-                                  ),
-                                )),
-                        onChanged: (value) {
-                          setState(() {
-                            anual = value!;
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                        child: Text(
-                      'Mes a mostrar:',
-                      style: charTextStyle,
-                      textAlign: TextAlign.center,
-                    )),
-                    Expanded(
-                      child: DropdownButtonFormField(
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5)),
-                            fillColor: bfColorBtn,
-                            filled: true),
-                        dropdownColor: bfColorBtn,
-                        value: mensual,
-                        items: List.generate(
-                            meses.length,
-                            (index) => DropdownMenuItem(
-                                  value: meses[index],
-                                  child: Text(
-                                    mesanio[int.parse(meses[index]) - 1],
-                                    style: charTextStyle,
-                                  ),
-                                )),
-                        onChanged: (value) {
-                          setState(() {
-                            mensual = value!;
-                            //anual = anios.first;
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              )
             ],
           );
         } else {
@@ -225,9 +151,10 @@ class _BarChartTransaccionesMensualesState
     transacciones.clear();
     anios.clear();
     meses.clear();
+
     var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
     var request = http.Request('GET', Uri.parse(dataUrl));
-    request.bodyFields = {'anio': anual, 'mes': mensual};
+    request.bodyFields = {'anio': widget.anual, 'mes': widget.mensual};
 
     request.headers.addAll(headers);
 
@@ -256,7 +183,7 @@ class _BarChartTransaccionesMensualesState
     var request3 =
         http.Request('GET', Uri.parse('http://192.168.0.7:8474/meses'));
     request3.bodyFields = {
-      'anio': anual,
+      'anio': widget.anual,
     };
     http.StreamedResponse responseStream3 = await request3.send();
     var response3 = await http.Response.fromStream(responseStream3);
@@ -270,6 +197,8 @@ class _BarChartTransaccionesMensualesState
     mayor = getMayor(transacciones);
     return transacciones;
   }
+
+  void getMeses() async {}
 
   double getMayor(List<TransaccionMensual> m) {
     double res = 0;
