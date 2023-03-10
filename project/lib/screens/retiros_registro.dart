@@ -19,7 +19,7 @@ class ScreenRetirosRegistro extends StatefulWidget {
 
 class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
   final DataGridController _dataGridController = DataGridController();
-  var link = 'http://192.168.0.7:8474/retiros';
+  var link = 'http://132.255.166.73:8474/retiros';
 
   bool visible = false;
   Icon searchIcon = const Icon(Icons.search);
@@ -195,8 +195,8 @@ class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
 
   Future getFuncionarioData(GestionArguments args) async {
     var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-    var request =
-        http.Request('GET', Uri.parse('http://192.168.0.7:8474/funcionarios'));
+    var request = http.Request(
+        'GET', Uri.parse('http://132.255.166.73:8474/funcionarios'));
     request.bodyFields = {'id_sede': args.idSede.toString()};
     request.headers.addAll(headers);
 
@@ -637,7 +637,7 @@ class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
                                                               http.Request(
                                                                   'POST',
                                                                   Uri.parse(
-                                                                      'http://192.168.0.7:8474/retiros/agregar'));
+                                                                      'http://132.255.166.73:8474/retiros/agregar'));
                                                           request.bodyFields = {
                                                             'id_funcionario':
                                                                 idFuncionarioController
@@ -1074,7 +1074,7 @@ class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
                                                               http.Request(
                                                                   'POST',
                                                                   Uri.parse(
-                                                                      'http://192.168.0.7:8474/retiros/editar'));
+                                                                      'http://132.255.166.73:8474/retiros/editar'));
                                                           request.bodyFields = {
                                                             'id_retiro': regId
                                                                 .toString(),
@@ -1244,7 +1244,7 @@ class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
                               var request = http.Request(
                                   'DELETE',
                                   Uri.parse(
-                                      'http://192.168.0.7:8474/retiros/borrar'));
+                                      'http://132.255.166.73:8474/retiros/borrar'));
                               String idList = '';
                               for (var element in selected) {
                                 idList += '${element.getCells().first.value},';

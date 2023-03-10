@@ -69,7 +69,7 @@ class _BarChartTransaccionesMensualesState
     );
 
     return FutureBuilder(
-      future: getChartData('http://192.168.0.7:8474/ingresos/mensuales'),
+      future: getChartData('http://132.255.166.73:8474/ingresos/mensuales'),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return Column(
@@ -169,7 +169,7 @@ class _BarChartTransaccionesMensualesState
     }
 
     var request2 =
-        http.Request('GET', Uri.parse('http://192.168.0.7:8474/anios'));
+        http.Request('GET', Uri.parse('http://132.255.166.73:8474/anios'));
 
     http.StreamedResponse responseStream2 = await request2.send();
     var response2 = await http.Response.fromStream(responseStream2);
@@ -181,7 +181,7 @@ class _BarChartTransaccionesMensualesState
     }
 
     var request3 =
-        http.Request('GET', Uri.parse('http://192.168.0.7:8474/meses'));
+        http.Request('GET', Uri.parse('http://132.255.166.73:8474/meses'));
     request3.bodyFields = {
       'anio': widget.anual,
     };

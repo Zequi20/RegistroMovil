@@ -4,14 +4,17 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:http/http.dart' as http;
 import '../models/model_transaccion_anual.dart';
 
-class BarChartTransacciones extends StatefulWidget {
-  const BarChartTransacciones({super.key, required this.anual});
+class BarChartTransaccionesSede extends StatefulWidget {
+  const BarChartTransaccionesSede(
+      {super.key, required this.anual, required this.sede});
   final String anual;
+  final String sede;
   @override
-  State<BarChartTransacciones> createState() => _BarChartTransaccionesState();
+  State<BarChartTransaccionesSede> createState() =>
+      _BarChartTransaccionesSedeState();
 }
 
-class _BarChartTransaccionesState extends State<BarChartTransacciones> {
+class _BarChartTransaccionesSedeState extends State<BarChartTransaccionesSede> {
   List<TransaccionAnual> transacciones = [];
   List<String> anios = [];
 
@@ -65,7 +68,8 @@ class _BarChartTransaccionesState extends State<BarChartTransacciones> {
     );
 
     return FutureBuilder(
-      future: getChartData('http://132.255.166.73:8474/ingresos/anuales'),
+      future:
+          getChartData('http://132.255.166.73:8474/ingresos/anuales_por_sede'),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return Column(
@@ -147,7 +151,7 @@ class _BarChartTransaccionesState extends State<BarChartTransacciones> {
     anios.clear();
     var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
     var request = http.Request('GET', Uri.parse(dataUrl));
-    request.bodyFields = {'anio': widget.anual};
+    request.bodyFields = {'anio': widget.anual, 'sede': widget.sede};
 
     request.headers.addAll(headers);
 
@@ -161,9 +165,9 @@ class _BarChartTransaccionesState extends State<BarChartTransacciones> {
           double.parse(element['valor'].toString()), element['mes']));
     }
 
-    var request2 =
-        http.Request('GET', Uri.parse('http://132.255.166.73:8474/anios'));
-
+    var request2 = http.Request(
+        'GET', Uri.parse('http://132.255.166.73:8474/anios_por_sede'));
+    request2.bodyFields = {'sede': widget.sede};
     http.StreamedResponse responseStream2 = await request2.send();
     var response2 = await http.Response.fromStream(responseStream2);
 

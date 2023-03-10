@@ -16,7 +16,7 @@ class ScreenGastosRegistro extends StatefulWidget {
 
 class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
   final DataGridController _dataGridController = DataGridController();
-  var link = 'http://192.168.0.7:8474/gastos';
+  var link = 'http://132.255.166.73:8474/gastos';
   //var queryController = TextEditingController();
   bool visible = false;
   Icon searchIcon = const Icon(Icons.search);
@@ -425,7 +425,7 @@ class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
                                                         var request = http.Request(
                                                             'POST',
                                                             Uri.parse(
-                                                                'http://192.168.0.7:8474/gastos/agregar'));
+                                                                'http://132.255.166.73:8474/gastos/agregar'));
                                                         request.bodyFields = {
                                                           'id_sede': args.idSede
                                                               .toString(),
@@ -767,7 +767,7 @@ class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
                                                               http.Request(
                                                                   'POST',
                                                                   Uri.parse(
-                                                                      'http://192.168.0.7:8474/gastos/editar'));
+                                                                      'http://132.255.166.73:8474/gastos/editar'));
                                                           request.bodyFields = {
                                                             'id_transaccion':
                                                                 regId
@@ -938,7 +938,7 @@ class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
                               var request = http.Request(
                                   'DELETE',
                                   Uri.parse(
-                                      'http://192.168.0.7:8474/transacciones/borrar'));
+                                      'http://132.255.166.73:8474/transacciones/borrar'));
                               String idList = '';
                               for (var element in selected) {
                                 idList += '${element.getCells().first.value},';

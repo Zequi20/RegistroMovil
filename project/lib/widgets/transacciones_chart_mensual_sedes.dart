@@ -2,20 +2,43 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:http/http.dart' as http;
-import '../models/model_transaccion_anual.dart';
+import '../models/model_transaccion_mensual.dart';
 
-class BarChartTransacciones extends StatefulWidget {
-  const BarChartTransacciones({super.key, required this.anual});
+class BarChartTransaccionesMensualesSede extends StatefulWidget {
+  const BarChartTransaccionesMensualesSede(
+      {super.key,
+      required this.anual,
+      required this.mensual,
+      required this.sede});
   final String anual;
+  final String mensual;
+  final String sede;
   @override
-  State<BarChartTransacciones> createState() => _BarChartTransaccionesState();
+  State<BarChartTransaccionesMensualesSede> createState() =>
+      _BarChartTransaccionesMensualesSedeState();
 }
 
-class _BarChartTransaccionesState extends State<BarChartTransacciones> {
-  List<TransaccionAnual> transacciones = [];
+class _BarChartTransaccionesMensualesSedeState
+    extends State<BarChartTransaccionesMensualesSede> {
+  List<TransaccionMensual> transacciones = [];
   List<String> anios = [];
+  List<String> meses = [];
 
   double mayor = 0;
+  List<String> mesanio = [
+    'enero',
+    'febrero',
+    'marzo',
+    'abril',
+    'mayo',
+    'junio',
+    'julio',
+    'agosto',
+    'septiembre',
+    'octubre',
+    'noviembre',
+    'diciembre'
+  ];
   @override
   Widget build(BuildContext context) {
     var bfColor = Colors.blue.shade600.withOpacity(0.7);
@@ -23,21 +46,6 @@ class _BarChartTransaccionesState extends State<BarChartTransacciones> {
     var bfColorBtn = Colors.indigo.shade900.withOpacity(0.7);
 
     var barsBorder = BorderSide(color: bfColor, width: 2);
-
-    List<String> meses = [
-      'Ene',
-      'Feb',
-      'Mar',
-      'Abr',
-      'May',
-      'Jun',
-      'Jul',
-      'Ago',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dic'
-    ];
 
     var basicShadow =
         const Shadow(color: Colors.black, offset: Offset(1, 2), blurRadius: 8);
@@ -65,7 +73,8 @@ class _BarChartTransaccionesState extends State<BarChartTransacciones> {
     );
 
     return FutureBuilder(
-      future: getChartData('http://132.255.166.73:8474/ingresos/anuales'),
+      future: getChartData(
+          'http://132.255.166.73:8474/ingresos/mensuales_por_sede'),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return Column(
@@ -95,7 +104,7 @@ class _BarChartTransaccionesState extends State<BarChartTransacciones> {
                             drawBehindEverything: true,
                             axisNameSize: 50,
                             axisNameWidget: Text(
-                              'Ingresos ${widget.anual}',
+                              'Ingresos ${mesanio[int.parse(widget.mensual) - 1]} del ${widget.anual}',
                               style: charTextStyle,
                             ),
                             sideTitles: SideTitles(showTitles: false)),
@@ -108,7 +117,7 @@ class _BarChartTransaccionesState extends State<BarChartTransacciones> {
                               return Padding(
                                 padding: const EdgeInsets.all(4.0),
                                 child: Text(
-                                  meses[value.toInt() - 1],
+                                  '${value.toInt() - 1}',
                                   style: mesTextStyle,
                                 ),
                               );
@@ -119,12 +128,13 @@ class _BarChartTransaccionesState extends State<BarChartTransacciones> {
                     barGroups: List.generate(transacciones.length, (index) {
                       return BarChartGroupData(barRods: [
                         BarChartRodData(
-                            gradient:
-                                LinearGradient(colors: [Colors.white, bfColor]),
-                            toY: transacciones[index].valor,
-                            width: 6,
-                            borderSide: barsBorder)
-                      ], x: transacciones[index].mes);
+                          gradient:
+                              LinearGradient(colors: [Colors.white, bfColor]),
+                          toY: transacciones[index].valor,
+                          width: 6,
+                          borderSide: barsBorder,
+                        )
+                      ], x: transacciones[index].dia);
                     }))),
               ),
             ],
@@ -145,9 +155,15 @@ class _BarChartTransaccionesState extends State<BarChartTransacciones> {
   Future getChartData(String dataUrl) async {
     transacciones.clear();
     anios.clear();
+    meses.clear();
+
     var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
     var request = http.Request('GET', Uri.parse(dataUrl));
-    request.bodyFields = {'anio': widget.anual};
+    request.bodyFields = {
+      'anio': widget.anual,
+      'mes': widget.mensual,
+      'sede': widget.sede
+    };
 
     request.headers.addAll(headers);
 
@@ -155,14 +171,15 @@ class _BarChartTransaccionesState extends State<BarChartTransacciones> {
     var response = await http.Response.fromStream(responseStream);
 
     List lista = jsonDecode(response.body);
-    //print(lista[0]['valor']);
+
     for (var element in lista) {
-      transacciones.add(TransaccionAnual(
-          double.parse(element['valor'].toString()), element['mes']));
+      transacciones.add(TransaccionMensual(
+          double.parse(element['valor'].toString()), element['dia']));
     }
 
-    var request2 =
-        http.Request('GET', Uri.parse('http://132.255.166.73:8474/anios'));
+    var request2 = http.Request(
+        'GET', Uri.parse('http://132.255.166.73:8474/anios_por_sede'));
+    request2.bodyFields = {'sede': widget.sede};
 
     http.StreamedResponse responseStream2 = await request2.send();
     var response2 = await http.Response.fromStream(responseStream2);
@@ -173,11 +190,25 @@ class _BarChartTransaccionesState extends State<BarChartTransacciones> {
       anios.add(element['anios'].toString());
     }
 
+    var request3 = http.Request(
+        'GET', Uri.parse('http://132.255.166.73:8474/meses_por_sede'));
+    request3.bodyFields = {'anio': widget.anual, 'sede': widget.sede};
+    http.StreamedResponse responseStream3 = await request3.send();
+    var response3 = await http.Response.fromStream(responseStream3);
+
+    List lista3 = jsonDecode(response3.body);
+
+    for (var element in lista3) {
+      meses.add(element['meses'].toString());
+    }
+
     mayor = getMayor(transacciones);
     return transacciones;
   }
 
-  double getMayor(List<TransaccionAnual> m) {
+  void getMeses() async {}
+
+  double getMayor(List<TransaccionMensual> m) {
     double res = 0;
 
     for (var element in m) {

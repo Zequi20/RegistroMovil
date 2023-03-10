@@ -17,7 +17,7 @@ class ScreenIngresosRegistro extends StatefulWidget {
 
 class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
   final DataGridController _dataGridController = DataGridController();
-  var link = 'http://192.168.0.7:8474/ingresos';
+  var link = 'http://132.255.166.73:8474/ingresos';
   //var queryController = TextEditingController();
   bool visible = false;
   Icon searchIcon = const Icon(Icons.search);
@@ -429,7 +429,7 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
                                                         var request = http.Request(
                                                             'POST',
                                                             Uri.parse(
-                                                                'http://192.168.0.7:8474/ingresos/agregar'));
+                                                                'http://132.255.166.73:8474/ingresos/agregar'));
                                                         request.bodyFields = {
                                                           'id_sede': args.idSede
                                                               .toString(),
@@ -771,7 +771,7 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
                                                               http.Request(
                                                                   'POST',
                                                                   Uri.parse(
-                                                                      'http://192.168.0.7:8474/ingresos/editar'));
+                                                                      'http://132.255.166.73:8474/ingresos/editar'));
                                                           request.bodyFields = {
                                                             'id_transaccion':
                                                                 regId
@@ -942,7 +942,7 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
                               var request = http.Request(
                                   'DELETE',
                                   Uri.parse(
-                                      'http://192.168.0.7:8474/transacciones/borrar'));
+                                      'http://132.255.166.73:8474/transacciones/borrar'));
                               String idList = '';
                               for (var element in selected) {
                                 idList += '${element.getCells().first.value},';

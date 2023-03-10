@@ -14,7 +14,7 @@ class ScreenSedes extends StatefulWidget {
 }
 
 class _ScreenSedesState extends State<ScreenSedes> {
-  final String sedesUrl = 'http://192.168.0.7:8474/sedes';
+  final String sedesUrl = 'http://132.255.166.73:8474/sedes';
 
   List<Sede> lista = [];
 

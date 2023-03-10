@@ -34,7 +34,7 @@ class _DonutChartState extends State<DonutChart> {
     );
 
     return FutureBuilder(
-      future: getChartData('http://192.168.0.7:8474/general'),
+      future: getChartData('http://132.255.166.73:8474/general'),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         NumberFormat f = NumberFormat("#,##0.00", "es_AR");
         if (snapshot.hasData) {
