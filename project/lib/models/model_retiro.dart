@@ -8,7 +8,7 @@ class ModelRetiro {
       json['id_retiro'],
       json['id_funcionario'],
       double.parse(json['valor_retiro'].toString()),
-      DateFormat('yyy-mm-dd')
+      DateFormat('yyy-MM-dd')
           .format(DateTime.parse(json['fecha_retiro'].toString())),
       json['hora_retiro'].toString(),
       json['motivo_retiro'].toString(),

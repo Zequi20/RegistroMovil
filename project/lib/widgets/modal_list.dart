@@ -37,6 +37,28 @@ class _ModalListState extends State<ModalList> {
   List<ModelFuncionario> listaFiltrada = [];
   @override
   Widget build(BuildContext context) {
+    var colorPrincipal = Colors.white;
+    var colorSecundario = Colors.blue.shade500;
+    var colorResaltante = Colors.indigo.shade900;
+    var shadowPrincipal =
+        const Shadow(color: Colors.black38, offset: Offset(1, 1));
+
+    var cardTextStyle = TextStyle(
+        color: colorPrincipal,
+        fontWeight: FontWeight.bold,
+        fontSize: 22,
+        shadows: [shadowPrincipal]);
+
+    var cardSubTextStyle = TextStyle(
+        color: colorPrincipal,
+        fontWeight: FontWeight.bold,
+        fontSize: 18,
+        shadows: [shadowPrincipal]);
+
+    var cardShape = RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(5),
+        side: BorderSide(color: colorResaltante));
+
     if (busquedaController.text.trim() == '') {
       listaFiltrada = widget.listaFuncionarios;
     } else {
@@ -50,16 +72,16 @@ class _ModalListState extends State<ModalList> {
     return AlertDialog(
         titlePadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
         contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-        shape: bfShape,
-        backgroundColor: bfColor,
-        titleTextStyle: bfTextStyle,
+        shape: cardShape,
+        backgroundColor: colorSecundario,
+        titleTextStyle: cardTextStyle,
         actions: [
           TextField(
             controller: busquedaController,
             onChanged: (value) {
               setState(() {});
             },
-            style: bfTextStyle,
+            style: cardSubTextStyle,
             decoration: InputDecoration(
                 border: InputBorder.none,
                 icon: const Icon(
@@ -68,7 +90,7 @@ class _ModalListState extends State<ModalList> {
                 ),
                 label: Text(
                   'Buscar funcionario',
-                  style: bfTextStyle,
+                  style: cardSubTextStyle,
                 )),
           )
         ],

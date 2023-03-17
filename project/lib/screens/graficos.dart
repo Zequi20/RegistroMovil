@@ -28,6 +28,7 @@ class _GraphScreenState extends State<GraphScreen> {
         child: Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        centerTitle: true,
         actions: [
           IconButton(
               onPressed: () {
@@ -41,8 +42,7 @@ class _GraphScreenState extends State<GraphScreen> {
               width: 1,
               color: Colors.white),
         ),
-        title: const Center(
-            child: Text(
+        title: const Text(
           style: TextStyle(
             shadows: [
               Shadow(color: Colors.grey, offset: Offset(1, 1), blurRadius: 4),
@@ -53,7 +53,7 @@ class _GraphScreenState extends State<GraphScreen> {
           ),
           'Generar graficos',
           textAlign: TextAlign.center,
-        )),
+        ),
         backgroundColor: Colors.indigo.shade900.withOpacity(0.7),
       ),
       body: SingleChildScrollView(

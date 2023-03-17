@@ -54,6 +54,33 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
     var horaControllerEdit = TextEditingController();
     var observacionControllerEdit = TextEditingController();
 
+    var colorPrincipal = Colors.white;
+    var colorSecundario = Colors.blue.shade500;
+    var colorResaltante = Colors.indigo.shade900;
+    var shadowPrincipal =
+        const Shadow(color: Colors.black38, offset: Offset(1, 1));
+
+    var titleTextStyle = TextStyle(
+      color: colorResaltante,
+      fontWeight: FontWeight.bold,
+      fontSize: 22,
+    );
+    var cardTextStyle = TextStyle(
+        color: colorPrincipal,
+        fontWeight: FontWeight.bold,
+        fontSize: 22,
+        shadows: [shadowPrincipal]);
+
+    var cardSubTextStyle = TextStyle(
+        color: colorPrincipal,
+        fontWeight: FontWeight.bold,
+        fontSize: 18,
+        shadows: [shadowPrincipal]);
+
+    var cardShape = RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(5),
+        side: BorderSide(color: colorResaltante));
+
     return SafeArea(
         child: Scaffold(
       floatingActionButton: Wrap(
@@ -70,26 +97,16 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
             horaControllerEdit,
             observacionControllerEdit),
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: colorPrincipal,
       appBar: AppBar(
+        iconTheme: IconThemeData(color: colorResaltante),
+        elevation: 0,
+        centerTitle: true,
         title: Text(
           'Ingresos ${args.nombreSede}',
-          style: const TextStyle(
-            shadows: [
-              Shadow(color: Colors.grey, offset: Offset(1, 1), blurRadius: 4),
-            ],
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 22,
-          ),
+          style: titleTextStyle,
         ),
-        backgroundColor: Colors.indigo.shade900.withOpacity(0.7),
-        shape: const RoundedRectangleBorder(
-          side: BorderSide(
-              strokeAlign: BorderSide.strokeAlignOutside,
-              width: 1,
-              color: Colors.white),
-        ),
+        backgroundColor: colorPrincipal,
       ),
       body: FutureBuilder(
         future: getTransaccionData(link, args),
@@ -123,14 +140,11 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
                                   Text('Valor: ${row.getCells()[1].value}'),
                                 ],
                               ),
-                              titleTextStyle: bfTextStyle,
-                              contentTextStyle: bfTextStyle,
-                              iconColor: Colors.white,
-                              backgroundColor: bfColor,
-                              shape: RoundedRectangleBorder(
-                                  side: const BorderSide(
-                                      width: 1, color: Colors.white),
-                                  borderRadius: BorderRadius.circular(12.0)),
+                              titleTextStyle: cardTextStyle,
+                              contentTextStyle: cardSubTextStyle,
+                              iconColor: colorPrincipal,
+                              backgroundColor: colorSecundario,
+                              shape: cardShape,
                             );
                           });
                     }
@@ -252,18 +266,37 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
       fechaControllerEdit,
       horaControllerEdit,
       observacionControllerEdit) {
-    ShapeBorder bfShape = RoundedRectangleBorder(
-        side: BorderSide.merge(const BorderSide(color: Colors.white),
-            const BorderSide(color: Colors.white)),
-        borderRadius: BorderRadius.circular(10.0));
+    var colorPrincipal = Colors.white;
+    var colorSecundario = Colors.blue.shade500;
+    var colorResaltante = Colors.indigo.shade900;
+    var shadowPrincipal =
+        const Shadow(color: Colors.black38, offset: Offset(1, 1));
+
+    var cardTextStyle = TextStyle(
+        color: colorPrincipal,
+        fontWeight: FontWeight.bold,
+        fontSize: 22,
+        shadows: [shadowPrincipal]);
+
+    var cardSubTextStyle = TextStyle(
+        color: colorPrincipal,
+        fontWeight: FontWeight.bold,
+        fontSize: 18,
+        shadows: [shadowPrincipal]);
+
+    var cardShape = RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(5),
+        side: BorderSide(color: colorResaltante));
+
     return [
       FloatingActionButton(
+          elevation: 1,
           heroTag: 'btn_add',
           onPressed: () {
             showModalBottomSheet(
                 isScrollControlled: true,
                 clipBehavior: Clip.antiAliasWithSaveLayer,
-                shape: bfShape,
+                shape: cardShape,
                 elevation: 0.5,
                 context: context,
                 builder: ((context) {
@@ -279,25 +312,15 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
                           padding: const EdgeInsets.all(0),
                           child: Container(
                             decoration: BoxDecoration(
-                                boxShadow: const [
-                                  BoxShadow(
-                                      color: Colors.black,
-                                      offset: Offset(1, 1),
-                                      blurRadius: 3)
-                                ],
-                                border: Border.all(
-                                    color: Colors.white,
-                                    width: 1,
-                                    strokeAlign: BorderSide.strokeAlignInside),
                                 borderRadius: const BorderRadius.all(
-                                    Radius.circular(10.0)),
-                                color: Colors.blue.shade600),
+                                    Radius.circular(5.0)),
+                                color: colorSecundario),
                             child: Center(
                               child: Padding(
                                 padding: const EdgeInsets.all(12),
                                 child: Text(
                                   'Agregar al registro',
-                                  style: bfTextStyle,
+                                  style: cardSubTextStyle,
                                 ),
                               ),
                             ),
@@ -382,37 +405,27 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
                           child: Row(
                             children: [
                               Expanded(
-                                  child: TextButton(
-                                      style: ButtonStyle(
-                                          side: const MaterialStatePropertyAll(
-                                              BorderSide(
-                                                  color: Colors.white,
-                                                  width: 1)),
-                                          elevation:
-                                              MaterialStateProperty.all(5),
-                                          shadowColor:
-                                              const MaterialStatePropertyAll(
-                                                  Colors.black),
-                                          backgroundColor:
-                                              MaterialStatePropertyAll(
-                                                  bfColor)),
+                                  child: FilledButton(
                                       onPressed: () {
                                         showDialog(
                                             context: context,
                                             builder: (context) {
                                               return AlertDialog(
-                                                titleTextStyle: bfTextStyle,
-                                                contentTextStyle: bfTextStyle,
-                                                backgroundColor: bfColor,
-                                                shape: bfShape,
-                                                iconColor: Colors.white,
+                                                titleTextStyle: cardTextStyle,
+                                                contentTextStyle:
+                                                    cardSubTextStyle,
+                                                backgroundColor:
+                                                    colorSecundario,
+                                                shape: cardShape,
+                                                iconColor: colorPrincipal,
                                                 actions: [
                                                   TextButton(
                                                       onPressed: () {
                                                         Navigator.pop(context);
                                                       },
                                                       child: Text(
-                                                          style: bfTextStyle,
+                                                          style:
+                                                              cardSubTextStyle,
                                                           'Cancelar')),
                                                   TextButton(
                                                       onPressed: () {
@@ -456,7 +469,7 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
                                                       },
                                                       child: Text(
                                                         'Agregar',
-                                                        style: bfTextStyle,
+                                                        style: cardSubTextStyle,
                                                       ))
                                                 ],
                                                 icon: const Icon(Icons.publish),
@@ -469,36 +482,25 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
                                       },
                                       child: Text(
                                         'Agregar',
-                                        style: bfTextStyle,
+                                        style: cardSubTextStyle,
                                       ))),
                               const Divider(
                                 indent: 5.0,
                               ),
                               Expanded(
-                                  child: TextButton(
-                                      style: ButtonStyle(
-                                          side: const MaterialStatePropertyAll(
-                                              BorderSide(
-                                                  color: Colors.white,
-                                                  width: 1)),
-                                          elevation:
-                                              MaterialStateProperty.all(5),
-                                          shadowColor:
-                                              const MaterialStatePropertyAll(
-                                                  Colors.black),
-                                          backgroundColor:
-                                              MaterialStatePropertyAll(
-                                                  bfColor)),
+                                  child: FilledButton(
                                       onPressed: () {
                                         showDialog(
                                             context: context,
                                             builder: (context) {
                                               return AlertDialog(
-                                                titleTextStyle: bfTextStyle,
-                                                contentTextStyle: bfTextStyle,
-                                                iconColor: Colors.white,
-                                                backgroundColor: bfColor,
-                                                shape: bfShape,
+                                                titleTextStyle: cardTextStyle,
+                                                contentTextStyle:
+                                                    cardSubTextStyle,
+                                                iconColor: colorPrincipal,
+                                                backgroundColor:
+                                                    colorSecundario,
+                                                shape: cardShape,
                                                 actions: [
                                                   TextButton(
                                                       onPressed: () {
@@ -506,7 +508,7 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
                                                       },
                                                       child: Text(
                                                         'Cancelar',
-                                                        style: bfTextStyle,
+                                                        style: cardSubTextStyle,
                                                       )),
                                                   TextButton(
                                                     onPressed: () {
@@ -514,25 +516,26 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
                                                       Navigator.pop(context);
                                                     },
                                                     child: Text('Descartar',
-                                                        style: bfTextStyle),
+                                                        style:
+                                                            cardSubTextStyle),
                                                   )
                                                 ],
                                                 icon: const Icon(
                                                     Icons.unpublished),
                                                 title: Text(
                                                   'Descartar Operacion',
-                                                  style: bfTextStyle,
+                                                  style: cardTextStyle,
                                                 ),
                                                 content: Text(
                                                   'Seguro que desea descartar la operacion?',
-                                                  style: bfTextStyle,
+                                                  style: cardSubTextStyle,
                                                 ),
                                               );
                                             });
                                       },
                                       child: Text(
                                         'Descartar',
-                                        style: bfTextStyle,
+                                        style: cardSubTextStyle,
                                       )))
                             ],
                           ),
@@ -542,9 +545,10 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
                   );
                 }));
           },
-          backgroundColor: bfColor,
-          child: const Icon(Icons.playlist_add, color: Colors.white)),
+          backgroundColor: colorSecundario,
+          child: Icon(Icons.playlist_add, color: colorPrincipal)),
       FloatingActionButton(
+          elevation: 1,
           heroTag: 'btn_edit',
           onPressed: () {
             if (_dataGridController.selectedRows.isNotEmpty) {
@@ -553,16 +557,16 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
                     context: context,
                     builder: (context) {
                       return AlertDialog(
-                        titleTextStyle: bfTextStyle,
-                        contentTextStyle: bfTextStyle,
-                        shape: bfShape,
-                        iconColor: Colors.white,
-                        backgroundColor: bfColor,
+                        titleTextStyle: cardTextStyle,
+                        contentTextStyle: cardSubTextStyle,
+                        shape: cardShape,
+                        iconColor: colorPrincipal,
+                        backgroundColor: colorSecundario,
                         actions: [
                           TextButton(
                               child: Text(
                                 'Aceptar',
-                                style: bfTextStyle,
+                                style: cardSubTextStyle,
                               ),
                               onPressed: () {
                                 Navigator.pop(context);
@@ -570,11 +574,11 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
                         ],
                         title: Text(
                           'Seleccione un solo registro',
-                          style: bfTextStyle,
+                          style: cardTextStyle,
                         ),
                         content: Text(
                           'Esta operacion solo puede realizarse con un registro a la vez, porfavor seleccione un solo registro',
-                          style: bfTextStyle,
+                          style: cardSubTextStyle,
                         ),
                       );
                     });
@@ -590,7 +594,7 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
                 showModalBottomSheet(
                     isScrollControlled: true,
                     clipBehavior: Clip.antiAliasWithSaveLayer,
-                    shape: bfShape,
+                    shape: cardShape,
                     elevation: 0.5,
                     context: context,
                     builder: ((context) {
@@ -606,26 +610,15 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
                               padding: const EdgeInsets.all(0),
                               child: Container(
                                 decoration: BoxDecoration(
-                                    boxShadow: const [
-                                      BoxShadow(
-                                          color: Colors.black,
-                                          offset: Offset(1, 1),
-                                          blurRadius: 3)
-                                    ],
-                                    border: Border.all(
-                                        color: Colors.white,
-                                        width: 1,
-                                        strokeAlign:
-                                            BorderSide.strokeAlignInside),
                                     borderRadius: const BorderRadius.all(
-                                        Radius.circular(10.0)),
-                                    color: Colors.blue.shade600),
+                                        Radius.circular(5.0)),
+                                    color: colorSecundario),
                                 child: Center(
                                   child: Padding(
                                     padding: const EdgeInsets.all(12),
                                     child: Text(
                                       'Modificar registro ($regId)',
-                                      style: bfTextStyle,
+                                      style: cardTextStyle,
                                     ),
                                   ),
                                 ),
@@ -720,32 +713,20 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
                               child: Row(
                                 children: [
                                   Expanded(
-                                      child: TextButton(
-                                          style: ButtonStyle(
-                                              side:
-                                                  const MaterialStatePropertyAll(
-                                                      BorderSide(
-                                                          color: Colors.white,
-                                                          width: 1)),
-                                              elevation:
-                                                  MaterialStateProperty.all(5),
-                                              shadowColor:
-                                                  const MaterialStatePropertyAll(
-                                                      Colors.black),
-                                              backgroundColor:
-                                                  MaterialStatePropertyAll(
-                                                      bfColor)),
+                                      child: FilledButton(
                                           onPressed: () {
                                             showDialog(
                                                 context: context,
                                                 builder: (context) {
                                                   return AlertDialog(
-                                                    titleTextStyle: bfTextStyle,
+                                                    titleTextStyle:
+                                                        cardTextStyle,
                                                     contentTextStyle:
-                                                        bfTextStyle,
-                                                    backgroundColor: bfColor,
-                                                    shape: bfShape,
-                                                    iconColor: Colors.white,
+                                                        cardSubTextStyle,
+                                                    backgroundColor:
+                                                        colorSecundario,
+                                                    shape: cardShape,
+                                                    iconColor: colorPrincipal,
                                                     actions: [
                                                       TextButton(
                                                         onPressed: () {
@@ -753,7 +734,8 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
                                                               context);
                                                         },
                                                         child: Text('Cancelar',
-                                                            style: bfTextStyle),
+                                                            style:
+                                                                cardSubTextStyle),
                                                       ),
                                                       TextButton(
                                                         onPressed: () {
@@ -804,7 +786,8 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
                                                           setState(() {});
                                                         },
                                                         child: Text('Agregar',
-                                                            style: bfTextStyle),
+                                                            style:
+                                                                cardSubTextStyle),
                                                       )
                                                     ],
                                                     icon: const Icon(
@@ -818,46 +801,26 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
                                           },
                                           child: Text(
                                             'Editar',
-                                            style: bfTextStyle,
+                                            style: cardSubTextStyle,
                                           ))),
                                   const Divider(
                                     indent: 5.0,
                                   ),
                                   Expanded(
-                                      child: TextButton(
-                                          style: ButtonStyle(
-                                              side:
-                                                  const MaterialStatePropertyAll(
-                                                      BorderSide(
-                                                          color: Colors.white,
-                                                          width: 1)),
-                                              elevation:
-                                                  MaterialStateProperty.all(5),
-                                              shadowColor:
-                                                  const MaterialStatePropertyAll(
-                                                      Colors.black),
-                                              backgroundColor:
-                                                  MaterialStatePropertyAll(
-                                                      bfColor)),
+                                      child: FilledButton(
                                           onPressed: () {
                                             showDialog(
                                                 context: context,
                                                 builder: (context) {
                                                   return AlertDialog(
-                                                    titleTextStyle: bfTextStyle,
+                                                    titleTextStyle:
+                                                        cardTextStyle,
                                                     contentTextStyle:
-                                                        bfTextStyle,
-                                                    iconColor: Colors.white,
-                                                    backgroundColor: bfColor,
-                                                    shape: RoundedRectangleBorder(
-                                                        side: const BorderSide(
-                                                            width: 1,
-                                                            color:
-                                                                Colors.white),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                    12.0)),
+                                                        cardSubTextStyle,
+                                                    iconColor: colorPrincipal,
+                                                    backgroundColor:
+                                                        colorSecundario,
+                                                    shape: cardShape,
                                                     actions: [
                                                       TextButton(
                                                         onPressed: () {
@@ -865,7 +828,8 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
                                                               context);
                                                         },
                                                         child: Text('Cancelar',
-                                                            style: bfTextStyle),
+                                                            style:
+                                                                cardSubTextStyle),
                                                       ),
                                                       TextButton(
                                                           onPressed: () {
@@ -876,25 +840,25 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
                                                           },
                                                           child: Text(
                                                               style:
-                                                                  bfTextStyle,
+                                                                  cardSubTextStyle,
                                                               'Descartar'))
                                                     ],
                                                     icon: const Icon(
                                                         Icons.unpublished),
                                                     title: Text(
                                                       'Descartar Operacion',
-                                                      style: bfTextStyle,
+                                                      style: cardTextStyle,
                                                     ),
                                                     content: Text(
                                                       'Seguro que desea descartar la operacion?',
-                                                      style: bfTextStyle,
+                                                      style: cardSubTextStyle,
                                                     ),
                                                   );
                                                 });
                                           },
                                           child: Text(
                                             'Descartar',
-                                            style: bfTextStyle,
+                                            style: cardSubTextStyle,
                                           )))
                                 ],
                               ),
@@ -906,11 +870,12 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
               }
             }
           },
-          backgroundColor: bfColor,
-          child: const Icon(Icons.edit_note, color: Colors.white)),
+          backgroundColor: colorSecundario,
+          child: Icon(Icons.edit_note, color: colorPrincipal)),
       FloatingActionButton(
+          elevation: 1,
           heroTag: 'btn_delete',
-          backgroundColor: bfColor,
+          backgroundColor: colorSecundario,
           onPressed: () {
             var selected = _dataGridController.selectedRows;
             if (selected.isNotEmpty) {
@@ -918,19 +883,17 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      titleTextStyle: bfTextStyle,
-                      contentTextStyle: bfTextStyle,
-                      iconColor: Colors.white,
-                      backgroundColor: bfColor,
-                      shape: RoundedRectangleBorder(
-                          side: const BorderSide(width: 1, color: Colors.white),
-                          borderRadius: BorderRadius.circular(12.0)),
+                      titleTextStyle: cardTextStyle,
+                      contentTextStyle: cardSubTextStyle,
+                      iconColor: colorPrincipal,
+                      backgroundColor: colorSecundario,
+                      shape: cardShape,
                       actions: [
                         TextButton(
                           onPressed: () {
                             Navigator.pop(context);
                           },
-                          child: Text('CANCELAR', style: bfTextStyle),
+                          child: Text('CANCELAR', style: cardSubTextStyle),
                         ),
                         TextButton(
                             style: const ButtonStyle(),
@@ -963,7 +926,7 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
                             },
                             child: Text(
                               "CONFIRMAR",
-                              style: bfTextStyle,
+                              style: cardSubTextStyle,
                             ))
                       ],
                       title: const Text("CONFIRMAR OPERACION"),
@@ -976,26 +939,46 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
                   });
             }
           },
-          child: const Icon(
+          child: Icon(
             Icons.delete_outline,
-            color: Colors.white,
+            color: colorPrincipal,
           ))
     ];
   }
 
   void succesDelete() {
+    var colorPrincipal = Colors.white;
+    var colorSecundario = Colors.blue.shade500;
+    var colorResaltante = Colors.indigo.shade900;
+    var shadowPrincipal =
+        const Shadow(color: Colors.black38, offset: Offset(1, 1));
+
+    var cardTextStyle = TextStyle(
+        color: colorPrincipal,
+        fontWeight: FontWeight.bold,
+        fontSize: 22,
+        shadows: [shadowPrincipal]);
+
+    var cardSubTextStyle = TextStyle(
+        color: colorPrincipal,
+        fontWeight: FontWeight.bold,
+        fontSize: 18,
+        shadows: [shadowPrincipal]);
+
+    var cardShape = RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(5),
+        side: BorderSide(color: colorResaltante));
+
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             icon: const Icon(Icons.check),
-            titleTextStyle: bfTextStyle,
-            contentTextStyle: bfTextStyle,
-            iconColor: Colors.white,
-            backgroundColor: bfColor,
-            shape: RoundedRectangleBorder(
-                side: const BorderSide(width: 1, color: Colors.white),
-                borderRadius: BorderRadius.circular(12.0)),
+            titleTextStyle: cardTextStyle,
+            contentTextStyle: cardSubTextStyle,
+            iconColor: colorPrincipal,
+            backgroundColor: colorSecundario,
+            shape: cardShape,
             title: const Text('Borrar registro'),
             content: const Text(
               'Operacion exitosa',

@@ -41,107 +41,123 @@ class _DonutChartState extends State<DonutChart> {
           return Column(
             children: [
               Expanded(
-                child: PieChart(PieChartData(
-                    startDegreeOffset: 30,
-                    centerSpaceRadius: 0,
-                    sections: [
-                      PieChartSectionData(
-                          radius: 95,
-                          value: snapshot.data[0],
-                          color: bfColorBtn,
-                          showTitle: true,
-                          title: 'Gastos',
-                          titleStyle: charTextStyle),
-                      PieChartSectionData(
-                          radius: 95,
-                          value: snapshot.data[1],
-                          color: bfColor,
-                          showTitle: true,
-                          title: 'Ingresos',
-                          titleStyle: charTextStyle)
-                    ])),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                    color: bfColorBtn,
-                    border: const Border(top: BorderSide(color: Colors.white)),
-                    boxShadow: const [
-                      BoxShadow(
-                          color: Colors.black26,
-                          offset: Offset(0, -6),
-                          blurRadius: 10)
-                    ]),
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.all(2),
-                                  decoration: BoxDecoration(
-                                      color: bfColor,
-                                      border: Border.all(color: Colors.white)),
-                                  width: 20,
-                                  height: 20,
-                                ),
-                                Text(
-                                  ' ${f.format(snapshot.data[1])} Gs',
-                                  style: statTextStyle,
-                                )
-                              ],
+                flex: 3,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: PieChart(PieChartData(
+                          startDegreeOffset: 30,
+                          centerSpaceRadius: 0,
+                          sections: [
+                            PieChartSectionData(
+                              radius: 95,
+                              value: snapshot.data[0],
+                              showTitle: true,
+                              title: 'Gastos',
                             ),
-                            Row(
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.all(2),
-                                  decoration: BoxDecoration(
-                                      color: bfColorBtn,
-                                      border: Border.all(color: Colors.white)),
-                                  width: 20,
-                                  height: 20,
-                                ),
-                                Text(
-                                  ' ${f.format(snapshot.data[0])} Gs',
-                                  style: statTextStyle,
-                                )
-                              ],
+                            PieChartSectionData(
+                              radius: 95,
+                              value: snapshot.data[1],
+                              showTitle: true,
+                              title: 'Ingresos',
                             )
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                          child: MaterialButton(
-                        shape: RoundedRectangleBorder(
-                            side: const BorderSide(color: Colors.white),
-                            borderRadius: BorderRadius.circular(5)),
-                        color: bfColor,
-                        onPressed: () {
-                          Navigator.of(context).pushNamed('GraphSelect');
-                        },
+                          ])),
+                    ),
+                    const Expanded(
                         child: Center(
-                          child: Row(
+                      child: Text(
+                        'kk',
+                      ),
+                    ))
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: bfColorBtn,
+                      border:
+                          const Border(top: BorderSide(color: Colors.white)),
+                      boxShadow: const [
+                        BoxShadow(
+                            color: Colors.black26,
+                            offset: Offset(0, -6),
+                            blurRadius: 10)
+                      ]),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Column(
                             children: [
-                              const Icon(
-                                Icons.pie_chart,
-                                color: Colors.white,
+                              Row(
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.all(2),
+                                    decoration: BoxDecoration(
+                                        color: bfColor,
+                                        border:
+                                            Border.all(color: Colors.white)),
+                                    width: 20,
+                                    height: 20,
+                                  ),
+                                  Text(
+                                    ' ${f.format(snapshot.data[1])} Gs',
+                                    style: statTextStyle,
+                                  )
+                                ],
                               ),
-                              Text(
-                                ' Graficos',
-                                style: charTextStyle,
-                              ),
+                              Row(
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.all(2),
+                                    decoration: BoxDecoration(
+                                        color: bfColorBtn,
+                                        border:
+                                            Border.all(color: Colors.white)),
+                                    width: 20,
+                                    height: 20,
+                                  ),
+                                  Text(
+                                    ' ${f.format(snapshot.data[0])} Gs',
+                                    style: statTextStyle,
+                                  )
+                                ],
+                              )
                             ],
                           ),
                         ),
-                      ))
-                    ],
+                        Expanded(
+                            child: MaterialButton(
+                          shape: RoundedRectangleBorder(
+                              side: const BorderSide(color: Colors.white),
+                              borderRadius: BorderRadius.circular(5)),
+                          color: bfColor,
+                          onPressed: () {
+                            Navigator.of(context).pushNamed('GraphSelect');
+                          },
+                          child: Center(
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Icons.pie_chart,
+                                  color: Colors.white,
+                                ),
+                                Text(
+                                  ' Graficos',
+                                  style: charTextStyle,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ))
+                      ],
+                    ),
                   ),
                 ),
-              ),
+              )
             ],
           );
         } else {

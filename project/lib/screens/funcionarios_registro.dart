@@ -92,6 +92,7 @@ class _ScreenFuncionariosRegistroState
       ),
       backgroundColor: Colors.white,
       appBar: AppBar(
+        centerTitle: true,
         title: Text(
           'Funcionarios ${args.nombreSede}',
           style: const TextStyle(
@@ -626,7 +627,7 @@ class _ScreenFuncionariosRegistroState
                                                               http.Request(
                                                                   'POST',
                                                                   Uri.parse(
-                                                                      'http://132.255.166.73:8474//funcionarios/agregar'));
+                                                                      'http://132.255.166.73:8474/funcionarios/agregar'));
                                                           request.bodyFields = {
                                                             'id_sede': args
                                                                 .idSede
