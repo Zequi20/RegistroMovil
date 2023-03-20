@@ -39,7 +39,7 @@ dependencies:
   
   
   syncfusion_flutter_datagrid: ^20.3.59
-  
+  syncfusion_flutter_core: any
   http: ^0.13.5
   intl: ^0.18.0
   time_range_picker: ^2.2.0

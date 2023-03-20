@@ -48,6 +48,11 @@ class _ScreenSedesState extends State<ScreenSedes> {
         child: Scaffold(
       backgroundColor: colorPrincipal,
       appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+              gradient:
+                  LinearGradient(colors: [colorPrincipal, colorSecundario])),
+        ),
         iconTheme: IconThemeData(color: colorResaltante),
         elevation: 0,
         centerTitle: true,

@@ -1,24 +1,30 @@
 import 'package:flutter/material.dart';
 
-import '../models/model_funcionario.dart';
+import '../models/model_funcionario_pagos.dart';
 
-class ModalList extends StatefulWidget {
-  const ModalList(
+class ModalPagos extends StatefulWidget {
+  const ModalPagos(
       {super.key,
       required this.listaFuncionarios,
       this.idTextController,
-      this.funcionarioTextController});
+      this.funcionarioTextController,
+      this.idSedeTextController,
+      this.sueldoTextController,
+      this.nombreSedeTextController});
   final TextEditingController? idTextController;
+  final TextEditingController? idSedeTextController;
+  final TextEditingController? nombreSedeTextController;
   final TextEditingController? funcionarioTextController;
-  final List<ModelFuncionario> listaFuncionarios;
+  final TextEditingController? sueldoTextController;
+  final List<ModelFuncionarioPagos> listaFuncionarios;
 
   @override
-  State<ModalList> createState() => _ModalListState();
+  State<ModalPagos> createState() => _ModalPagosState();
 }
 
-class _ModalListState extends State<ModalList> {
+class _ModalPagosState extends State<ModalPagos> {
   var busquedaController = TextEditingController();
-  List<ModelFuncionario> listaFiltrada = [];
+  List<ModelFuncionarioPagos> listaFiltrada = [];
   @override
   Widget build(BuildContext context) {
     var colorPrincipal = Colors.white;
@@ -68,9 +74,9 @@ class _ModalListState extends State<ModalList> {
             style: cardSubTextStyle,
             decoration: InputDecoration(
                 border: InputBorder.none,
-                icon: const Icon(
+                icon: Icon(
                   Icons.search,
-                  color: Colors.white,
+                  color: colorPrincipal,
                 ),
                 label: Text(
                   'Buscar funcionario',
@@ -105,8 +111,14 @@ class _ModalListState extends State<ModalList> {
                       onTap: () {
                         widget.idTextController!.text =
                             listaFiltrada[index].idFuncionario.toString();
+                        widget.idSedeTextController!.text =
+                            listaFiltrada[index].idSede.toString();
                         widget.funcionarioTextController!.text =
-                            listaFiltrada[index].nombreFuncionario.toString();
+                            listaFiltrada[index].nombreFuncionario;
+                        widget.sueldoTextController!.text =
+                            listaFiltrada[index].sueldoFuncionario.toString();
+                        widget.nombreSedeTextController!.text =
+                            listaFiltrada[index].nombreSede;
                         Navigator.pop(context);
                       },
                       child: Row(children: [
@@ -116,7 +128,7 @@ class _ModalListState extends State<ModalList> {
                               '${listaFiltrada[index].idFuncionario}',
                             )),
                         Expanded(
-                            flex: 3,
+                            flex: 1,
                             child: Text(
                               listaFiltrada[index].nombreFuncionario,
                             ))

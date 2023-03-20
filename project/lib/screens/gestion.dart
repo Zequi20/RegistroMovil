@@ -40,6 +40,11 @@ class ScreenGestion extends StatelessWidget {
         child: Scaffold(
             backgroundColor: colorPrincipal,
             appBar: AppBar(
+              flexibleSpace: Container(
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        colors: [colorPrincipal, colorSecundario])),
+              ),
               elevation: 0,
               iconTheme: IconThemeData(color: colorResaltante),
               centerTitle: true,

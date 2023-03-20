@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-
 import '../screenParams/arguments.dart';
 
 class ScreenFuncionariosRegistro extends StatefulWidget {
@@ -85,31 +84,39 @@ class _ScreenFuncionariosRegistroState
 
     return SafeArea(
         child: Scaffold(
-      floatingActionButton: Wrap(
-        direction: Axis.horizontal,
-        spacing: 6.5,
-        children: getActions(
-          args,
-          ciController,
-          nombreController,
-          telefonoController,
-          correoController,
-          fechaInicioController,
-          sueldoController,
-          horaEntradaController,
-          horaSalidaController,
-          ciControllerEdit,
-          nombreControllerEdit,
-          telefonoControllerEdit,
-          correoControllerEdit,
-          fechaInicioControllerEdit,
-          sueldoControllerEdit,
-          horaEntradaControllerEdit,
-          horaSalidaControllerEdit,
+      floatingActionButton: Opacity(
+        opacity: 0.7,
+        child: Wrap(
+          direction: Axis.horizontal,
+          spacing: 6.5,
+          children: getActions(
+            args,
+            ciController,
+            nombreController,
+            telefonoController,
+            correoController,
+            fechaInicioController,
+            sueldoController,
+            horaEntradaController,
+            horaSalidaController,
+            ciControllerEdit,
+            nombreControllerEdit,
+            telefonoControllerEdit,
+            correoControllerEdit,
+            fechaInicioControllerEdit,
+            sueldoControllerEdit,
+            horaEntradaControllerEdit,
+            horaSalidaControllerEdit,
+          ),
         ),
       ),
       backgroundColor: colorPrincipal,
       appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+              gradient:
+                  LinearGradient(colors: [colorPrincipal, colorSecundario])),
+        ),
         elevation: 1,
         iconTheme: IconThemeData(color: colorResaltante),
         centerTitle: true,
@@ -359,6 +366,7 @@ class _ScreenFuncionariosRegistroState
         side: BorderSide(color: colorResaltante));
     return [
       FloatingActionButton(
+          elevation: 0,
           heroTag: 'btn_add',
           onPressed: () {
             showModalBottomSheet(
@@ -752,6 +760,7 @@ class _ScreenFuncionariosRegistroState
           backgroundColor: colorSecundario,
           child: const Icon(Icons.playlist_add, color: Colors.white)),
       FloatingActionButton(
+          elevation: 0,
           heroTag: 'btn_edit',
           onPressed: () async {
             if (_dataGridController.selectedRows.isNotEmpty) {
@@ -1225,6 +1234,7 @@ class _ScreenFuncionariosRegistroState
           backgroundColor: colorSecundario,
           child: const Icon(Icons.edit_note, color: Colors.white)),
       FloatingActionButton(
+          elevation: 0,
           heroTag: 'btn_delete',
           backgroundColor: colorSecundario,
           onPressed: () {

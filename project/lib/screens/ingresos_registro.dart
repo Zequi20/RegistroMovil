@@ -83,95 +83,105 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
 
     return SafeArea(
         child: Scaffold(
-      floatingActionButton: Wrap(
-        direction: Axis.horizontal,
-        spacing: 6.5,
-        children: getActions(
-            args,
-            valorController,
-            fechaController,
-            horaController,
-            observacionController,
-            valorControllerEdit,
-            fechaControllerEdit,
-            horaControllerEdit,
-            observacionControllerEdit),
-      ),
-      backgroundColor: colorPrincipal,
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: colorResaltante),
-        elevation: 0,
-        centerTitle: true,
-        title: Text(
-          'Ingresos ${args.nombreSede}',
-          style: titleTextStyle,
-        ),
-        backgroundColor: colorPrincipal,
-      ),
-      body: FutureBuilder(
-        future: getTransaccionData(link, args),
-        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-          return snapshot.hasData
-              ? SfDataGrid(
-                  onCellTap: (details) {
-                    if (details.rowColumnIndex.rowIndex != 0) {
-                      int selectedRowIndex =
-                          details.rowColumnIndex.rowIndex - 1;
-                      var row = _transactionDataSource.effectiveRows
-                          .elementAt(selectedRowIndex);
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: Text(
-                                'Registro ${row.getCells()[0].value}',
-                                textAlign: TextAlign.center,
-                              ),
-                              content: Wrap(
-                                direction: Axis.vertical,
-                                children: [
-                                  SizedBox(
-                                    width: 250,
-                                    child: Text(
-                                        'Observacion: ${row.getCells()[4].value}'),
-                                  ),
-                                  Text('Fecha: ${row.getCells()[2].value}'),
-                                  Text('Hora: ${row.getCells()[3].value}'),
-                                  Text('Valor: ${row.getCells()[1].value}'),
-                                ],
-                              ),
-                              titleTextStyle: cardTextStyle,
-                              contentTextStyle: cardSubTextStyle,
-                              iconColor: colorPrincipal,
-                              backgroundColor: colorSecundario,
-                              shape: cardShape,
-                            );
-                          });
-                    }
-                  },
-                  frozenColumnsCount: 1,
-                  allowSorting: true,
-                  allowFiltering: true,
-                  showCheckboxColumn: true,
-                  isScrollbarAlwaysShown: true,
-                  controller: _dataGridController,
-                  selectionMode: SelectionMode.multiple,
-                  source: _transactionDataSource,
-                  columns: getColumns(),
-                )
-              : Center(
-                  child: CircularProgressIndicator(
-                    color: Colors.blue.shade600.withOpacity(0.7),
-                    backgroundColor: Colors.white,
-                    strokeWidth: 8,
-                  ) /* CircularProgressIndicator(
+            floatingActionButton: Opacity(
+              opacity: 0.7,
+              child: Wrap(
+                direction: Axis.horizontal,
+                spacing: 6.5,
+                children: getActions(
+                    args,
+                    valorController,
+                    fechaController,
+                    horaController,
+                    observacionController,
+                    valorControllerEdit,
+                    fechaControllerEdit,
+                    horaControllerEdit,
+                    observacionControllerEdit),
+              ),
+            ),
+            backgroundColor: colorPrincipal,
+            appBar: AppBar(
+              flexibleSpace: Container(
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        colors: [colorPrincipal, colorSecundario])),
+              ),
+              iconTheme: IconThemeData(color: colorResaltante),
+              elevation: 0,
+              centerTitle: true,
+              title: Text(
+                'Ingresos ${args.nombreSede}',
+                style: titleTextStyle,
+              ),
+              backgroundColor: colorPrincipal,
+            ),
+            body: FutureBuilder(
+              future: getTransaccionData(link, args),
+              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                return snapshot.hasData
+                    ? SfDataGrid(
+                        onCellTap: (details) {
+                          if (details.rowColumnIndex.rowIndex != 0) {
+                            int selectedRowIndex =
+                                details.rowColumnIndex.rowIndex - 1;
+                            var row = _transactionDataSource.effectiveRows
+                                .elementAt(selectedRowIndex);
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: Text(
+                                      'Registro ${row.getCells()[0].value}',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    content: Wrap(
+                                      direction: Axis.vertical,
+                                      children: [
+                                        SizedBox(
+                                          width: 250,
+                                          child: Text(
+                                              'Observacion: ${row.getCells()[4].value}'),
+                                        ),
+                                        Text(
+                                            'Fecha: ${row.getCells()[2].value}'),
+                                        Text(
+                                            'Hora: ${row.getCells()[3].value}'),
+                                        Text(
+                                            'Valor: ${row.getCells()[1].value}'),
+                                      ],
+                                    ),
+                                    titleTextStyle: cardTextStyle,
+                                    contentTextStyle: cardSubTextStyle,
+                                    iconColor: colorPrincipal,
+                                    backgroundColor: colorSecundario,
+                                    shape: cardShape,
+                                  );
+                                });
+                          }
+                        },
+                        frozenColumnsCount: 1,
+                        allowSorting: true,
+                        allowFiltering: true,
+                        showCheckboxColumn: true,
+                        isScrollbarAlwaysShown: true,
+                        controller: _dataGridController,
+                        selectionMode: SelectionMode.multiple,
+                        source: _transactionDataSource,
+                        columns: getColumns(),
+                      )
+                    : Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.blue.shade600.withOpacity(0.7),
+                          backgroundColor: Colors.white,
+                          strokeWidth: 8,
+                        ) /* CircularProgressIndicator(
                     strokeWidth: 3,
                   ) */
-                  ,
-                );
-        },
-      ),
-    ));
+                        ,
+                      );
+              },
+            )));
   }
 
   Future getTransaccionData(String url, GestionArguments args) async {
@@ -290,7 +300,7 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
 
     return [
       FloatingActionButton(
-          elevation: 1,
+          elevation: 0,
           heroTag: 'btn_add',
           onPressed: () {
             showModalBottomSheet(
@@ -548,7 +558,7 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
           backgroundColor: colorSecundario,
           child: Icon(Icons.playlist_add, color: colorPrincipal)),
       FloatingActionButton(
-          elevation: 1,
+          elevation: 0,
           heroTag: 'btn_edit',
           onPressed: () {
             if (_dataGridController.selectedRows.isNotEmpty) {
@@ -873,7 +883,7 @@ class _ScreenIngresosRegistroState extends State<ScreenIngresosRegistro> {
           backgroundColor: colorSecundario,
           child: Icon(Icons.edit_note, color: colorPrincipal)),
       FloatingActionButton(
-          elevation: 1,
+          elevation: 0,
           heroTag: 'btn_delete',
           backgroundColor: colorSecundario,
           onPressed: () {

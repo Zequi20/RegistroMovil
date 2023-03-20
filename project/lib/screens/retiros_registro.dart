@@ -83,26 +83,34 @@ class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
     );
     return SafeArea(
         child: Scaffold(
-      floatingActionButton: Wrap(
-          direction: Axis.horizontal,
-          spacing: 6.5,
-          children: getActions(
-              args,
-              _transactions,
-              funcionarioController,
-              idFuncionarioController,
-              valorController,
-              fechaController,
-              horaController,
-              motivoController,
-              idFuncionarioControllerEdit,
-              funcionarioControllerEdit,
-              valorControllerEdit,
-              fechaControllerEdit,
-              horaControllerEdit,
-              motivoControllerEdit)),
+      floatingActionButton: Opacity(
+        opacity: 0.7,
+        child: Wrap(
+            direction: Axis.horizontal,
+            spacing: 6.5,
+            children: getActions(
+                args,
+                _transactions,
+                funcionarioController,
+                idFuncionarioController,
+                valorController,
+                fechaController,
+                horaController,
+                motivoController,
+                idFuncionarioControllerEdit,
+                funcionarioControllerEdit,
+                valorControllerEdit,
+                fechaControllerEdit,
+                horaControllerEdit,
+                motivoControllerEdit)),
+      ),
       backgroundColor: colorPrincipal,
       appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+              gradient:
+                  LinearGradient(colors: [colorPrincipal, colorSecundario])),
+        ),
         elevation: 1,
         iconTheme: IconThemeData(color: colorResaltante),
         centerTitle: true,
@@ -344,6 +352,7 @@ class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
 
     return [
       FloatingActionButton(
+          elevation: 0,
           heroTag: 'btn_add',
           onPressed: () {
             showModalBottomSheet(
@@ -749,6 +758,7 @@ class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
           backgroundColor: colorSecundario,
           child: Icon(Icons.playlist_add, color: colorPrincipal)),
       FloatingActionButton(
+          elevation: 0,
           heroTag: 'btn_edit',
           onPressed: () {
             if (_dataGridController.selectedRows.isNotEmpty) {
@@ -1161,6 +1171,7 @@ class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
           backgroundColor: colorSecundario,
           child: Icon(Icons.edit_note, color: colorPrincipal)),
       FloatingActionButton(
+          elevation: 0,
           heroTag: 'btn_delete',
           backgroundColor: colorSecundario,
           onPressed: () {

@@ -1,9 +1,9 @@
 import 'package:flutter/services.dart';
 import 'dart:convert';
-// ignore: unused_import
+
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-// ignore: unused_import
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:http/http.dart' as http;
 
@@ -20,6 +20,9 @@ class _ScreenInicioState extends State<ScreenInicio> {
   var colorPrincipal = Colors.white;
   var shadowPrincipal =
       const Shadow(color: Colors.black38, offset: Offset(1, 1));
+
+  String begin = '2022-01-01';
+  String end = DateFormat('yyyy-MM-dd').format(DateTime.now());
   @override
   Widget build(BuildContext context) {
     var titleTextStyle = TextStyle(
@@ -32,6 +35,11 @@ class _ScreenInicioState extends State<ScreenInicio> {
         fontWeight: FontWeight.bold,
         fontSize: 22,
         shadows: [shadowPrincipal]);
+    var cardSubTextStyle = TextStyle(
+        color: colorPrincipal,
+        fontWeight: FontWeight.bold,
+        fontSize: 18,
+        shadows: [shadowPrincipal]);
     var cardShape = RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(5),
         side: BorderSide(color: colorResaltante));
@@ -39,6 +47,16 @@ class _ScreenInicioState extends State<ScreenInicio> {
         child: Scaffold(
       backgroundColor: colorPrincipal,
       appBar: AppBar(
+        leading: IconButton(
+            onPressed: () {
+              setState(() {});
+            },
+            icon: const Icon(Icons.replay_rounded)),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+              gradient:
+                  LinearGradient(colors: [colorPrincipal, colorSecundario])),
+        ),
         iconTheme: IconThemeData(color: colorResaltante),
         elevation: 0,
         centerTitle: true,
@@ -49,14 +67,6 @@ class _ScreenInicioState extends State<ScreenInicio> {
         ),
         backgroundColor: colorPrincipal,
         actions: [
-          /* IconButton(
-              onPressed: () {
-                SystemChannels.platform.invokeMethod('SystemNavigator.pop');
-              },
-              icon: Icon(
-                Icons.notifications_none_outlined,
-                color: Colors.indigo.shade900,
-              )), */
           IconButton(
               onPressed: () {
                 SystemChannels.platform.invokeMethod('SystemNavigator.pop');
@@ -79,10 +89,16 @@ class _ScreenInicioState extends State<ScreenInicio> {
                     double total = snapshot.data[0] + snapshot.data[1];
                     String ingresos = '${f.format(snapshot.data[1])} Gs';
                     String egresos = '${f.format(snapshot.data[0])} Gs';
+                    String ganancias =
+                        '${f.format(snapshot.data[1] - snapshot.data[0])} Gs';
                     String porcIngresos =
                         '${f.format((snapshot.data[1] * 100) / (total))}% Ingresos';
                     String porcEgresos =
                         '${f.format((snapshot.data[0] * 100) / (total))}% Gastos';
+                    var gananciasColor = colorSecundario;
+                    if (snapshot.data[1] - snapshot.data[0] < 0) {
+                      gananciasColor = Colors.red;
+                    }
                     return Padding(
                       padding: const EdgeInsets.all(14),
                       child: Column(
@@ -137,6 +153,32 @@ class _ScreenInicioState extends State<ScreenInicio> {
                           ),
                           Divider(
                             color: colorPrincipal,
+                            height: 8,
+                          ),
+                          ListTile(
+                            shape: cardShape,
+                            contentPadding: const EdgeInsets.all(8),
+                            leading: Icon(
+                              Icons.info,
+                              color: colorPrincipal,
+                              size: 45,
+                              shadows: [shadowPrincipal],
+                            ),
+                            title: Text(
+                              'Ganancias',
+                              style: cardTextStyle,
+                            ),
+                            subtitle: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                ganancias,
+                                style: cardTextStyle,
+                              ),
+                            ),
+                            tileColor: gananciasColor,
+                          ),
+                          Divider(
+                            color: colorPrincipal,
                             height: 12,
                           ),
                           Row(
@@ -177,6 +219,75 @@ class _ScreenInicioState extends State<ScreenInicio> {
                                       titleStyle: cardTextStyle)
                                 ])),
                           ),
+                          Row(
+                            children: [
+                              Expanded(
+                                  flex: 2,
+                                  child: FilledButton(
+                                      onPressed: () async {
+                                        begin = await showDatePicker(
+                                                cancelText: 'Cancelar',
+                                                confirmText: 'Aceptar',
+                                                initialEntryMode:
+                                                    DatePickerEntryMode
+                                                        .calendarOnly,
+                                                context: context,
+                                                initialDate: DateTime.now(),
+                                                firstDate: DateTime(2022, 1, 1),
+                                                lastDate: DateTime.now())
+                                            .then((value) {
+                                          if (value != null) {
+                                            return DateFormat('yyyy-MM-dd')
+                                                .format(value);
+                                          } else {
+                                            return begin;
+                                          }
+                                        });
+                                        setState(() {});
+                                      },
+                                      child: Text(
+                                        begin,
+                                        style: cardSubTextStyle,
+                                        textAlign: TextAlign.center,
+                                      ))),
+                              Expanded(
+                                  child: Text(
+                                'hasta',
+                                style: titleTextStyle,
+                                textAlign: TextAlign.center,
+                              )),
+                              Expanded(
+                                  flex: 2,
+                                  child: FilledButton(
+                                      onPressed: () async {
+                                        end = await showDatePicker(
+                                                cancelText: 'Cancelar',
+                                                confirmText: 'Aceptar',
+                                                initialEntryMode:
+                                                    DatePickerEntryMode
+                                                        .calendarOnly,
+                                                context: context,
+                                                initialDate: DateTime.now(),
+                                                firstDate:
+                                                    DateTime.parse(begin),
+                                                lastDate: DateTime.now())
+                                            .then((value) {
+                                          if (value != null) {
+                                            return DateFormat('yyyy-MM-dd')
+                                                .format(value);
+                                          } else {
+                                            return end;
+                                          }
+                                        });
+                                        setState(() {});
+                                      },
+                                      child: Text(
+                                        end,
+                                        textAlign: TextAlign.center,
+                                        style: cardSubTextStyle,
+                                      ))),
+                            ],
+                          ),
                           Divider(
                             color: colorPrincipal,
                             height: 12,
@@ -195,10 +306,10 @@ class _ScreenInicioState extends State<ScreenInicio> {
                           ),
                           FilledButton(
                               onPressed: () {
-                                setState(() {});
+                                Navigator.of(context).pushNamed('Pagos');
                               },
                               child: Text(
-                                'Gestionar pagos',
+                                'Gestionar pago',
                                 style: cardTextStyle,
                               ))
                         ],
@@ -221,15 +332,23 @@ class _ScreenInicioState extends State<ScreenInicio> {
 
   Future getChartData(String dataUrl) async {
     var request = http.Request('GET', Uri.parse(dataUrl));
+    request.bodyFields = {'begin': begin, 'end': end};
 
     http.StreamedResponse responseStream = await request.send();
     var response = await http.Response.fromStream(responseStream);
 
     List lista = jsonDecode(response.body);
 
-    List<double> valores = lista
-        .map((e) => double.parse(e['sum(valor_transaccion)'].toString()))
-        .toList();
+    List<double> valores = lista.map((e) {
+      if (e['SUM(valor_transaccion)'].toString() != 'null') {
+        return double.parse(e['SUM(valor_transaccion)'].toString());
+      } else {
+        return 0.0;
+      }
+    }).toList();
+    if (valores.length < 2) {
+      valores.add(0.0);
+    }
 
     return valores;
   }

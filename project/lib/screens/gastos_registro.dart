@@ -73,22 +73,30 @@ class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
 
     return SafeArea(
         child: Scaffold(
-      floatingActionButton: Wrap(
-        direction: Axis.horizontal,
-        spacing: 6.5,
-        children: getActions(
-            args,
-            valorController,
-            fechaController,
-            horaController,
-            observacionController,
-            valorControllerEdit,
-            fechaControllerEdit,
-            horaControllerEdit,
-            observacionControllerEdit),
+      floatingActionButton: Opacity(
+        opacity: 0.7,
+        child: Wrap(
+          direction: Axis.horizontal,
+          spacing: 6.5,
+          children: getActions(
+              args,
+              valorController,
+              fechaController,
+              horaController,
+              observacionController,
+              valorControllerEdit,
+              fechaControllerEdit,
+              horaControllerEdit,
+              observacionControllerEdit),
+        ),
       ),
       backgroundColor: colorPrincipal,
       appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+              gradient:
+                  LinearGradient(colors: [colorPrincipal, colorSecundario])),
+        ),
         iconTheme: IconThemeData(color: colorResaltante),
         elevation: 1,
         centerTitle: true,
@@ -275,6 +283,7 @@ class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
         side: BorderSide(color: colorResaltante));
     return [
       FloatingActionButton(
+          elevation: 0,
           heroTag: 'btn_add',
           onPressed: () {
             showModalBottomSheet(
@@ -537,6 +546,7 @@ class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
           backgroundColor: colorSecundario,
           child: Icon(Icons.playlist_add, color: colorPrincipal)),
       FloatingActionButton(
+          elevation: 0,
           heroTag: 'btn_edit',
           onPressed: () {
             if (_dataGridController.selectedRows.isNotEmpty) {
@@ -860,6 +870,7 @@ class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
           backgroundColor: colorSecundario,
           child: Icon(Icons.edit_note, color: colorPrincipal)),
       FloatingActionButton(
+          elevation: 0,
           heroTag: 'btn_delete',
           backgroundColor: colorSecundario,
           onPressed: () {
