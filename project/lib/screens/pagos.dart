@@ -80,6 +80,11 @@ class _ScreenPagosState extends State<ScreenPagos> {
         actions: [
           IconButton(
               onPressed: () {
+                setState(() {});
+              },
+              icon: const Icon(Icons.replay_outlined)),
+          IconButton(
+              onPressed: () {
                 SystemChannels.platform.invokeMethod('SystemNavigator.pop');
               },
               icon: const Icon(
@@ -281,8 +286,8 @@ class _ScreenPagosState extends State<ScreenPagos> {
                   keyboardType: TextInputType.text,
                   decoration:
                       const InputDecoration(label: Text('Sueldo Funcionario')),
-                  onTap: () {
-                    showDialog(
+                  onTap: () async {
+                    await showDialog(
                         context: context,
                         builder: (context) {
                           return FutureBuilder(
@@ -308,6 +313,7 @@ class _ScreenPagosState extends State<ScreenPagos> {
                             },
                           );
                         });
+                    setState(() {});
                   },
                 ),
               ),
@@ -315,10 +321,6 @@ class _ScreenPagosState extends State<ScreenPagos> {
                 padding: const EdgeInsets.symmetric(horizontal: 12.0),
                 child: TextField(
                   onChanged: (value) {
-                    if (value.trim() != '') {
-                      total = double.parse(sueldoFuncionario.text) +
-                          double.parse(value);
-                    }
                     setState(() {});
                   },
                   controller: plusFuncionario,
@@ -372,17 +374,33 @@ class _ScreenPagosState extends State<ScreenPagos> {
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12),
-                child: Text(
-                  'Total a pagar ${f.format(total)} Gs',
-                  style: titleTextStyle,
-                  textAlign: TextAlign.center,
-                ),
+                child: getTotal(
+                    titleTextStyle, plusFuncionario, sueldoFuncionario),
               ),
             ],
           ),
         ),
       ),
     ));
+  }
+
+  Text getTotal(var titleTextStyle, TextEditingController plusFuncionario,
+      TextEditingController sueldoFuncionario) {
+    double plus = 0;
+    double sueldo = 0;
+    double total = 0;
+    if (plusFuncionario.text.trim() != '') {
+      plus = double.parse(plusFuncionario.text);
+    }
+    if (sueldoFuncionario.text.trim() != '') {
+      sueldo = double.parse(sueldoFuncionario.text);
+    }
+    total = plus + sueldo;
+    return Text(
+      'Total a pagar ${f.format(total)} Gs',
+      style: titleTextStyle,
+      textAlign: TextAlign.center,
+    );
   }
 
   Future getPagosData(String dataUrl) async {
