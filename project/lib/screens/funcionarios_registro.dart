@@ -41,6 +41,8 @@ class _ScreenFuncionariosRegistroState
     var correoController = TextEditingController();
     var fechaInicioController =
         TextEditingController(text: DateFormat('yyyy-MM-dd').format(curDate));
+    var fechaCobroController =
+        TextEditingController(text: DateFormat('dd').format(curDate));
     var sueldoController = TextEditingController();
     var horaEntradaController = TextEditingController();
     var horaSalidaController = TextEditingController();
@@ -51,6 +53,8 @@ class _ScreenFuncionariosRegistroState
     var correoControllerEdit = TextEditingController();
     var fechaInicioControllerEdit =
         TextEditingController(text: DateFormat('yyyy-MM-dd').format(curDate));
+    var fechaCobroControllerEdit =
+        TextEditingController(text: DateFormat('dd').format(curDate));
     var sueldoControllerEdit = TextEditingController();
     var horaEntradaControllerEdit = TextEditingController();
     var horaSalidaControllerEdit = TextEditingController();
@@ -104,6 +108,8 @@ class _ScreenFuncionariosRegistroState
             telefonoControllerEdit,
             correoControllerEdit,
             fechaInicioControllerEdit,
+            fechaCobroControllerEdit,
+            fechaCobroController,
             sueldoControllerEdit,
             horaEntradaControllerEdit,
             horaSalidaControllerEdit,
@@ -157,9 +163,11 @@ class _ScreenFuncionariosRegistroState
                                     child: Text(
                                         'Nombre: ${row.getCells()[2].value}'),
                                   ),
-                                  Text('Sueldo: ${row.getCells()[6].value}'),
+                                  Text('Sueldo: ${row.getCells()[7].value}'),
                                   Text(
                                       'Fecha de inicio: ${row.getCells()[5].value}'),
+                                  Text(
+                                      'Fecha de cobro: ${row.getCells()[6].value}'),
                                   Text('Telefono: ${row.getCells()[3].value}'),
                                   SizedBox(
                                     width: 250,
@@ -167,7 +175,7 @@ class _ScreenFuncionariosRegistroState
                                         'Correo: ${row.getCells()[4].value}'),
                                   ),
                                   Text(
-                                      'Horario: ${row.getCells()[7].value}-${row.getCells()[8].value}'),
+                                      'Horario: ${row.getCells()[8].value}-${row.getCells()[9].value}'),
                                 ],
                               ),
                               titleTextStyle: cardTextStyle,
@@ -294,6 +302,16 @@ class _ScreenFuncionariosRegistroState
       GridColumn(
           allowSorting: true,
           allowFiltering: true,
+          columnName: 'Fecha de Cobro',
+          columnWidthMode: ColumnWidthMode.fitByColumnName,
+          label: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            alignment: Alignment.center,
+            child: const Text('Fecha de cobro'),
+          )),
+      GridColumn(
+          allowSorting: true,
+          allowFiltering: true,
           columnName: 'Sueldo',
           columnWidthMode: ColumnWidthMode.fitByColumnName,
           label: Container(
@@ -326,6 +344,7 @@ class _ScreenFuncionariosRegistroState
 
   List<Widget> getActions(
     GestionArguments args,
+    TextEditingController fechaCobroController,
     TextEditingController ciController,
     TextEditingController nombreController,
     TextEditingController telefonoController,
@@ -339,6 +358,7 @@ class _ScreenFuncionariosRegistroState
     TextEditingController telefonoControllerEdit,
     TextEditingController correoControllerEdit,
     TextEditingController fechaInicioControllerEdit,
+    TextEditingController fechaCobroControllerEdit,
     TextEditingController sueldoControllerEdit,
     TextEditingController horaEntradaControllerEdit,
     TextEditingController horaSalidaControllerEdit,
@@ -458,17 +478,6 @@ class _ScreenFuncionariosRegistroState
                               children: [
                                 Expanded(
                                     child: TextField(
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.allow(
-                                        RegExp(r'\d'))
-                                  ],
-                                  controller: sueldoController,
-                                  keyboardType: TextInputType.text,
-                                  decoration: const InputDecoration(
-                                      label: Text('Sueldo del funcionario')),
-                                )),
-                                Expanded(
-                                    child: TextField(
                                   onTap: () async {
                                     fechaInicioController.text =
                                         await showDatePicker(
@@ -494,6 +503,33 @@ class _ScreenFuncionariosRegistroState
                                       labelText: 'Fecha de inicio'),
                                   readOnly: true,
                                   controller: fechaInicioController,
+                                )),
+                                Expanded(
+                                    child: TextField(
+                                  onTap: () async {
+                                    fechaCobroController.text =
+                                        await showDatePicker(
+                                                cancelText: 'Cancelar',
+                                                confirmText: 'Aceptar',
+                                                initialEntryMode:
+                                                    DatePickerEntryMode
+                                                        .calendarOnly,
+                                                context: context,
+                                                initialDate: DateTime.now(),
+                                                firstDate: DateTime(2000, 1, 1),
+                                                lastDate: DateTime.now())
+                                            .then((value) {
+                                      if (value != null) {
+                                        return DateFormat('dd').format(value);
+                                      } else {
+                                        return fechaCobroController.text;
+                                      }
+                                    });
+                                  },
+                                  decoration: const InputDecoration(
+                                      labelText: 'Fecha de cobro'),
+                                  readOnly: true,
+                                  controller: fechaCobroController,
                                 ))
                               ],
                             ),
@@ -556,6 +592,18 @@ class _ScreenFuncionariosRegistroState
                               ],
                             ),
                           ),
+                          Padding(
+                              padding: const EdgeInsets.all(12),
+                              child: TextField(
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp(r'\d'))
+                                ],
+                                controller: sueldoController,
+                                keyboardType: TextInputType.text,
+                                decoration: const InputDecoration(
+                                    label: Text('Sueldo del funcionario')),
+                              )),
                           Padding(
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 12.0),
@@ -803,9 +851,10 @@ class _ScreenFuncionariosRegistroState
                 telefonoControllerEdit.text = selection[3].value.toString();
                 correoControllerEdit.text = selection[4].value.toString();
                 fechaInicioControllerEdit.text = selection[5].value.toString();
-                sueldoControllerEdit.text = selection[6].value.toString();
-                horaEntradaControllerEdit.text = selection[7].value.toString();
-                horaSalidaControllerEdit.text = selection[8].value.toString();
+                fechaCobroControllerEdit.text = selection[6].value.toString();
+                sueldoControllerEdit.text = selection[7].value.toString();
+                horaEntradaControllerEdit.text = selection[8].value.toString();
+                horaSalidaControllerEdit.text = selection[9].value.toString();
                 showModalBottomSheet(
                   isScrollControlled: true,
                   clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -910,18 +959,6 @@ class _ScreenFuncionariosRegistroState
                                   children: [
                                     Expanded(
                                         child: TextField(
-                                      inputFormatters: [
-                                        FilteringTextInputFormatter.allow(
-                                            RegExp(r'\d'))
-                                      ],
-                                      controller: sueldoControllerEdit,
-                                      keyboardType: TextInputType.text,
-                                      decoration: const InputDecoration(
-                                          label:
-                                              Text('Sueldo del funcionario')),
-                                    )),
-                                    Expanded(
-                                        child: TextField(
                                       onTap: () async {
                                         fechaInicioControllerEdit
                                             .text = await showDatePicker(
@@ -948,6 +985,35 @@ class _ScreenFuncionariosRegistroState
                                           labelText: 'Fecha de inicio'),
                                       readOnly: true,
                                       controller: fechaInicioControllerEdit,
+                                    )),
+                                    Expanded(
+                                        child: TextField(
+                                      onTap: () async {
+                                        fechaCobroControllerEdit
+                                            .text = await showDatePicker(
+                                                cancelText: 'Cancelar',
+                                                confirmText: 'Aceptar',
+                                                initialEntryMode:
+                                                    DatePickerEntryMode
+                                                        .calendarOnly,
+                                                context: context,
+                                                initialDate: DateTime.now(),
+                                                firstDate: DateTime(2000, 1, 1),
+                                                lastDate: DateTime.now())
+                                            .then((value) {
+                                          if (value != null) {
+                                            return DateFormat('dd')
+                                                .format(value);
+                                          } else {
+                                            return fechaCobroControllerEdit
+                                                .text;
+                                          }
+                                        });
+                                      },
+                                      decoration: const InputDecoration(
+                                          labelText: 'Fecha de cobro'),
+                                      readOnly: true,
+                                      controller: fechaCobroControllerEdit,
                                     ))
                                   ],
                                 ),
@@ -1008,10 +1074,22 @@ class _ScreenFuncionariosRegistroState
                                           labelText: 'Hora de Salida'),
                                       readOnly: true,
                                       controller: horaSalidaControllerEdit,
-                                    ))
+                                    )),
                                   ],
                                 ),
                               ),
+                              Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: TextField(
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.allow(
+                                          RegExp(r'\d'))
+                                    ],
+                                    controller: sueldoControllerEdit,
+                                    keyboardType: TextInputType.text,
+                                    decoration: const InputDecoration(
+                                        label: Text('Sueldo del funcionario')),
+                                  )),
                               Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 12.0),

@@ -13,6 +13,8 @@ class ModelFuncionario {
       json['correo_funcionario'],
       DateFormat('yyy-MM-dd')
           .format(DateTime.parse(json['fecha_inicio_funcionario'].toString())),
+      DateFormat('dd')
+          .format(DateTime.parse(json['fecha_cobro_funcionario'].toString())),
       double.parse(json['sueldo_funcionario'].toString()),
       json['hora_entrada_funcionario'],
       json['hora_salida_funcionario'],
@@ -26,6 +28,7 @@ class ModelFuncionario {
       this.telefonoFuncionario,
       this.correoFuncionario,
       this.fechaInicioFuncionario,
+      this.fechaCobroFuncionario,
       this.sueldoFuncionario,
       this.horaEntradaFuncionario,
       this.horaSalidaFuncionario);
@@ -36,6 +39,7 @@ class ModelFuncionario {
   String telefonoFuncionario;
   String correoFuncionario;
   String fechaInicioFuncionario;
+  String fechaCobroFuncionario;
   double sueldoFuncionario;
   String horaEntradaFuncionario;
   String horaSalidaFuncionario;
@@ -61,6 +65,9 @@ class FuncionarioDataSource extends DataGridSource {
               DataGridCell<String>(
                   columnName: 'Fecha de Inicio',
                   value: dataGridRow.fechaInicioFuncionario),
+              DataGridCell<String>(
+                  columnName: 'Fecha de Cobro',
+                  value: dataGridRow.fechaCobroFuncionario),
               DataGridCell<double>(
                   columnName: 'Sueldo', value: dataGridRow.sueldoFuncionario),
               DataGridCell<String>(

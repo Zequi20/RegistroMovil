@@ -95,7 +95,7 @@ class _ScreenInicioState extends State<ScreenInicio> {
                     String porcEgresos =
                         '${f.format((snapshot.data[0] * 100) / (total))}% Gastos';
                     var gananciasColor = colorSecundario;
-                    if (snapshot.data[1] - snapshot.data[0] < 0) {
+                    if (snapshot.data[1] < snapshot.data[0]) {
                       gananciasColor = Colors.red;
                     }
                     return Padding(
@@ -108,6 +108,8 @@ class _ScreenInicioState extends State<ScreenInicio> {
                                 color: colorSecundario,
                                 borderRadius: BorderRadius.circular(8)),
                             child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Divider(
                                   color: colorSecundario,
@@ -117,7 +119,7 @@ class _ScreenInicioState extends State<ScreenInicio> {
                                   shape: cardShape,
                                   contentPadding: const EdgeInsets.all(8),
                                   leading: Icon(
-                                    Icons.info,
+                                    Icons.attach_money,
                                     color: colorPrincipal,
                                     size: 45,
                                     shadows: [shadowPrincipal],
@@ -143,7 +145,7 @@ class _ScreenInicioState extends State<ScreenInicio> {
                                   shape: cardShape,
                                   contentPadding: const EdgeInsets.all(8),
                                   leading: Icon(
-                                    Icons.info,
+                                    Icons.money_off,
                                     color: colorPrincipal,
                                     size: 45,
                                     shadows: [shadowPrincipal],
@@ -169,7 +171,7 @@ class _ScreenInicioState extends State<ScreenInicio> {
                                   shape: cardShape,
                                   contentPadding: const EdgeInsets.all(8),
                                   leading: Icon(
-                                    Icons.info,
+                                    Icons.check,
                                     color: colorPrincipal,
                                     size: 45,
                                     shadows: [shadowPrincipal],
@@ -214,27 +216,26 @@ class _ScreenInicioState extends State<ScreenInicio> {
                               ))
                             ],
                           ),
+                          Divider(
+                            color: colorPrincipal,
+                            height: 12,
+                          ),
                           AspectRatio(
                             aspectRatio: 1.25,
-                            child: PieChart(PieChartData(
-                                startDegreeOffset: 30,
-                                centerSpaceRadius: 0,
-                                sections: [
-                                  PieChartSectionData(
-                                      radius: 130,
-                                      value: snapshot.data[0],
-                                      showTitle: true,
-                                      color: colorResaltante,
-                                      title: 'Gastos',
-                                      titleStyle: cardTextStyle),
-                                  PieChartSectionData(
-                                      radius: 130,
-                                      value: snapshot.data[1],
-                                      showTitle: true,
-                                      color: colorSecundario,
-                                      title: 'Ingresos',
-                                      titleStyle: cardTextStyle)
-                                ])),
+                            child: BarChart(BarChartData(barGroups: [
+                              BarChartGroupData(x: 0, barRods: [
+                                BarChartRodData(
+                                    width: 40,
+                                    toY: snapshot.data[1],
+                                    color: colorResaltante)
+                              ]),
+                              BarChartGroupData(x: 1, barRods: [
+                                BarChartRodData(
+                                    width: 40,
+                                    toY: snapshot.data[0],
+                                    color: colorSecundario)
+                              ])
+                            ])),
                           ),
                           Row(
                             children: [
