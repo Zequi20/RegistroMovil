@@ -80,11 +80,6 @@ class _ScreenPagosState extends State<ScreenPagos> {
         actions: [
           IconButton(
               onPressed: () {
-                setState(() {});
-              },
-              icon: const Icon(Icons.replay_outlined)),
-          IconButton(
-              onPressed: () {
                 SystemChannels.platform.invokeMethod('SystemNavigator.pop');
               },
               icon: const Icon(

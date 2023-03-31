@@ -41,8 +41,7 @@ class _ScreenInicioState extends State<ScreenInicio> {
         fontSize: 18,
         shadows: [shadowPrincipal]);
     var cardShape = RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(5),
-        side: BorderSide(color: colorResaltante));
+        borderRadius: BorderRadius.circular(5), side: BorderSide.none);
     return SafeArea(
         child: Scaffold(
       backgroundColor: colorPrincipal,
@@ -103,79 +102,97 @@ class _ScreenInicioState extends State<ScreenInicio> {
                       padding: const EdgeInsets.all(14),
                       child: Column(
                         children: [
-                          ListTile(
-                            shape: cardShape,
-                            contentPadding: const EdgeInsets.all(8),
-                            leading: Icon(
-                              Icons.info,
-                              color: colorPrincipal,
-                              size: 45,
-                              shadows: [shadowPrincipal],
+                          Container(
+                            decoration: BoxDecoration(
+                                border: Border.all(color: colorResaltante),
+                                color: colorSecundario,
+                                borderRadius: BorderRadius.circular(8)),
+                            child: Column(
+                              children: [
+                                Divider(
+                                  color: colorSecundario,
+                                  height: 5,
+                                ),
+                                ListTile(
+                                  shape: cardShape,
+                                  contentPadding: const EdgeInsets.all(8),
+                                  leading: Icon(
+                                    Icons.info,
+                                    color: colorPrincipal,
+                                    size: 45,
+                                    shadows: [shadowPrincipal],
+                                  ),
+                                  title: Text(
+                                    'Ingresos',
+                                    style: cardTextStyle,
+                                  ),
+                                  subtitle: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      ingresos,
+                                      style: cardTextStyle,
+                                    ),
+                                  ),
+                                  tileColor: colorSecundario,
+                                ),
+                                Divider(
+                                  color: colorSecundario,
+                                  height: 5,
+                                ),
+                                ListTile(
+                                  shape: cardShape,
+                                  contentPadding: const EdgeInsets.all(8),
+                                  leading: Icon(
+                                    Icons.info,
+                                    color: colorPrincipal,
+                                    size: 45,
+                                    shadows: [shadowPrincipal],
+                                  ),
+                                  title: Text(
+                                    'Gastos',
+                                    style: cardTextStyle,
+                                  ),
+                                  subtitle: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      egresos,
+                                      style: cardTextStyle,
+                                    ),
+                                  ),
+                                  tileColor: colorSecundario,
+                                ),
+                                Divider(
+                                  color: colorSecundario,
+                                  height: 5,
+                                ),
+                                ListTile(
+                                  shape: cardShape,
+                                  contentPadding: const EdgeInsets.all(8),
+                                  leading: Icon(
+                                    Icons.info,
+                                    color: colorPrincipal,
+                                    size: 45,
+                                    shadows: [shadowPrincipal],
+                                  ),
+                                  title: Text(
+                                    'Ganancias',
+                                    style: cardTextStyle,
+                                  ),
+                                  subtitle: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      ganancias,
+                                      style: cardTextStyle,
+                                    ),
+                                  ),
+                                  tileColor: gananciasColor,
+                                ),
+                                Divider(
+                                  color: colorSecundario,
+                                  height: 5,
+                                ),
+                              ],
                             ),
-                            title: Text(
-                              'Ingresos',
-                              style: cardTextStyle,
-                            ),
-                            subtitle: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                ingresos,
-                                style: cardTextStyle,
-                              ),
-                            ),
-                            tileColor: colorSecundario,
-                          ),
-                          Divider(
-                            color: colorPrincipal,
-                            height: 8,
-                          ),
-                          ListTile(
-                            shape: cardShape,
-                            contentPadding: const EdgeInsets.all(8),
-                            leading: Icon(
-                              Icons.info,
-                              color: colorPrincipal,
-                              size: 45,
-                              shadows: [shadowPrincipal],
-                            ),
-                            title: Text(
-                              'Gastos',
-                              style: cardTextStyle,
-                            ),
-                            subtitle: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                egresos,
-                                style: cardTextStyle,
-                              ),
-                            ),
-                            tileColor: colorSecundario,
-                          ),
-                          Divider(
-                            color: colorPrincipal,
-                            height: 8,
-                          ),
-                          ListTile(
-                            shape: cardShape,
-                            contentPadding: const EdgeInsets.all(8),
-                            leading: Icon(
-                              Icons.info,
-                              color: colorPrincipal,
-                              size: 45,
-                              shadows: [shadowPrincipal],
-                            ),
-                            title: Text(
-                              'Ganancias',
-                              style: cardTextStyle,
-                            ),
-                            subtitle: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                ganancias,
-                                style: cardTextStyle,
-                              ),
-                            ),
-                            tileColor: gananciasColor,
                           ),
                           Divider(
                             color: colorPrincipal,
