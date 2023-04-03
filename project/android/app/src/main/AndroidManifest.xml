@@ -2,7 +2,7 @@
     package="com.example.bio_farm">
     <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="bio_farm"
+        android:label="Farmapp"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

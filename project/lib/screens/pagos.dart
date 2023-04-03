@@ -102,8 +102,8 @@ class _ScreenPagosState extends State<ScreenPagos> {
                         keyboardType: TextInputType.text,
                         decoration: const InputDecoration(
                             label: Text('Id Funcionario')),
-                        onTap: () {
-                          showDialog(
+                        onTap: () async {
+                          await showDialog(
                               context: context,
                               builder: (context) {
                                 return FutureBuilder(
@@ -131,6 +131,7 @@ class _ScreenPagosState extends State<ScreenPagos> {
                                   },
                                 );
                               });
+                          setState(() {});
                         },
                       ),
                     ),
@@ -144,8 +145,8 @@ class _ScreenPagosState extends State<ScreenPagos> {
                         keyboardType: TextInputType.text,
                         decoration:
                             const InputDecoration(label: Text('Id Sede')),
-                        onTap: () {
-                          showDialog(
+                        onTap: () async {
+                          await showDialog(
                               context: context,
                               builder: (context) {
                                 return FutureBuilder(
@@ -173,6 +174,7 @@ class _ScreenPagosState extends State<ScreenPagos> {
                                   },
                                 );
                               });
+                          setState(() {});
                         },
                       ),
                     ),
@@ -193,8 +195,8 @@ class _ScreenPagosState extends State<ScreenPagos> {
                         keyboardType: TextInputType.text,
                         decoration: const InputDecoration(
                             label: Text('Nombre Funcionario')),
-                        onTap: () {
-                          showDialog(
+                        onTap: () async {
+                          await showDialog(
                               context: context,
                               builder: (context) {
                                 return FutureBuilder(
@@ -222,6 +224,7 @@ class _ScreenPagosState extends State<ScreenPagos> {
                                   },
                                 );
                               });
+                          setState(() {});
                         },
                       ),
                     ),
@@ -235,8 +238,8 @@ class _ScreenPagosState extends State<ScreenPagos> {
                         keyboardType: TextInputType.text,
                         decoration: const InputDecoration(
                             label: Text('Sede Funcionario')),
-                        onTap: () {
-                          showDialog(
+                        onTap: () async {
+                          await showDialog(
                               context: context,
                               builder: (context) {
                                 return FutureBuilder(
@@ -264,6 +267,7 @@ class _ScreenPagosState extends State<ScreenPagos> {
                                   },
                                 );
                               });
+                          setState(() {});
                         },
                       ),
                     ),
@@ -372,11 +376,101 @@ class _ScreenPagosState extends State<ScreenPagos> {
                 child: getTotal(
                     titleTextStyle, plusFuncionario, sueldoFuncionario),
               ),
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: FilledButton(
+                    onPressed: () async {
+                      if (idFuncionario.text.trim() != '') {
+                        if (plusFuncionario.text.trim() == '') {
+                          plusFuncionario.text = '0';
+                        }
+                        if (sueldoFuncionario.text.trim() == '') {
+                          sueldoFuncionario.text = '0';
+                        }
+                        if (comentarioPago.text.trim() == '') {
+                          comentarioPago.text = 'vacio';
+                        }
+                        var request = http.Request(
+                            'POST',
+                            Uri.parse(
+                                'http://132.255.166.73:8474/pagos/confirmar'));
+                        request.bodyFields = {
+                          'id_funcionario': idFuncionario.text,
+                          'id_sede': idSede.text,
+                          'salario_registro': sueldoFuncionario.text,
+                          'plus_registro': plusFuncionario.text,
+                          'fecha_registro': fechaPago.text,
+                          'comentario_registro': comentarioPago.text,
+                        };
+
+                        http.StreamedResponse response = await request.send();
+                        if (response.statusCode == 200) {
+                          pagosReg(cardTextStyle, cardSubTextStyle, cardShape);
+                        }
+                      } else {
+                        pagosError(cardTextStyle, cardSubTextStyle, cardShape);
+                      }
+                    },
+                    child: Text(
+                      'Registrar pago',
+                      style: cardTextStyle,
+                    )),
+              )
             ],
           ),
         ),
       ),
     ));
+  }
+
+  void pagosReg(var cardTextStyle, var cardSubTextStyle, var cardShape) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            icon: const Icon(Icons.check),
+            titleTextStyle: cardTextStyle,
+            contentTextStyle: cardSubTextStyle,
+            iconColor: colorPrincipal,
+            backgroundColor: colorSecundario,
+            shape: cardShape,
+            title: const Text('Registrar pago'),
+            content: const Text(
+              'Operacion exitosa',
+              textAlign: TextAlign.center,
+            ),
+          );
+        });
+  }
+
+  void pagosError(var cardTextStyle, var cardSubTextStyle, var cardShape) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    'Aceptar',
+                    style: cardSubTextStyle,
+                  ))
+            ],
+            icon: const Icon(Icons.cancel),
+            titleTextStyle: cardTextStyle,
+            contentTextStyle: cardSubTextStyle,
+            iconColor: colorPrincipal,
+            backgroundColor: colorSecundario,
+            shape: cardShape,
+            title: const Text('Campos Obligatorios'),
+            content: const Text(
+              'Por favor complete los campos del funcionario e intentelo de nuevo',
+              textAlign: TextAlign.center,
+            ),
+          );
+        });
   }
 
   Text getTotal(var titleTextStyle, TextEditingController plusFuncionario,
