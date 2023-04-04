@@ -111,7 +111,7 @@ class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
               gradient:
                   LinearGradient(colors: [colorPrincipal, colorSecundario])),
         ),
-        elevation: 1,
+        elevation: 15,
         iconTheme: IconThemeData(color: colorResaltante),
         centerTitle: true,
         title: Text(

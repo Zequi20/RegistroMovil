@@ -57,7 +57,7 @@ class _ScreenInicioState extends State<ScreenInicio> {
                   LinearGradient(colors: [colorPrincipal, colorSecundario])),
         ),
         iconTheme: IconThemeData(color: colorResaltante),
-        elevation: 0,
+        elevation: 15,
         centerTitle: true,
         title: Text(
           style: titleTextStyle,
@@ -105,14 +105,16 @@ class _ScreenInicioState extends State<ScreenInicio> {
                           Container(
                             decoration: BoxDecoration(
                                 border: Border.all(color: colorResaltante),
-                                color: colorSecundario,
+                                gradient: LinearGradient(
+                                    begin: Alignment.center,
+                                    colors: [colorSecundario, colorPrincipal]),
                                 borderRadius: BorderRadius.circular(8)),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Divider(
-                                  color: colorSecundario,
+                                const Divider(
+                                  color: Colors.transparent,
                                   height: 5,
                                 ),
                                 ListTile(
@@ -137,8 +139,8 @@ class _ScreenInicioState extends State<ScreenInicio> {
                                   ),
                                   tileColor: colorSecundario,
                                 ),
-                                Divider(
-                                  color: colorSecundario,
+                                const Divider(
+                                  color: Colors.transparent,
                                   height: 5,
                                 ),
                                 ListTile(
@@ -163,8 +165,8 @@ class _ScreenInicioState extends State<ScreenInicio> {
                                   ),
                                   tileColor: colorSecundario,
                                 ),
-                                Divider(
-                                  color: colorSecundario,
+                                const Divider(
+                                  color: Colors.transparent,
                                   height: 5,
                                 ),
                                 ListTile(
@@ -189,8 +191,8 @@ class _ScreenInicioState extends State<ScreenInicio> {
                                   ),
                                   tileColor: gananciasColor,
                                 ),
-                                Divider(
-                                  color: colorSecundario,
+                                const Divider(
+                                  color: Colors.transparent,
                                   height: 5,
                                 ),
                               ],
@@ -221,21 +223,99 @@ class _ScreenInicioState extends State<ScreenInicio> {
                             height: 12,
                           ),
                           AspectRatio(
-                            aspectRatio: 1.25,
-                            child: BarChart(BarChartData(barGroups: [
-                              BarChartGroupData(x: 0, barRods: [
-                                BarChartRodData(
-                                    width: 40,
-                                    toY: snapshot.data[1],
-                                    color: colorResaltante)
-                              ]),
-                              BarChartGroupData(x: 1, barRods: [
-                                BarChartRodData(
-                                    width: 40,
-                                    toY: snapshot.data[0],
-                                    color: colorSecundario)
-                              ])
-                            ])),
+                            aspectRatio: 1,
+                            child: BarChart(BarChartData(
+                                borderData: FlBorderData(show: true),
+                                titlesData: FlTitlesData(
+                                    bottomTitles: AxisTitles(
+                                        axisNameSize: 30,
+                                        drawBehindEverything: true,
+                                        sideTitles: SideTitles(
+                                          reservedSize: 45,
+                                          showTitles: true,
+                                          getTitlesWidget: (value, meta) {
+                                            if (value == 0) {
+                                              return Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Text(
+                                                  'Ingresos',
+                                                  style: titleTextStyle,
+                                                ),
+                                              );
+                                            } else {
+                                              return Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Text(
+                                                  'Gastos',
+                                                  style: titleTextStyle,
+                                                ),
+                                              );
+                                            }
+                                          },
+                                        )),
+                                    show: true,
+                                    topTitles: AxisTitles(
+                                        sideTitles:
+                                            SideTitles(showTitles: false)),
+                                    rightTitles: AxisTitles(
+                                        sideTitles:
+                                            SideTitles(showTitles: false)),
+                                    leftTitles: AxisTitles(
+                                        sideTitles: SideTitles(
+                                            getTitlesWidget: (value, meta) {
+                                              if (value > 0) {
+                                                return Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: FittedBox(
+                                                      child: Text(
+                                                    meta.formattedValue,
+                                                    textAlign: TextAlign.center,
+                                                  )),
+                                                );
+                                              } else {
+                                                return Text(
+                                                  meta.formattedValue,
+                                                  textAlign: TextAlign.center,
+                                                );
+                                              }
+                                            },
+                                            interval: getMayor(snapshot.data[0],
+                                                    snapshot.data[1]) /
+                                                4,
+                                            reservedSize: 50,
+                                            showTitles: true))),
+                                barGroups: [
+                                  BarChartGroupData(
+                                      groupVertically: true,
+                                      x: 0,
+                                      barRods: [
+                                        BarChartRodData(
+                                            gradient: LinearGradient(colors: [
+                                              colorResaltante,
+                                              colorPrincipal,
+                                            ]),
+                                            width: 40,
+                                            toY: snapshot.data[1],
+                                            borderSide: BorderSide(
+                                                color: colorResaltante),
+                                            borderRadius: BorderRadius.zero)
+                                      ]),
+                                  BarChartGroupData(x: 1, barRods: [
+                                    BarChartRodData(
+                                        gradient: LinearGradient(colors: [
+                                          colorSecundario,
+                                          colorPrincipal,
+                                        ]),
+                                        width: 40,
+                                        toY: snapshot.data[0],
+                                        borderRadius: BorderRadius.zero,
+                                        borderSide:
+                                            BorderSide(color: colorResaltante))
+                                  ])
+                                ])),
                           ),
                           Row(
                             children: [
@@ -346,6 +426,14 @@ class _ScreenInicioState extends State<ScreenInicio> {
         ),
       ),
     ));
+  }
+
+  double getMayor(double uno, double dos) {
+    if (uno > dos) {
+      return uno;
+    } else {
+      return dos;
+    }
   }
 
   Future getChartData(String dataUrl) async {

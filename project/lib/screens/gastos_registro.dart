@@ -98,7 +98,7 @@ class _ScreenGastosRegistroState extends State<ScreenGastosRegistro> {
                   LinearGradient(colors: [colorPrincipal, colorSecundario])),
         ),
         iconTheme: IconThemeData(color: colorResaltante),
-        elevation: 1,
+        elevation: 15,
         centerTitle: true,
         title: Text(
           'Gastos ${args.nombreSede}',

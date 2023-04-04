@@ -69,7 +69,7 @@ class _ScreenPagosState extends State<ScreenPagos> {
                   LinearGradient(colors: [colorPrincipal, colorSecundario])),
         ),
         iconTheme: IconThemeData(color: colorResaltante),
-        elevation: 0,
+        elevation: 15,
         centerTitle: true,
         title: Text(
           style: titleTextStyle,
@@ -83,6 +83,13 @@ class _ScreenPagosState extends State<ScreenPagos> {
                 SystemChannels.platform.invokeMethod('SystemNavigator.pop');
               },
               icon: const Icon(
+                Icons.history,
+              )),
+          IconButton(
+              onPressed: () {
+                SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+              },
+              icon: const Icon(
                 Icons.exit_to_app,
               )),
         ],
@@ -91,6 +98,13 @@ class _ScreenPagosState extends State<ScreenPagos> {
         child: Form(
           child: Column(
             children: [
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Text(
+                  'Registrar nuevo pago',
+                  style: titleTextStyle,
+                ),
+              ),
               Row(
                 children: [
                   Expanded(

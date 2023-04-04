@@ -54,7 +54,7 @@ class _ScreenSedesState extends State<ScreenSedes> {
                   LinearGradient(colors: [colorPrincipal, colorSecundario])),
         ),
         iconTheme: IconThemeData(color: colorResaltante),
-        elevation: 0,
+        elevation: 15,
         centerTitle: true,
         title: Text(
           style: titleTextStyle,

@@ -45,7 +45,7 @@ class ScreenGestion extends StatelessWidget {
                     gradient: LinearGradient(
                         colors: [colorPrincipal, colorSecundario])),
               ),
-              elevation: 0,
+              elevation: 15,
               iconTheme: IconThemeData(color: colorResaltante),
               centerTitle: true,
               title: Text(

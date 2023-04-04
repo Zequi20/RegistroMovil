@@ -123,7 +123,7 @@ class _ScreenFuncionariosRegistroState
               gradient:
                   LinearGradient(colors: [colorPrincipal, colorSecundario])),
         ),
-        elevation: 1,
+        elevation: 15,
         iconTheme: IconThemeData(color: colorResaltante),
         centerTitle: true,
         title: Text(
