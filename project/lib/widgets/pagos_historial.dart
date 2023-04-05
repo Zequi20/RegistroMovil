@@ -16,7 +16,9 @@ class _PagosHistorialState extends State<PagosHistorial> {
   var colorSecundario = Colors.blue.shade500;
   var colorPrincipal = Colors.white;
   bool ascendSort = true;
+  TextEditingController controlador = TextEditingController();
   List<DataRow> rows = [];
+  List<DataRow> filas = [];
   NumberFormat f = NumberFormat("#,##0.00", "es_AR");
   @override
   Widget build(BuildContext context) {
@@ -36,7 +38,7 @@ class _PagosHistorialState extends State<PagosHistorial> {
               if (snapshot.hasData) {
                 List<dynamic> data = snapshot.data;
 
-                rows = List.from(data
+                filas = List.from(data
                     .map((element) => DataRow(cells: [
                           DataCell(Text(element['id_registro'].toString())),
                           DataCell(Text(element['nombre_funcionario'])),
@@ -48,6 +50,13 @@ class _PagosHistorialState extends State<PagosHistorial> {
                           DataCell(Text(element['comentario_registro'])),
                         ]))
                     .toList());
+
+                rows = filas.where((element) {
+                  return element.cells[1].child
+                      .toString()
+                      .toLowerCase()
+                      .contains(controlador.text);
+                }).toList();
 
                 return SingleChildScrollView(
                   scrollDirection: Axis.vertical,
@@ -87,7 +96,10 @@ class _PagosHistorialState extends State<PagosHistorial> {
         ),
         Expanded(
           child: TextFormField(
-            onChanged: (value) {},
+            onChanged: (value) {
+              setState(() {});
+            },
+            controller: controlador,
             decoration: const InputDecoration(
                 enabledBorder: InputBorder.none,
                 border: InputBorder.none,
