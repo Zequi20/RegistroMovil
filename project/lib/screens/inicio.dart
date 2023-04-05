@@ -30,6 +30,7 @@ class _ScreenInicioState extends State<ScreenInicio> {
       fontWeight: FontWeight.bold,
       fontSize: 22,
     );
+
     var cardTextStyle = TextStyle(
         color: colorPrincipal,
         fontWeight: FontWeight.bold,
@@ -77,6 +78,7 @@ class _ScreenInicioState extends State<ScreenInicio> {
       ),
       body: SingleChildScrollView(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
             FutureBuilder(
                 future: getChartData('http://132.255.166.73:8474/general'),

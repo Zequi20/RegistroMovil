@@ -1,5 +1,6 @@
 import 'package:bio_farm/models/model_funcionario_pagos.dart';
-import 'package:bio_farm/widgets/modal_pagos.dart';
+import 'package:bio_farm/widgets/pagos_form.dart';
+import 'package:bio_farm/widgets/pagos_historial.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
 
@@ -59,382 +60,54 @@ class _ScreenPagosState extends State<ScreenPagos> {
     var cardShape = RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(5),
         side: BorderSide(color: colorResaltante));
-    return SafeArea(
-        child: Scaffold(
-      backgroundColor: colorPrincipal,
-      appBar: AppBar(
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-              gradient:
-                  LinearGradient(colors: [colorPrincipal, colorSecundario])),
-        ),
-        iconTheme: IconThemeData(color: colorResaltante),
-        elevation: 15,
-        centerTitle: true,
-        title: Text(
-          style: titleTextStyle,
-          'PAGOS',
-          textAlign: TextAlign.center,
-        ),
+    return DefaultTabController(
+      length: 2,
+      child: SafeArea(
+          child: Scaffold(
         backgroundColor: colorPrincipal,
-        actions: [
-          IconButton(
-              onPressed: () {
-                SystemChannels.platform.invokeMethod('SystemNavigator.pop');
-              },
-              icon: const Icon(
+        appBar: AppBar(
+          bottom: TabBar(tabs: [
+            Tab(
+                icon: Icon(
+              Icons.list_alt,
+              color: colorResaltante,
+            )),
+            Tab(
+              icon: Icon(
                 Icons.history,
-              )),
-          IconButton(
-              onPressed: () {
-                SystemChannels.platform.invokeMethod('SystemNavigator.pop');
-              },
-              icon: const Icon(
-                Icons.exit_to_app,
-              )),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Form(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Text(
-                  'Registrar nuevo pago',
-                  style: titleTextStyle,
-                ),
+                color: colorResaltante,
               ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                      child: TextField(
-                        controller: idFuncionario,
-                        readOnly: true,
-                        keyboardType: TextInputType.text,
-                        decoration: const InputDecoration(
-                            label: Text('Id Funcionario')),
-                        onTap: () async {
-                          await showDialog(
-                              context: context,
-                              builder: (context) {
-                                return FutureBuilder(
-                                  future: getPagosData(
-                                      'http://132.255.166.73:8474/funcionarios/pago'),
-                                  builder: (BuildContext context,
-                                      AsyncSnapshot<dynamic> snapshot) {
-                                    return snapshot.hasData
-                                        ? ModalPagos(
-                                            listaFuncionarios: snapshot.data,
-                                            idTextController: idFuncionario,
-                                            idSedeTextController: idSede,
-                                            funcionarioTextController:
-                                                nombreFuncionario,
-                                            sueldoTextController:
-                                                sueldoFuncionario,
-                                            nombreSedeTextController:
-                                                sedeFuncionario,
-                                          )
-                                        : Center(
-                                            child: CircularProgressIndicator(
-                                              color: colorPrincipal,
-                                            ),
-                                          );
-                                  },
-                                );
-                              });
-                          setState(() {});
-                        },
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                      child: TextField(
-                        controller: idSede,
-                        readOnly: true,
-                        keyboardType: TextInputType.text,
-                        decoration:
-                            const InputDecoration(label: Text('Id Sede')),
-                        onTap: () async {
-                          await showDialog(
-                              context: context,
-                              builder: (context) {
-                                return FutureBuilder(
-                                  future: getPagosData(
-                                      'http://132.255.166.73:8474/funcionarios/pago'),
-                                  builder: (BuildContext context,
-                                      AsyncSnapshot<dynamic> snapshot) {
-                                    return snapshot.hasData
-                                        ? ModalPagos(
-                                            listaFuncionarios: snapshot.data,
-                                            idTextController: idFuncionario,
-                                            idSedeTextController: idSede,
-                                            funcionarioTextController:
-                                                nombreFuncionario,
-                                            sueldoTextController:
-                                                sueldoFuncionario,
-                                            nombreSedeTextController:
-                                                sedeFuncionario,
-                                          )
-                                        : Center(
-                                            child: CircularProgressIndicator(
-                                              color: colorPrincipal,
-                                            ),
-                                          );
-                                  },
-                                );
-                              });
-                          setState(() {});
-                        },
-                      ),
-                    ),
-                  )
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                      child: TextField(
-                        controller: nombreFuncionario,
-                        readOnly: true,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp(r'\d'))
-                        ],
-                        keyboardType: TextInputType.text,
-                        decoration: const InputDecoration(
-                            label: Text('Nombre Funcionario')),
-                        onTap: () async {
-                          await showDialog(
-                              context: context,
-                              builder: (context) {
-                                return FutureBuilder(
-                                  future: getPagosData(
-                                      'http://132.255.166.73:8474/funcionarios/pago'),
-                                  builder: (BuildContext context,
-                                      AsyncSnapshot<dynamic> snapshot) {
-                                    return snapshot.hasData
-                                        ? ModalPagos(
-                                            listaFuncionarios: snapshot.data,
-                                            idTextController: idFuncionario,
-                                            idSedeTextController: idSede,
-                                            funcionarioTextController:
-                                                nombreFuncionario,
-                                            sueldoTextController:
-                                                sueldoFuncionario,
-                                            nombreSedeTextController:
-                                                sedeFuncionario,
-                                          )
-                                        : Center(
-                                            child: CircularProgressIndicator(
-                                              color: colorPrincipal,
-                                            ),
-                                          );
-                                  },
-                                );
-                              });
-                          setState(() {});
-                        },
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                      child: TextField(
-                        controller: sedeFuncionario,
-                        readOnly: true,
-                        keyboardType: TextInputType.text,
-                        decoration: const InputDecoration(
-                            label: Text('Sede Funcionario')),
-                        onTap: () async {
-                          await showDialog(
-                              context: context,
-                              builder: (context) {
-                                return FutureBuilder(
-                                  future: getPagosData(
-                                      'http://132.255.166.73:8474/funcionarios/pago'),
-                                  builder: (BuildContext context,
-                                      AsyncSnapshot<dynamic> snapshot) {
-                                    return snapshot.hasData
-                                        ? ModalPagos(
-                                            listaFuncionarios: snapshot.data,
-                                            idTextController: idFuncionario,
-                                            idSedeTextController: idSede,
-                                            funcionarioTextController:
-                                                nombreFuncionario,
-                                            sueldoTextController:
-                                                sueldoFuncionario,
-                                            nombreSedeTextController:
-                                                sedeFuncionario,
-                                          )
-                                        : Center(
-                                            child: CircularProgressIndicator(
-                                              color: colorPrincipal,
-                                            ),
-                                          );
-                                  },
-                                );
-                              });
-                          setState(() {});
-                        },
-                      ),
-                    ),
-                  )
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                child: TextField(
-                  controller: sueldoFuncionario,
-                  readOnly: true,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp(r'\d'))
-                  ],
-                  keyboardType: TextInputType.text,
-                  decoration:
-                      const InputDecoration(label: Text('Sueldo Funcionario')),
-                  onTap: () async {
-                    await showDialog(
-                        context: context,
-                        builder: (context) {
-                          return FutureBuilder(
-                            future: getPagosData(
-                                'http://132.255.166.73:8474/funcionarios/pago'),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<dynamic> snapshot) {
-                              return snapshot.hasData
-                                  ? ModalPagos(
-                                      listaFuncionarios: snapshot.data,
-                                      idTextController: idFuncionario,
-                                      idSedeTextController: idSede,
-                                      funcionarioTextController:
-                                          nombreFuncionario,
-                                      sueldoTextController: sueldoFuncionario,
-                                      nombreSedeTextController: sedeFuncionario,
-                                    )
-                                  : Center(
-                                      child: CircularProgressIndicator(
-                                        color: colorPrincipal,
-                                      ),
-                                    );
-                            },
-                          );
-                        });
-                    setState(() {});
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                child: TextField(
-                  onChanged: (value) {
-                    setState(() {});
-                  },
-                  controller: plusFuncionario,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  keyboardType: TextInputType.number,
-                  decoration:
-                      const InputDecoration(label: Text('Plus Funcionario')),
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12),
-                child: TextField(
-                  controller: fechaPago,
-                  onTap: () async {
-                    fechaPago.text = await showDatePicker(
-                            cancelText: 'Cancelar',
-                            confirmText: 'Aceptar',
-                            initialEntryMode: DatePickerEntryMode.calendarOnly,
-                            context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime(2000, 1, 1),
-                            lastDate: DateTime.now())
-                        .then((value) {
-                      if (value != null) {
-                        return DateFormat('yyyy-MM-dd').format(value);
-                      } else {
-                        return fechaPago.text;
-                      }
-                    });
-                  },
-                  readOnly: true,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp(r'\d'))
-                  ],
-                  keyboardType: TextInputType.text,
-                  decoration: const InputDecoration(label: Text('Fecha pago')),
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12),
-                child: TextField(
-                  maxLength: 50,
-                  controller: comentarioPago,
-                  keyboardType: TextInputType.text,
-                  decoration:
-                      const InputDecoration(label: Text('Comentario pago')),
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12),
-                child: getTotal(
-                    titleTextStyle, plusFuncionario, sueldoFuncionario),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(12),
-                child: FilledButton(
-                    onPressed: () async {
-                      if (idFuncionario.text.trim() != '') {
-                        if (plusFuncionario.text.trim() == '') {
-                          plusFuncionario.text = '0';
-                        }
-                        if (sueldoFuncionario.text.trim() == '') {
-                          sueldoFuncionario.text = '0';
-                        }
-                        if (comentarioPago.text.trim() == '') {
-                          comentarioPago.text = 'vacio';
-                        }
-                        var request = http.Request(
-                            'POST',
-                            Uri.parse(
-                                'http://132.255.166.73:8474/pagos/confirmar'));
-                        request.bodyFields = {
-                          'id_funcionario': idFuncionario.text,
-                          'id_sede': idSede.text,
-                          'salario_registro': sueldoFuncionario.text,
-                          'plus_registro': plusFuncionario.text,
-                          'fecha_registro': fechaPago.text,
-                          'comentario_registro': comentarioPago.text,
-                        };
-
-                        http.StreamedResponse response = await request.send();
-                        if (response.statusCode == 200) {
-                          pagosReg(cardTextStyle, cardSubTextStyle, cardShape);
-                        }
-                      } else {
-                        pagosError(cardTextStyle, cardSubTextStyle, cardShape);
-                      }
-                    },
-                    child: Text(
-                      'Registrar pago',
-                      style: cardTextStyle,
-                    )),
-              )
-            ],
+            )
+          ]),
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+                gradient:
+                    LinearGradient(colors: [colorPrincipal, colorSecundario])),
           ),
+          iconTheme: IconThemeData(color: colorResaltante),
+          elevation: 15,
+          centerTitle: true,
+          title: Text(
+            style: titleTextStyle,
+            'PAGOS',
+            textAlign: TextAlign.center,
+          ),
+          backgroundColor: colorPrincipal,
+          actions: [
+            IconButton(
+                onPressed: () {
+                  SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+                },
+                icon: const Icon(
+                  Icons.exit_to_app,
+                )),
+          ],
         ),
-      ),
-    ));
+        body: const TabBarView(
+          children: [PagosForm(), PagosHistorial()],
+        ),
+      )),
+    );
   }
 
   void pagosReg(var cardTextStyle, var cardSubTextStyle, var cardShape) {
