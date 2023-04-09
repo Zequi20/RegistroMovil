@@ -17,7 +17,7 @@ class _PagosHistorialState extends State<PagosHistorial> {
   var colorPrincipal = Colors.white;
   bool filtrar = false;
   String filtro = '';
-  String algo = 'algo';
+  int cellIndex = 1;
 
   TextEditingController controlador = TextEditingController();
 
@@ -36,6 +36,7 @@ class _PagosHistorialState extends State<PagosHistorial> {
                     Row(
                       children: [
                         Expanded(
+                          flex: 2,
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: TextFormField(
@@ -54,12 +55,53 @@ class _PagosHistorialState extends State<PagosHistorial> {
                                   enabledBorder: InputBorder.none,
                                   border: InputBorder.none,
                                   icon: Icon(Icons.search),
-                                  hintText: 'Busqueda por nombre'),
+                                  hintText: 'Busqueda por...'),
                             ),
                           ),
                         ),
                         Expanded(
-                          child: Text(algo),
+                          child: DropdownButtonFormField(
+                            decoration: const InputDecoration(
+                                enabledBorder: InputBorder.none,
+                                border: InputBorder.none),
+                            elevation: 1,
+                            onChanged: (value) {
+                              setState(() {
+                                cellIndex = value!;
+                              });
+                            },
+                            value: cellIndex,
+                            items: const [
+                              DropdownMenuItem(
+                                value: 0,
+                                child: Text('ID'),
+                              ),
+                              DropdownMenuItem(
+                                value: 1,
+                                child: Text('Nombre'),
+                              ),
+                              DropdownMenuItem(
+                                value: 2,
+                                child: Text('Sede'),
+                              ),
+                              DropdownMenuItem(
+                                value: 3,
+                                child: Text('Salario'),
+                              ),
+                              DropdownMenuItem(
+                                value: 4,
+                                child: Text('Plus'),
+                              ),
+                              DropdownMenuItem(
+                                value: 5,
+                                child: Text('Fecha'),
+                              ),
+                              DropdownMenuItem(
+                                value: 6,
+                                child: Text('Comentario'),
+                              )
+                            ],
+                          ),
                         )
                       ],
                     ),
@@ -120,8 +162,7 @@ class _PagosHistorialState extends State<PagosHistorial> {
       return procesado;
     } else {
       return procesado.where((element) {
-        algo = (element.cells[1].child as Text).data!;
-        return (element.cells[1].child as Text)
+        return (element.cells[cellIndex].child as Text)
             .data!
             .toLowerCase()
             .contains(filtro);
