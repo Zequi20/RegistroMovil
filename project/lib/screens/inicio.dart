@@ -106,7 +106,6 @@ class _ScreenInicioState extends State<ScreenInicio> {
                         children: [
                           Container(
                             decoration: BoxDecoration(
-                                border: Border.all(color: colorResaltante),
                                 gradient: LinearGradient(
                                     begin: Alignment.center,
                                     colors: [colorSecundario, colorPrincipal]),
@@ -295,27 +294,30 @@ class _ScreenInicioState extends State<ScreenInicio> {
                                       x: 0,
                                       barRods: [
                                         BarChartRodData(
-                                            gradient: LinearGradient(colors: [
-                                              colorResaltante,
-                                              colorPrincipal,
-                                            ]),
+                                            gradient: LinearGradient(
+                                                begin: Alignment.topCenter,
+                                                end: Alignment.bottomCenter,
+                                                colors: [
+                                                  colorResaltante,
+                                                  colorPrincipal,
+                                                ]),
                                             width: 40,
                                             toY: snapshot.data[1],
-                                            borderSide: BorderSide(
-                                                color: colorResaltante),
                                             borderRadius: BorderRadius.zero)
                                       ]),
                                   BarChartGroupData(x: 1, barRods: [
                                     BarChartRodData(
-                                        gradient: LinearGradient(colors: [
-                                          colorSecundario,
-                                          colorPrincipal,
-                                        ]),
-                                        width: 40,
-                                        toY: snapshot.data[0],
-                                        borderRadius: BorderRadius.zero,
-                                        borderSide:
-                                            BorderSide(color: colorResaltante))
+                                      gradient: LinearGradient(
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter,
+                                          colors: [
+                                            colorSecundario,
+                                            colorPrincipal,
+                                          ]),
+                                      width: 40,
+                                      toY: snapshot.data[0],
+                                      borderRadius: BorderRadius.zero,
+                                    ),
                                   ])
                                 ])),
                           ),

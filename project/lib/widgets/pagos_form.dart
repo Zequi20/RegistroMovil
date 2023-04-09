@@ -4,9 +4,6 @@ import 'package:bio_farm/models/model_funcionario_pagos.dart';
 import 'package:bio_farm/widgets/modal_pagos.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
-
-// ignore: unused_import
-import 'package:fl_chart/fl_chart.dart';
 import 'package:http/http.dart' as http;
 
 class PagosForm extends StatefulWidget {
@@ -427,21 +424,6 @@ class _PagosFormState extends State<PagosForm> {
         Expanded(
             child: Container(
           decoration: const BoxDecoration(color: Colors.white),
-        )),
-        Expanded(
-            child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [colorSecundario, colorPrincipal, colorSecundario]),
-          ),
-          child: Center(
-            child: Text(
-              'Formulario de pagos',
-              style: titleTextStyle,
-            ),
-          ),
         )),
       ],
     );
