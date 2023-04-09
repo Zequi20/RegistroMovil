@@ -376,39 +376,8 @@ class _PagosFormState extends State<PagosForm> {
                       padding: const EdgeInsets.all(12),
                       child: FilledButton(
                           onPressed: () async {
-                            if (idFuncionario.text.trim() != '') {
-                              if (plusFuncionario.text.trim() == '') {
-                                plusFuncionario.text = '0';
-                              }
-                              if (sueldoFuncionario.text.trim() == '') {
-                                sueldoFuncionario.text = '0';
-                              }
-                              if (comentarioPago.text.trim() == '') {
-                                comentarioPago.text = 'vacio';
-                              }
-                              var request = http.Request(
-                                  'POST',
-                                  Uri.parse(
-                                      'http://132.255.166.73:8474/pagos/confirmar'));
-                              request.bodyFields = {
-                                'id_funcionario': idFuncionario.text,
-                                'id_sede': idSede.text,
-                                'salario_registro': sueldoFuncionario.text,
-                                'plus_registro': plusFuncionario.text,
-                                'fecha_registro': fechaPago.text,
-                                'comentario_registro': comentarioPago.text,
-                              };
-
-                              http.StreamedResponse response =
-                                  await request.send();
-                              if (response.statusCode == 200) {
-                                pagosReg(
-                                    cardTextStyle, cardSubTextStyle, cardShape);
-                              }
-                            } else {
-                              pagosError(
-                                  cardTextStyle, cardSubTextStyle, cardShape);
-                            }
+                            pagosReg(
+                                cardTextStyle, cardSubTextStyle, cardShape);
                           },
                           child: Text(
                             'Registrar pago',
@@ -434,15 +403,97 @@ class _PagosFormState extends State<PagosForm> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            icon: const Icon(Icons.check),
+            actions: [
+              TextButton(
+                  onPressed: () async {
+                    if (idFuncionario.text.trim() != '') {
+                      if (plusFuncionario.text.trim() == '') {
+                        plusFuncionario.text = '0';
+                      }
+                      if (sueldoFuncionario.text.trim() == '') {
+                        sueldoFuncionario.text = '0';
+                      }
+                      if (comentarioPago.text.trim() == '') {
+                        comentarioPago.text = 'vacio';
+                      }
+                      var request = http.Request(
+                          'POST',
+                          Uri.parse(
+                              'http://132.255.166.73:8474/pagos/confirmar'));
+                      request.bodyFields = {
+                        'id_funcionario': idFuncionario.text,
+                        'id_sede': idSede.text,
+                        'salario_registro': sueldoFuncionario.text,
+                        'plus_registro': plusFuncionario.text,
+                        'fecha_registro': fechaPago.text,
+                        'comentario_registro': comentarioPago.text,
+                      };
+
+                      await request.send().then((value) {
+                        if (value.statusCode == 200) {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  icon: const Icon(Icons.check),
+                                  titleTextStyle: cardTextStyle,
+                                  contentTextStyle: cardSubTextStyle,
+                                  iconColor: colorPrincipal,
+                                  backgroundColor: colorSecundario,
+                                  shape: cardShape,
+                                  title: const Text('Operacion exitosa'),
+                                  content: const Text(
+                                    'Se agrego exitosamente al registro',
+                                    textAlign: TextAlign.center,
+                                  ),
+                                );
+                              });
+                        } else {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  icon: const Icon(Icons.error),
+                                  titleTextStyle: cardTextStyle,
+                                  contentTextStyle: cardSubTextStyle,
+                                  iconColor: colorPrincipal,
+                                  backgroundColor: colorSecundario,
+                                  shape: cardShape,
+                                  title: const Text('Error'),
+                                  content: const Text(
+                                    'La operacion no ha podido realizarse',
+                                    textAlign: TextAlign.center,
+                                  ),
+                                );
+                              });
+                        }
+                      });
+                    } else {
+                      pagosError(cardTextStyle, cardSubTextStyle, cardShape);
+                    }
+                  },
+                  child: Text(
+                    'Realizar',
+                    style: cardTextStyle,
+                  )),
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    'Cancelar',
+                    style: cardTextStyle,
+                  ))
+            ],
+            icon: const Icon(Icons.warning),
             titleTextStyle: cardTextStyle,
             contentTextStyle: cardSubTextStyle,
             iconColor: colorPrincipal,
             backgroundColor: colorSecundario,
             shape: cardShape,
-            title: const Text('Registrar pago'),
+            title: const Text('Confirmar operacion'),
             content: const Text(
-              'Operacion exitosa',
+              'Esta operacion no se puede deshacer',
               textAlign: TextAlign.center,
             ),
           );
@@ -457,6 +508,7 @@ class _PagosFormState extends State<PagosForm> {
             actions: [
               TextButton(
                   onPressed: () {
+                    Navigator.of(context).pop();
                     Navigator.of(context).pop();
                   },
                   child: Text(
