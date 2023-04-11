@@ -399,23 +399,14 @@ class _PagosFormState extends State<PagosForm> {
   }
 
   void pagosReg(var cardTextStyle, var cardSubTextStyle, var cardShape) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            actions: [
-              TextButton(
-                  onPressed: () async {
-                    if (idFuncionario.text.trim() != '') {
-                      if (plusFuncionario.text.trim() == '') {
-                        plusFuncionario.text = '0';
-                      }
-                      if (sueldoFuncionario.text.trim() == '') {
-                        sueldoFuncionario.text = '0';
-                      }
-                      if (comentarioPago.text.trim() == '') {
-                        comentarioPago.text = 'vacio';
-                      }
+    if (idFuncionario.text.trim() != '') {
+      showDialog(
+          context: context,
+          builder: (buildContext) {
+            return AlertDialog(
+              actions: [
+                TextButton(
+                    onPressed: () async {
                       var request = http.Request(
                           'POST',
                           Uri.parse(
@@ -431,104 +422,141 @@ class _PagosFormState extends State<PagosForm> {
 
                       await request.send().then((value) {
                         if (value.statusCode == 200) {
-                          showDialog(
+                          return showDialog(
                               context: context,
-                              builder: (BuildContext context) {
+                              builder: (buildContext) {
                                 return AlertDialog(
-                                  icon: const Icon(Icons.check),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            Navigator.of(context).pop();
+                                          });
+                                        },
+                                        child: Text(
+                                          'Aceptar',
+                                          style: cardSubTextStyle,
+                                        ))
+                                  ],
+                                  actionsAlignment: MainAxisAlignment.center,
+                                  shape: cardShape,
+                                  backgroundColor: colorSecundario,
                                   titleTextStyle: cardTextStyle,
                                   contentTextStyle: cardSubTextStyle,
-                                  iconColor: colorPrincipal,
-                                  backgroundColor: colorSecundario,
-                                  shape: cardShape,
-                                  title: const Text('Operacion exitosa'),
+                                  icon: Icon(
+                                    Icons.check,
+                                    color: colorPrincipal,
+                                  ),
                                   content: const Text(
-                                    'Se agrego exitosamente al registro',
+                                    'Operacion realizada con exito',
                                     textAlign: TextAlign.center,
                                   ),
+                                  title: const Text(
+                                      'Confirmacion de la operacion'),
                                 );
                               });
                         } else {
-                          showDialog(
+                          return showDialog(
                               context: context,
-                              builder: (BuildContext context) {
+                              builder: (buildContext) {
                                 return AlertDialog(
-                                  icon: const Icon(Icons.error),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            Navigator.of(context).pop();
+                                          });
+                                        },
+                                        child: Text(
+                                          'Aceptar',
+                                          style: cardSubTextStyle,
+                                        ))
+                                  ],
+                                  actionsAlignment: MainAxisAlignment.center,
+                                  shape: cardShape,
+                                  backgroundColor: colorSecundario,
                                   titleTextStyle: cardTextStyle,
                                   contentTextStyle: cardSubTextStyle,
-                                  iconColor: colorPrincipal,
-                                  backgroundColor: colorSecundario,
-                                  shape: cardShape,
-                                  title: const Text('Error'),
+                                  icon: Icon(
+                                    Icons.error,
+                                    color: colorPrincipal,
+                                  ),
                                   content: const Text(
-                                    'La operacion no ha podido realizarse',
+                                    'Operacion no realizada',
                                     textAlign: TextAlign.center,
                                   ),
+                                  title: const Text('Error en la operacion'),
                                 );
                               });
                         }
                       });
-                    } else {
-                      pagosError(cardTextStyle, cardSubTextStyle, cardShape);
-                    }
-                  },
-                  child: Text(
-                    'Realizar',
-                    style: cardTextStyle,
-                  )),
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    'Cancelar',
-                    style: cardTextStyle,
-                  ))
-            ],
-            icon: const Icon(Icons.warning),
-            titleTextStyle: cardTextStyle,
-            contentTextStyle: cardSubTextStyle,
-            iconColor: colorPrincipal,
-            backgroundColor: colorSecundario,
-            shape: cardShape,
-            title: const Text('Confirmar operacion'),
-            content: const Text(
-              'Esta operacion no se puede deshacer',
-              textAlign: TextAlign.center,
-            ),
-          );
-        });
-  }
-
-  void pagosError(var cardTextStyle, var cardSubTextStyle, var cardShape) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    'Aceptar',
-                    style: cardSubTextStyle,
-                  ))
-            ],
-            icon: const Icon(Icons.cancel),
-            titleTextStyle: cardTextStyle,
-            contentTextStyle: cardSubTextStyle,
-            iconColor: colorPrincipal,
-            backgroundColor: colorSecundario,
-            shape: cardShape,
-            title: const Text('Campos Obligatorios'),
-            content: const Text(
-              'Por favor complete los campos del funcionario e intentelo de nuevo',
-              textAlign: TextAlign.center,
-            ),
-          );
-        });
+                    },
+                    child: Text(
+                      'Si, registrar',
+                      style: cardSubTextStyle,
+                    )),
+                TextButton(
+                    onPressed: () {
+                      setState(() {
+                        Navigator.of(context).pop();
+                      });
+                    },
+                    child: Text(
+                      'No registrar',
+                      style: cardSubTextStyle,
+                    ))
+              ],
+              actionsAlignment: MainAxisAlignment.center,
+              shape: cardShape,
+              backgroundColor: colorSecundario,
+              titleTextStyle: cardTextStyle,
+              contentTextStyle: cardSubTextStyle,
+              icon: Icon(
+                Icons.error,
+                color: colorPrincipal,
+              ),
+              content: const Text(
+                'Esta accion no se puede deshacer, esta seguro?',
+                textAlign: TextAlign.center,
+              ),
+              title: const Text('Registrar pago'),
+            );
+          });
+      /*   */
+    } else {
+      showDialog(
+          context: context,
+          builder: (buildContext) {
+            return AlertDialog(
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      setState(() {
+                        Navigator.of(context).pop();
+                      });
+                    },
+                    child: Text(
+                      'Aceptar',
+                      style: cardSubTextStyle,
+                    ))
+              ],
+              actionsAlignment: MainAxisAlignment.center,
+              shape: cardShape,
+              backgroundColor: colorSecundario,
+              titleTextStyle: cardTextStyle,
+              contentTextStyle: cardSubTextStyle,
+              icon: Icon(
+                Icons.error,
+                color: colorPrincipal,
+              ),
+              content: const Text(
+                'Los campos del funcionario son obligatorios, completelos y vuelva a intentarlo',
+                textAlign: TextAlign.center,
+              ),
+              title: const Text('Campos obligatorios'),
+            );
+          });
+    }
   }
 
   Text getTotal(var titleTextStyle, TextEditingController plusFuncionario,
