@@ -24,7 +24,7 @@ class _PagosFormState extends State<PagosForm> {
   TextEditingController nombreFuncionario = TextEditingController();
   TextEditingController sedeFuncionario = TextEditingController();
   TextEditingController sueldoFuncionario = TextEditingController(text: '0');
-  TextEditingController plusFuncionario = TextEditingController();
+  TextEditingController plusFuncionario = TextEditingController(text: '0');
 
   TextEditingController fechaPago = TextEditingController(
       text: DateFormat('yyy-MM-dd').format(DateTime.now()));
@@ -430,6 +430,7 @@ class _PagosFormState extends State<PagosForm> {
                                     TextButton(
                                         onPressed: () {
                                           setState(() {
+                                            Navigator.of(context).pop();
                                             Navigator.of(context).pop();
                                           });
                                         },
