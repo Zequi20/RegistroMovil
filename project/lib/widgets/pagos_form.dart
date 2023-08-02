@@ -83,7 +83,7 @@ class _PagosFormState extends State<PagosForm> {
                                     builder: (context) {
                                       return FutureBuilder(
                                         future: getPagosData(
-                                            'http://132.255.166.73:8474/funcionarios/pago'),
+                                            'http://132.255.166.73:8474/funcionarios_pago'),
                                         builder: (BuildContext context,
                                             AsyncSnapshot<dynamic> snapshot) {
                                           return snapshot.hasData
@@ -410,7 +410,7 @@ class _PagosFormState extends State<PagosForm> {
                       var request = http.Request(
                           'POST',
                           Uri.parse(
-                              'http://132.255.166.73:8474/pagos/confirmar'));
+                              'http://132.255.166.73:8474/insertar_pago'));
                       request.bodyFields = {
                         'id_funcionario': idFuncionario.text,
                         'id_sede': idSede.text,

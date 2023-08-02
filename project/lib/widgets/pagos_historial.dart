@@ -28,7 +28,7 @@ class _PagosHistorialState extends State<PagosHistorial> {
       children: [
         Expanded(
           child: FutureBuilder(
-            future: getHistorial('http://132.255.166.73:8474/pagos/historial'),
+            future: getHistorial('http://132.255.166.73:8474/pagos'),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.hasData) {
                 return Column(
@@ -150,7 +150,7 @@ class _PagosHistorialState extends State<PagosHistorial> {
         .map((element) => DataRow(cells: [
               DataCell(Text(element['id_registro'].toString())),
               DataCell(Text(element['nombre_funcionario'])),
-              DataCell(Text(element['nombre_Sede'])),
+              DataCell(Text(element['nombre_sede'])),
               DataCell(Text(f.format(element['salario_registro']))),
               DataCell(Text(f.format(element['plus_registro']))),
               DataCell(Text(DateFormat('yyyy-MM-dd')
