@@ -646,7 +646,7 @@ class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
                                                               http.Request(
                                                                   'POST',
                                                                   Uri.parse(
-                                                                      'http://132.255.166.73:8474/retiros/agregar'));
+                                                                      'http://132.255.166.73:8474/insertar_retiro'));
                                                           request.bodyFields = {
                                                             'id_funcionario':
                                                                 idFuncionarioController
@@ -1052,7 +1052,7 @@ class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
                                                               http.Request(
                                                                   'POST',
                                                                   Uri.parse(
-                                                                      'http://132.255.166.73:8474/retiros/editar'));
+                                                                      'http://132.255.166.73:8474/editar_retiro'));
                                                           request.bodyFields = {
                                                             'id_retiro': regId
                                                                 .toString(),
@@ -1203,13 +1203,13 @@ class _ScreenRetirosRegistroState extends State<ScreenRetirosRegistro> {
                               var request = http.Request(
                                   'DELETE',
                                   Uri.parse(
-                                      'http://132.255.166.73:8474/retiros/borrar'));
+                                      'http://132.255.166.73:8474/eliminar_retiro'));
                               String idList = '';
                               for (var element in selected) {
                                 idList += '${element.getCells().first.value},';
                               }
 
-                              request.bodyFields = {'id': '$idList 0'};
+                              request.bodyFields = {'id_list': '$idList 0'};
                               request.headers.addAll(headers);
 
                               http.StreamedResponse response =
