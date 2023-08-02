@@ -14,7 +14,7 @@ class ModelFuncionario {
       DateFormat('yyy-MM-dd')
           .format(DateTime.parse(json['fecha_inicio_funcionario'].toString())),
       DateFormat('dd')
-          .format(DateTime.parse(json['fecha_cobro_funcionario'].toString())),
+          .format(DateTime.parse(json['fecha_inicio_funcionario'].toString())),
       double.parse(json['sueldo_funcionario'].toString()),
       json['hora_entrada_funcionario'],
       json['hora_salida_funcionario'],

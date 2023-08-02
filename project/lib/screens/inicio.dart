@@ -449,17 +449,11 @@ class _ScreenInicioState extends State<ScreenInicio> {
 
     List lista = jsonDecode(response.body);
 
-    List<double> valores = lista.map((e) {
-      if (e['SUM(valor_transaccion)'].toString() != 'null') {
-        return double.parse(e['SUM(valor_transaccion)'].toString());
-      } else {
-        return 0.0;
-      }
-    }).toList();
-    if (valores.length < 2) {
-      valores.add(0.0);
-    }
+    List<int?> valores = [0, 0];
 
-    return valores;
+    valores[1] = lista[0]['ingresos'];
+    valores[0] = lista[0]['gastos'];
+
+    return valores.map((e) => double.tryParse(e.toString())).toList();
   }
 }
