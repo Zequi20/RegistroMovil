@@ -1170,7 +1170,7 @@ class _ScreenFuncionariosRegistroState
                                                                   http.Request(
                                                                       'POST',
                                                                       Uri.parse(
-                                                                          'http://132.255.166.73:8474/funcionarios/editar'));
+                                                                          'http://132.255.166.73:8474/editar_funcionario'));
                                                               request
                                                                   .bodyFields = {
                                                                 'id_funcionario':
@@ -1346,13 +1346,13 @@ class _ScreenFuncionariosRegistroState
                               var request = http.Request(
                                   'DELETE',
                                   Uri.parse(
-                                      'http://132.255.166.73:8474/funcionarios/borrar'));
+                                      'http://132.255.166.73:8474/eliminar_funcionario'));
                               String idList = '';
                               for (var element in selected) {
                                 idList += '${element.getCells().first.value},';
                               }
 
-                              request.bodyFields = {'id': '$idList 0'};
+                              request.bodyFields = {'id_list': '$idList 0'};
                               request.headers.addAll(headers);
 
                               http.StreamedResponse response =
