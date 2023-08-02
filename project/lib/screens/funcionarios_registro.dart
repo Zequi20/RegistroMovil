@@ -99,8 +99,8 @@ class _ScreenFuncionariosRegistroState
             nombreController,
             telefonoController,
             correoController,
-            fechaInicioController,
             sueldoController,
+            fechaInicioController,
             horaEntradaController,
             horaSalidaController,
             ciControllerEdit,
@@ -430,7 +430,7 @@ class _ScreenFuncionariosRegistroState
                                 FilteringTextInputFormatter.allow(RegExp(r'\d'))
                               ],
                               controller: ciController,
-                              keyboardType: TextInputType.text,
+                              keyboardType: TextInputType.streetAddress,
                               decoration: const InputDecoration(
                                   label: Text('Cedula de Identidad')),
                             ),
@@ -440,7 +440,7 @@ class _ScreenFuncionariosRegistroState
                                 const EdgeInsets.symmetric(horizontal: 12.0),
                             child: TextField(
                               controller: nombreController,
-                              keyboardType: TextInputType.text,
+                              keyboardType: TextInputType.name,
                               decoration: const InputDecoration(
                                   label: Text('Nombre del funcionario')),
                             ),
@@ -457,14 +457,14 @@ class _ScreenFuncionariosRegistroState
                                         RegExp(r'\d'))
                                   ],
                                   controller: telefonoController,
-                                  keyboardType: TextInputType.text,
+                                  keyboardType: TextInputType.phone,
                                   decoration: const InputDecoration(
                                       label: Text('Telefono del funcionario')),
                                 )),
                                 Expanded(
                                     child: TextField(
                                   controller: correoController,
-                                  keyboardType: TextInputType.text,
+                                  keyboardType: TextInputType.emailAddress,
                                   decoration: const InputDecoration(
                                       label: Text('Correo del funcionario')),
                                 ))
@@ -600,7 +600,9 @@ class _ScreenFuncionariosRegistroState
                                       RegExp(r'\d'))
                                 ],
                                 controller: sueldoController,
-                                keyboardType: TextInputType.text,
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                        decimal: true),
                                 decoration: const InputDecoration(
                                     label: Text('Sueldo del funcionario')),
                               )),
@@ -679,7 +681,7 @@ class _ScreenFuncionariosRegistroState
                                                               http.Request(
                                                                   'POST',
                                                                   Uri.parse(
-                                                                      'http://132.255.166.73:8474/funcionarios/agregar'));
+                                                                      'http://132.255.166.73:8474/insertar_funcionario'));
                                                           request.bodyFields = {
                                                             'id_sede': args
                                                                 .idSede
@@ -944,7 +946,7 @@ class _ScreenFuncionariosRegistroState
                                     Expanded(
                                         child: TextField(
                                       controller: correoControllerEdit,
-                                      keyboardType: TextInputType.text,
+                                      keyboardType: TextInputType.emailAddress,
                                       decoration: const InputDecoration(
                                           label:
                                               Text('Correo del funcionario')),
