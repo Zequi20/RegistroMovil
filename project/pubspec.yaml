@@ -45,6 +45,7 @@ dependencies:
   time_range_picker: ^2.2.0
   fl_chart: ^0.60.0
   firebase_core: ^2.15.0
+  firebase_messaging: ^14.6.5
 
 dev_dependencies:
   flutter_test:
