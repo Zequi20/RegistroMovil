@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
 
@@ -23,6 +24,12 @@ class _ScreenInicioState extends State<ScreenInicio> {
 
   String begin = '2022-01-01';
   String end = DateFormat('yyyy-MM-dd').format(DateTime.now());
+  @override
+  void initState() {
+    super.initState();
+    FirebaseMessaging.instance.subscribeToTopic('pagos');
+  }
+
   @override
   Widget build(BuildContext context) {
     var titleTextStyle = TextStyle(

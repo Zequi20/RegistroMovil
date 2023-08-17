@@ -1,15 +1,17 @@
+import 'package:flutter/material.dart';
+//screens
 import 'package:bio_farm/screens/gastos_registro.dart';
 import 'package:bio_farm/screens/ingresos_registro.dart';
 import 'package:bio_farm/screens/funcionarios_registro.dart';
 import 'package:bio_farm/screens/inicio.dart';
 import 'package:bio_farm/screens/pagos.dart';
 import 'package:bio_farm/screens/retiros_registro.dart';
-import 'package:flutter/material.dart';
 import 'package:bio_farm/screens/gestion.dart';
 import 'screens/sedes.dart';
+//firebase
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-
+import 'package:bio_farm/api/firebase_api.dart';
 // ...
 
 void main() async {
@@ -17,7 +19,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
+  await FireBaseApi().initNotifications();
   runApp(const MyApp());
 }
 
